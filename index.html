@@ -1,0 +1,436 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>1/10 電房車設定・圈速紀錄</title>
+<style>
+:root{
+  --bg:#0b0d10;--panel:#141820;--panel2:#1b202a;--text:#eef2f7;--muted:#9aa6b2;
+  --line:#2b3340;--accent:#6aa9ff;--good:#71d38a;--warn:#ffcf66;--bad:#ff7a7a;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC",sans-serif;background:var(--bg);color:var(--text)}
+header{position:sticky;top:0;z-index:5;background:rgba(11,13,16,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.wrap{max-width:1200px;margin:auto;padding:18px}
+h1{font-size:24px;margin:0 0 4px}
+.sub{color:var(--muted);font-size:14px}
+nav{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+button,.btn{border:1px solid var(--line);background:var(--panel2);color:var(--text);padding:10px 14px;border-radius:10px;cursor:pointer;font-weight:600}
+button:hover,.btn:hover{border-color:#4b5a6f}
+button.primary{background:var(--accent);border-color:var(--accent);color:#07111f}
+button.danger{background:#331a1a;border-color:#6a2c2c;color:#ffd5d5}
+main{padding-bottom:60px}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:14px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px}
+.span-12{grid-column:span 12}.span-8{grid-column:span 8}.span-6{grid-column:span 6}.span-4{grid-column:span 4}
+@media(max-width:850px){.span-8,.span-6,.span-4{grid-column:span 12}}
+h2{font-size:18px;margin:0 0 12px}
+h3{font-size:15px;margin:16px 0 8px;color:#dce7f6}
+label{display:block;font-size:12px;color:var(--muted);margin-bottom:5px}
+input,select,textarea{width:100%;background:#0e1218;color:var(--text);border:1px solid var(--line);border-radius:9px;padding:9px 10px;outline:none}
+input:focus,select:focus,textarea:focus{border-color:var(--accent)}
+textarea{min-height:90px;resize:vertical}
+.formgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.formgrid .wide{grid-column:span 2}
+.formgrid .full{grid-column:span 4}
+@media(max-width:850px){.formgrid{grid-template-columns:repeat(2,1fr)}.formgrid .wide{grid-column:span 2}.formgrid .full{grid-column:span 2}}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.kpi{background:var(--panel2);border-radius:12px;padding:12px}
+.kpi b{font-size:22px;display:block;margin-top:3px}
+.kpi small{color:var(--muted)}
+@media(max-width:700px){.kpis{grid-template-columns:repeat(2,1fr)}}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{padding:9px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{color:#b8c5d3;font-weight:700;position:sticky;top:93px;background:var(--panel)}
+tr:hover td{background:#171c24}
+.tag{display:inline-block;padding:3px 7px;border-radius:999px;background:#243044;color:#cfe1ff;font-size:11px}
+.muted{color:var(--muted)}
+.row-actions{display:flex;gap:6px;flex-wrap:wrap}
+.row-actions button{padding:6px 8px;font-size:12px}
+.hidden{display:none!important}
+canvas{width:100%;height:240px;background:#0e1218;border-radius:10px;border:1px solid var(--line)}
+.compare-select{display:flex;gap:8px;flex-wrap:wrap;max-height:150px;overflow:auto}
+.check{display:flex;align-items:center;gap:6px;background:var(--panel2);padding:7px 9px;border-radius:9px;font-size:12px}
+.check input{width:auto}
+.notice{padding:10px 12px;border-radius:10px;background:#182131;color:#cfe1ff;font-size:13px}
+.good{color:var(--good)} .warn{color:var(--warn)} .bad{color:var(--bad)}
+hr{border:0;border-top:1px solid var(--line);margin:16px 0}
+footer{color:var(--muted);font-size:12px;text-align:center;padding:25px}
+</style>
+<meta name="theme-color" content="#0b0d10">
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>1/10 電房車設定・圈速紀錄</h1>
+    <div class="sub">Session 設定資料庫｜圈速匯入｜最佳圈 / 平均圈｜多場次比較</div>
+    <nav>
+      <button onclick="showView('dashboard')">總覽</button>
+      <button onclick="newSession()" class="primary">＋ 新增練車紀錄</button>
+      <button onclick="showView('compare')">比較</button>
+      <button onclick="exportJSON()">匯出備份</button>
+      <label class="btn">匯入備份<input id="jsonImport" type="file" accept=".json" class="hidden"></label>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+<section id="dashboard">
+  <div class="grid">
+    <div class="card span-12">
+      <div class="kpis">
+        <div class="kpi"><small>總場次</small><b id="kSessions">0</b></div>
+        <div class="kpi"><small>總圈數</small><b id="kLaps">0</b></div>
+        <div class="kpi"><small>歷史最佳圈</small><b id="kBest">—</b></div>
+        <div class="kpi"><small>最近一次平均</small><b id="kAvg">—</b></div>
+      </div>
+    </div>
+    <div class="card span-12">
+      <h2>練車紀錄</h2>
+      <div style="overflow:auto">
+        <table>
+          <thead><tr><th>日期</th><th>場地</th><th>車</th><th>馬達 / FDR</th><th>輪胎</th><th>最佳圈</th><th>平均圈</th><th>圈數</th><th></th></tr></thead>
+          <tbody id="sessionRows"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="editor" class="hidden">
+  <div class="grid">
+    <div class="card span-8">
+      <h2 id="editorTitle">新增練車紀錄</h2>
+      <div class="formgrid">
+        <div><label>日期</label><input id="date" type="date"></div>
+        <div><label>場地</label><input id="track" placeholder="例如：柑園"></div>
+        <div><label>車型</label><input id="car" value="Xpress XQ3S"></div>
+        <div><label>組別 / 規則</label><input id="className" placeholder="13.5 Open / 17.5 GT"></div>
+      </div>
+
+      <h3>電裝 / 傳動</h3>
+      <div class="formgrid">
+        <div class="wide"><label>馬達</label><input id="motor" placeholder="例如：Justock 13.5T"></div>
+        <div class="wide"><label>ESC</label><input id="esc" placeholder="例如：XeRun 120A V3"></div>
+        <div><label>Pinion</label><input id="pinion" type="number" step="1"></div>
+        <div><label>Spur</label><input id="spur" type="number" step="1"></div>
+        <div><label>內齒比</label><input id="internalRatio" type="number" step="0.01" value="1.90"></div>
+        <div><label>FDR</label><input id="fdr" type="number" step="0.01"></div>
+      </div>
+
+      <h3>輪胎 / 暖胎</h3>
+      <div class="formgrid">
+        <div><label>輪胎</label><input id="tires" placeholder="RUSH 36X / 40X"></div>
+        <div><label>胎膠</label><input id="additive" placeholder="品牌 / 時間"></div>
+        <div><label>暖胎溫度 °C</label><input id="warmerTemp" type="number" placeholder="70"></div>
+        <div><label>暖胎時間 min</label><input id="warmerMin" type="number" step="0.5" placeholder="5"></div>
+      </div>
+
+      <h3>底盤設定</h3>
+      <div class="formgrid">
+        <div><label>車高 前 mm</label><input id="rideF" type="number" step="0.1"></div>
+        <div><label>車高 後 mm</label><input id="rideR" type="number" step="0.1"></div>
+        <div><label>Downstop 前</label><input id="downF" type="number" step="0.1"></div>
+        <div><label>Downstop 後</label><input id="downR" type="number" step="0.1"></div>
+        <div><label>前束 °</label><input id="toeF" type="number" step="0.1" placeholder="-1 = out 1°"></div>
+        <div><label>後束 °</label><input id="toeR" type="number" step="0.1" placeholder="3 = in 3°"></div>
+        <div><label>外傾 前 °</label><input id="camberF" type="number" step="0.1"></div>
+        <div><label>外傾 後 °</label><input id="camberR" type="number" step="0.1"></div>
+        <div><label>避震油 前 cSt</label><input id="shockF" type="number"></div>
+        <div><label>避震油 後 cSt</label><input id="shockR" type="number"></div>
+        <div><label>差速油 cSt</label><input id="diffOil" type="number"></div>
+        <div><label>防傾桿</label><input id="arb" placeholder="前/後線徑或備註"></div>
+      </div>
+
+      <h3>備註</h3>
+      <textarea id="notes" placeholder="例如：前防傾桿左右反應、右上擺臂阻力、前束是否跑掉、左後 downstop…"></textarea>
+    </div>
+
+    <div class="card span-4">
+      <h2>圈速</h2>
+      <div class="notice">可直接貼入「每行一圈」，或上傳 CSV/TXT。支援 12.345、0:12.345、Lap 1,12.345 等格式。</div>
+      <br>
+      <label>貼上圈速</label>
+      <textarea id="lapText" placeholder="12.842&#10;12.515&#10;12.301&#10;12.404"></textarea>
+      <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
+        <button onclick="parseLapText()">解析圈速</button>
+        <label class="btn">上傳 CSV/TXT<input id="lapFile" type="file" accept=".csv,.txt" class="hidden"></label>
+      </div>
+      <hr>
+      <div class="kpis" style="grid-template-columns:repeat(2,1fr)">
+        <div class="kpi"><small>有效圈</small><b id="lapCount">0</b></div>
+        <div class="kpi"><small>最佳圈</small><b id="lapBest">—</b></div>
+        <div class="kpi"><small>平均圈</small><b id="lapAvg">—</b></div>
+        <div class="kpi"><small>一致性 σ</small><b id="lapStd">—</b></div>
+      </div>
+      <canvas id="lapChart" width="500" height="240"></canvas>
+      <div style="display:flex;gap:8px;margin-top:12px">
+        <button class="primary" onclick="saveSession()">儲存紀錄</button>
+        <button onclick="showView('dashboard')">取消</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="detail" class="hidden">
+  <div class="grid">
+    <div class="card span-12">
+      <div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap">
+        <h2 id="detailTitle">Session</h2>
+        <div class="row-actions">
+          <button onclick="editCurrent()">編輯</button>
+          <button class="danger" onclick="deleteCurrent()">刪除</button>
+          <button onclick="showView('dashboard')">返回</button>
+        </div>
+      </div>
+      <div id="detailBody"></div>
+    </div>
+  </div>
+</section>
+
+<section id="compare" class="hidden">
+  <div class="grid">
+    <div class="card span-12">
+      <h2>選擇要比較的場次</h2>
+      <div id="compareSelect" class="compare-select"></div>
+      <div style="margin-top:10px"><button class="primary" onclick="renderComparison()">更新比較</button></div>
+    </div>
+    <div class="card span-12">
+      <h2>圈速比較</h2>
+      <canvas id="compareChart" width="1000" height="260"></canvas>
+      <div id="compareSummary" style="margin-top:12px"></div>
+    </div>
+    <div class="card span-12">
+      <h2>設定差異</h2>
+      <div style="overflow:auto"><table id="compareTable"></table></div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>資料儲存在此瀏覽器的 localStorage。更換裝置或清除瀏覽資料前，請先匯出 JSON 備份。</footer>
+
+<script>
+const KEY='touring_sessions_v1';
+let sessions = JSON.parse(localStorage.getItem(KEY)||'[]');
+let currentId=null;
+let currentLaps=[];
+
+const fields=['date','track','car','className','motor','esc','pinion','spur','internalRatio','fdr','tires','additive','warmerTemp','warmerMin','rideF','rideR','downF','downR','toeF','toeR','camberF','camberR','shockF','shockR','diffOil','arb','notes'];
+
+function showView(name){
+  ['dashboard','editor','detail','compare'].forEach(id=>document.getElementById(id).classList.toggle('hidden',id!==name));
+  if(name==='dashboard') renderDashboard();
+  if(name==='compare') renderCompareSelector();
+}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
+function num(v){let n=parseFloat(v);return Number.isFinite(n)?n:null}
+function fmt(t){return Number.isFinite(t)?t.toFixed(3)+' s':'—'}
+function stats(laps){
+  if(!laps.length) return {best:null,avg:null,std:null};
+  const avg=laps.reduce((a,b)=>a+b,0)/laps.length;
+  const best=Math.min(...laps);
+  const std=Math.sqrt(laps.reduce((a,b)=>a+(b-avg)**2,0)/laps.length);
+  return {best,avg,std};
+}
+function parseTimeToken(s){
+  s=String(s).trim();
+  let m=s.match(/(?:(\d+):)?(\d{1,3}(?:\.\d+)?)/);
+  if(!m) return null;
+  let sec=parseFloat(m[2]), min=m[1]?parseInt(m[1]):0;
+  let t=min*60+sec;
+  return (t>0 && t<300)?t:null;
+}
+function parseLapText(){
+  const text=document.getElementById('lapText').value;
+  const lines=text.split(/\r?\n/);
+  let arr=[];
+  for(const line of lines){
+    if(!line.trim()) continue;
+    const parts=line.split(/[,;\t]/).map(x=>x.trim()).filter(Boolean);
+    let candidates=parts.map(parseTimeToken).filter(x=>x!==null);
+    if(candidates.length){
+      // If line starts with lap number and has another numeric field, prefer last plausible time.
+      let pick=candidates[candidates.length-1];
+      arr.push(pick);
+    } else {
+      let t=parseTimeToken(line);
+      if(t!==null) arr.push(t);
+    }
+  }
+  currentLaps=arr;
+  updateLapStats();
+}
+function updateLapStats(){
+  const s=stats(currentLaps);
+  lapCount.textContent=currentLaps.length;
+  lapBest.textContent=fmt(s.best);
+  lapAvg.textContent=fmt(s.avg);
+  lapStd.textContent=s.std===null?'—':s.std.toFixed(3);
+  drawLineChart('lapChart',currentLaps,'圈數','秒');
+}
+function newSession(){
+  currentId=null; currentLaps=[];
+  editorTitle.textContent='新增練車紀錄';
+  fields.forEach(f=>document.getElementById(f).value='');
+  car.value='Xpress XQ3S'; internalRatio.value='1.90';
+  date.value=new Date().toISOString().slice(0,10);
+  lapText.value='';
+  updateLapStats();
+  showView('editor');
+}
+function calcFDR(){
+  let p=num(pinion.value), s=num(spur.value), i=num(internalRatio.value);
+  if(p&&s&&i) fdr.value=(s/p*i).toFixed(2);
+}
+pinion.addEventListener('input',calcFDR); spur.addEventListener('input',calcFDR); internalRatio.addEventListener('input',calcFDR);
+
+function saveSession(){
+  const obj={id:currentId||uid(),createdAt:new Date().toISOString(),laps:[...currentLaps]};
+  fields.forEach(f=>obj[f]=document.getElementById(f).value);
+  const idx=sessions.findIndex(x=>x.id===obj.id);
+  if(idx>=0) sessions[idx]=obj; else sessions.push(obj);
+  sessions.sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+  localStorage.setItem(KEY,JSON.stringify(sessions));
+  currentId=obj.id;
+  showView('dashboard');
+}
+function renderDashboard(){
+  let totalLaps=sessions.reduce((n,s)=>n+(s.laps?.length||0),0);
+  let all=sessions.flatMap(s=>s.laps||[]);
+  let last=sessions[0];
+  kSessions.textContent=sessions.length;
+  kLaps.textContent=totalLaps;
+  kBest.textContent=fmt(all.length?Math.min(...all):null);
+  kAvg.textContent=fmt(last?stats(last.laps||[]).avg:null);
+  sessionRows.innerHTML=sessions.length?sessions.map(s=>{
+    const st=stats(s.laps||[]);
+    return `<tr>
+      <td>${escHtml(s.date||'—')}</td>
+      <td>${escHtml(s.track||'—')}</td>
+      <td>${escHtml(s.car||'—')}</td>
+      <td>${escHtml(s.motor||'—')}<br><span class="muted">FDR ${escHtml(s.fdr||'—')}</span></td>
+      <td>${escHtml(s.tires||'—')}</td>
+      <td class="good">${fmt(st.best)}</td>
+      <td>${fmt(st.avg)}</td>
+      <td>${(s.laps||[]).length}</td>
+      <td><div class="row-actions"><button onclick="openDetail('${s.id}')">查看</button><button onclick="editSession('${s.id}')">編輯</button></div></td>
+    </tr>`;
+  }).join(''):`<tr><td colspan="9" class="muted">還沒有紀錄。先新增第一個練車 Session。</td></tr>`;
+}
+function openDetail(id){
+  const s=sessions.find(x=>x.id===id); if(!s)return;
+  currentId=id; const st=stats(s.laps||[]);
+  detailTitle.textContent=`${s.date||''} ${s.track||''} — ${s.car||''}`;
+  const pairs=[
+    ['組別',s.className],['馬達',s.motor],['ESC',s.esc],['FDR',s.fdr],
+    ['輪胎',s.tires],['胎膠',s.additive],['暖胎',`${s.warmerTemp||'—'}°C / ${s.warmerMin||'—'} min`],
+    ['車高',`F ${s.rideF||'—'} / R ${s.rideR||'—'}`],['Downstop',`F ${s.downF||'—'} / R ${s.downR||'—'}`],
+    ['Toe',`F ${s.toeF||'—'}° / R ${s.toeR||'—'}°`],['Camber',`F ${s.camberF||'—'}° / R ${s.camberR||'—'}°`],
+    ['避震油',`F ${s.shockF||'—'} / R ${s.shockR||'—'} cSt`],['差速油',s.diffOil?`${s.diffOil} cSt`:'—'],['防傾桿',s.arb],
+  ];
+  detailBody.innerHTML=`
+    <div class="kpis" style="margin:12px 0 16px">
+      <div class="kpi"><small>最佳圈</small><b class="good">${fmt(st.best)}</b></div>
+      <div class="kpi"><small>平均圈</small><b>${fmt(st.avg)}</b></div>
+      <div class="kpi"><small>一致性 σ</small><b>${st.std===null?'—':st.std.toFixed(3)}</b></div>
+      <div class="kpi"><small>圈數</small><b>${(s.laps||[]).length}</b></div>
+    </div>
+    <div class="formgrid">${pairs.map(([a,b])=>`<div><label>${a}</label><div>${escHtml(b||'—')}</div></div>`).join('')}
+      <div class="full"><label>備註</label><div style="white-space:pre-wrap">${escHtml(s.notes||'—')}</div></div>
+    </div>
+    <hr><h3>圈速</h3><canvas id="detailChart" width="1000" height="240"></canvas>`;
+  showView('detail');
+  setTimeout(()=>drawLineChart('detailChart',s.laps||[],'圈數','秒'),0);
+}
+function editCurrent(){editSession(currentId)}
+function editSession(id){
+  const s=sessions.find(x=>x.id===id); if(!s)return;
+  currentId=id;
+  editorTitle.textContent='編輯練車紀錄';
+  fields.forEach(f=>document.getElementById(f).value=s[f]??'');
+  currentLaps=[...(s.laps||[])];
+  lapText.value=currentLaps.map(x=>x.toFixed(3)).join('\n');
+  updateLapStats();
+  showView('editor');
+}
+function deleteCurrent(){
+  if(!confirm('確定刪除這筆紀錄？')) return;
+  sessions=sessions.filter(x=>x.id!==currentId);
+  localStorage.setItem(KEY,JSON.stringify(sessions));
+  currentId=null; showView('dashboard');
+}
+function renderCompareSelector(){
+  compareSelect.innerHTML=sessions.map(s=>`<label class="check"><input type="checkbox" value="${s.id}"> ${escHtml(s.date||'')} ${escHtml(s.track||'')} ${escHtml(s.car||'')}</label>`).join('');
+  drawLineChart('compareChart',[],'','');
+  compareTable.innerHTML='';
+  compareSummary.innerHTML='<span class="muted">選 2～5 筆紀錄比較。</span>';
+}
+function renderComparison(){
+  const ids=[...compareSelect.querySelectorAll('input:checked')].map(x=>x.value).slice(0,5);
+  const sel=ids.map(id=>sessions.find(s=>s.id===id)).filter(Boolean);
+  if(sel.length<2){compareSummary.innerHTML='<span class="warn">至少選兩筆。</span>';return;}
+  drawMultiChart('compareChart',sel);
+  const rows=[
+    ['日期','date'],['場地','track'],['馬達','motor'],['ESC','esc'],['FDR','fdr'],['輪胎','tires'],['胎膠','additive'],
+    ['暖胎 °C','warmerTemp'],['暖胎 min','warmerMin'],['車高 F','rideF'],['車高 R','rideR'],['Downstop F','downF'],['Downstop R','downR'],
+    ['Toe F','toeF'],['Toe R','toeR'],['Camber F','camberF'],['Camber R','camberR'],['避震油 F','shockF'],['避震油 R','shockR'],['差速油','diffOil'],['防傾桿','arb']
+  ];
+  compareTable.innerHTML='<thead><tr><th>項目</th>'+sel.map((s,i)=>`<th>#${i+1} ${escHtml(s.date||'')}</th>`).join('')+'</tr></thead><tbody>'+
+    rows.map(([name,key])=>`<tr><td>${name}</td>${sel.map(s=>`<td>${escHtml(s[key]||'—')}</td>`).join('')}</tr>`).join('')+
+    '</tbody>';
+  const bests=sel.map(s=>stats(s.laps||[]).best);
+  const avgs=sel.map(s=>stats(s.laps||[]).avg);
+  const valid=bests.map((v,i)=>[v,i]).filter(x=>Number.isFinite(x[0])).sort((a,b)=>a[0]-b[0]);
+  let html='<div class="kpis">'+sel.map((s,i)=>`<div class="kpi"><small>#${i+1} ${escHtml(s.date||'')}</small><b>${fmt(bests[i])}</b><small>平均 ${fmt(avgs[i])}</small></div>`).join('')+'</div>';
+  if(valid.length>=2){
+    const d=valid[1][0]-valid[0][0];
+    html+=`<p>最快的是 <b class="good">#${valid[0][1]+1}</b>，比第二快快 <b>${d.toFixed(3)} s</b>。</p>`;
+  }
+  compareSummary.innerHTML=html;
+}
+function drawLineChart(id,data){
+  const c=document.getElementById(id); if(!c)return; const ctx=c.getContext('2d');
+  const w=c.width,h=c.height; ctx.clearRect(0,0,w,h); ctx.fillStyle='#0e1218';ctx.fillRect(0,0,w,h);
+  if(!data.length){ctx.fillStyle='#7f8a98';ctx.font='14px sans-serif';ctx.fillText('尚無圈速資料',20,30);return;}
+  const pad=38,min=Math.min(...data),max=Math.max(...data),range=Math.max(.2,max-min);
+  ctx.strokeStyle='#2b3340';ctx.lineWidth=1;
+  for(let i=0;i<5;i++){let y=pad+(h-2*pad)*i/4;ctx.beginPath();ctx.moveTo(pad,y);ctx.lineTo(w-pad,y);ctx.stroke();}
+  ctx.strokeStyle='#6aa9ff';ctx.lineWidth=2;ctx.beginPath();
+  data.forEach((v,i)=>{let x=pad+(w-2*pad)*(data.length===1?.5:i/(data.length-1));let y=h-pad-(v-min)/range*(h-2*pad);if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y)});ctx.stroke();
+  ctx.fillStyle='#9aa6b2';ctx.font='12px sans-serif';ctx.fillText(max.toFixed(3)+'s',4,pad+4);ctx.fillText(min.toFixed(3)+'s',4,h-pad+4);
+}
+function drawMultiChart(id,sel){
+  const c=document.getElementById(id),ctx=c.getContext('2d'),w=c.width,h=c.height;ctx.clearRect(0,0,w,h);ctx.fillStyle='#0e1218';ctx.fillRect(0,0,w,h);
+  const all=sel.flatMap(s=>s.laps||[]); if(!all.length)return;
+  const pad=42,min=Math.min(...all),max=Math.max(...all),range=Math.max(.2,max-min),n=Math.max(...sel.map(s=>(s.laps||[]).length));
+  const colors=['#6aa9ff','#71d38a','#ffcf66','#ff7a7a','#c79cff'];
+  for(let j=0;j<sel.length;j++){
+    const data=sel[j].laps||[]; ctx.strokeStyle=colors[j];ctx.lineWidth=2;ctx.beginPath();
+    data.forEach((v,i)=>{let x=pad+(w-2*pad)*(n===1?.5:i/(n-1));let y=h-pad-(v-min)/range*(h-2*pad);if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y)});ctx.stroke();
+    ctx.fillStyle=colors[j];ctx.fillRect(pad+120*j,10,10,10);ctx.fillStyle='#dce7f6';ctx.fillText('#'+(j+1),pad+14+120*j,19);
+  }
+  ctx.fillStyle='#9aa6b2';ctx.fillText(max.toFixed(3)+'s',4,pad);ctx.fillText(min.toFixed(3)+'s',4,h-pad);
+}
+function exportJSON(){
+  const blob=new Blob([JSON.stringify({version:1,exportedAt:new Date().toISOString(),sessions},null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='touring-car-sessions.json';a.click();URL.revokeObjectURL(a.href);
+}
+jsonImport.addEventListener('change',async e=>{
+  const f=e.target.files[0]; if(!f)return;
+  try{
+    const o=JSON.parse(await f.text()); const arr=Array.isArray(o)?o:o.sessions;
+    if(!Array.isArray(arr))throw new Error();
+    if(confirm(`匯入 ${arr.length} 筆資料並覆蓋目前資料？`)){sessions=arr;localStorage.setItem(KEY,JSON.stringify(sessions));renderDashboard();}
+  }catch{alert('無法讀取這個 JSON 備份。')}
+  e.target.value='';
+});
+lapFile.addEventListener('change',async e=>{
+  const f=e.target.files[0];if(!f)return;lapText.value=await f.text();parseLapText();e.target.value='';
+});
+function escHtml(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+renderDashboard();
+</script>
+</body>
+</html>
