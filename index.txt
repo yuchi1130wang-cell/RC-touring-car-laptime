@@ -1,0 +1,61 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isGarageMember(garageId) {
+      return signedIn()
+        && exists(/databases/$(database)/documents/garages/$(garageId)/members/$(request.auth.uid));
+    }
+
+    function isGarageOwner(garageId) {
+      return signedIn()
+        && get(/databases/$(database)/documents/garages/$(garageId)).data.ownerUid == request.auth.uid;
+    }
+
+    // 每個人的個人資料、Garage 清單、設定歷史都只有本人能存取。
+    match /users/{userId} {
+      allow read, write: if signedIn() && request.auth.uid == userId;
+
+      match /{document=**} {
+        allow read, write: if signedIn() && request.auth.uid == userId;
+      }
+    }
+
+    match /garages/{garageId} {
+      // 建立者可新增 Garage。為了讓「持有 Garage 代碼的人」能加入，
+      // Garage 基本資料允許已登入使用者讀取；Session 本身仍只限成員。
+      allow create: if signedIn()
+                    && request.resource.data.ownerUid == request.auth.uid;
+      allow read: if signedIn();
+      allow update, delete: if isGarageOwner(garageId);
+
+      match /members/{memberId} {
+        allow read: if isGarageMember(garageId);
+        // 持有 Garage 代碼即視為受邀；使用者只能替自己建立會員資料。
+        allow create: if signedIn()
+                      && request.auth.uid == memberId
+                      && exists(/databases/$(database)/documents/garages/$(garageId));
+        allow update: if signedIn() && request.auth.uid == memberId;
+        allow delete: if signedIn()
+                      && (request.auth.uid == memberId || isGarageOwner(garageId));
+      }
+
+      match /sessions/{sessionId} {
+        allow read: if isGarageMember(garageId);
+        allow create: if isGarageMember(garageId)
+                      && request.resource.data.ownerUid == request.auth.uid;
+        // 共享 Garage 內大家都看得到，但只有建立者能改／刪自己的 Session。
+        allow update: if isGarageMember(garageId)
+                      && resource.data.ownerUid == request.auth.uid
+                      && request.resource.data.ownerUid == request.auth.uid;
+        allow delete: if isGarageMember(garageId)
+                      && resource.data.ownerUid == request.auth.uid;
+      }
+    }
+  }
+}
