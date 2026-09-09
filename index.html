@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>1/10 電房車設定・圈速紀錄</title>
+<title>1/10 電房車設定・圈速紀錄 V3</title>
 <style>
 :root{
   --bg:#0b0d10;--panel:#141820;--panel2:#1b202a;--text:#eef2f7;--muted:#9aa6b2;
@@ -57,6 +57,18 @@ canvas{width:100%;height:240px;background:#0e1218;border-radius:10px;border:1px 
 .good{color:var(--good)} .warn{color:var(--warn)} .bad{color:var(--bad)}
 hr{border:0;border-top:1px solid var(--line);margin:16px 0}
 footer{color:var(--muted);font-size:12px;text-align:center;padding:25px}
+
+.data-tools{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+@media(max-width:800px){.data-tools{grid-template-columns:1fr}}
+.manage-list{display:flex;flex-direction:column;gap:8px}
+.manage-item{display:flex;justify-content:space-between;gap:10px;align-items:center;background:var(--panel2);padding:10px;border-radius:10px}
+.manage-item .meta{min-width:0;font-size:13px}
+.manage-item .meta b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.change-list{margin:8px 0 0;padding-left:20px;font-size:13px}
+.change-list li{margin:5px 0}
+.stat5{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+@media(max-width:800px){.stat5{grid-template-columns:repeat(2,1fr)}}
+.pill{display:inline-block;padding:3px 7px;border-radius:999px;background:#243044;color:#cfe1ff;font-size:11px}
 </style>
 <meta name="theme-color" content="#0b0d10">
 
@@ -87,6 +99,7 @@ footer{color:var(--muted);font-size:12px;text-align:center;padding:25px}
       <button onclick="showView('dashboard')">總覽</button>
       <button onclick="newSession()" class="primary">＋ 新增練車紀錄</button>
       <button onclick="showView('compare')">比較</button>
+      <button onclick="showView('manage')">資料管理</button>
       <button onclick="exportJSON()">匯出備份</button>
       <label class="btn">匯入備份<input id="jsonImport" type="file" accept=".json" class="hidden"></label>
     </nav>
@@ -198,12 +211,14 @@ footer{color:var(--muted);font-size:12px;text-align:center;padding:25px}
         <label class="btn">上傳 CSV/TXT<input id="lapFile" type="file" accept=".csv,.txt" class="hidden"></label>
       </div>
       <hr>
-      <div class="kpis" style="grid-template-columns:repeat(2,1fr)">
+      <div class="stat5">
         <div class="kpi"><small>有效圈</small><b id="lapCount">0</b></div>
         <div class="kpi"><small>最佳圈</small><b id="lapBest">—</b></div>
-        <div class="kpi"><small>平均圈</small><b id="lapAvg">—</b></div>
+        <div class="kpi"><small>Best 3 Avg</small><b id="lapBest3">—</b></div>
+        <div class="kpi"><small>Best 5 Avg</small><b id="lapBest5">—</b></div>
         <div class="kpi"><small>一致性 σ</small><b id="lapStd">—</b></div>
       </div>
+      <div class="muted" style="font-size:12px;margin:8px 0">全段平均：<span id="lapAvg">—</span></div>
       <canvas id="lapChart" width="500" height="240"></canvas>
       <div style="display:flex;gap:8px;margin-top:12px">
         <button class="primary" onclick="saveSession()">儲存紀錄</button>
@@ -247,9 +262,36 @@ footer{color:var(--muted);font-size:12px;text-align:center;padding:25px}
     </div>
   </div>
 </section>
+
+<section id="manage" class="hidden">
+  <div class="grid">
+    <div class="card span-12">
+      <h2>資料管理</h2>
+      <div class="notice">只管理你自己的資料。共享 Garage 中朋友的 Session 與設定不會出現在這裡，也不會被你刪除。</div>
+    </div>
+    <div class="card span-6">
+      <h2>最近刪除的 Session</h2>
+      <div class="muted" style="font-size:12px;margin-bottom:10px">保留 30 天，可還原；超過 30 天的本人 Session 會在載入時清理。</div>
+      <div id="trashList" class="manage-list"></div>
+    </div>
+    <div class="card span-6">
+      <h2>我的設定歷史</h2>
+      <div class="muted" style="font-size:12px;margin-bottom:10px">這裡只包含你自己的 Setup。刪除後不會再出現在「設定來源」，但不會刪掉原 Session。</div>
+      <div id="setupManageList" class="manage-list"></div>
+    </div>
+    <div class="card span-6">
+      <h2>馬達歷史建議</h2>
+      <div id="motorManageList" class="manage-list"></div>
+    </div>
+    <div class="card span-6">
+      <h2>ESC 歷史建議</h2>
+      <div id="escManageList" class="manage-list"></div>
+    </div>
+  </div>
+</section>
 </main>
 
-<footer>Garage Session 由成員共享；「設定來源／歷史建議」只讀取目前登入者自己的紀錄。localStorage 僅作每個 Garage 的本機快取。</footer>
+<footer>Garage V3｜Session 共享；個人設定歷史與電裝建議仍依 Google UID 分開。Session 採 30 天最近刪除。</footer>
 
 
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
@@ -258,7 +300,7 @@ footer{color:var(--muted);font-size:12px;text-align:center;padding:25px}
 
 <script>
 const LEGACY_KEY='touring_sessions_v1';
-const CACHE_PREFIX='touring_garage_v2_';
+const CACHE_PREFIX='touring_garage_v3_';
 let sessions=[];
 let currentId=null;
 let currentLaps=[];
@@ -266,6 +308,8 @@ let currentGarageId=null;
 let currentGarage=null;
 let userGarages=[];
 let personalSetups=[];
+let hiddenMotorHistory=[];
+let hiddenEscHistory=[];
 
 // Firebase / Firestore
 const firebaseConfig = {
@@ -303,8 +347,11 @@ function garageRef(id=currentGarageId){ if(!id) throw new Error('尚未選擇 Ga
 function garageSessionsRef(){ return garageRef().collection('sessions'); }
 function userGarageRef(id){ if(!currentUser) throw new Error('尚未登入'); return db.collection('users').doc(currentUser.uid).collection('garages').doc(id); }
 function displayName(){ return currentUser?.displayName || currentUser?.email || '未命名車手'; }
-function mySessions(){ return currentUser ? sessions.filter(s=>s.ownerUid===currentUser.uid) : []; }
+function activeSessions(){ return sessions.filter(s=>!s.deletedAt); }
+function mySessions(){ return currentUser ? activeSessions().filter(s=>s.ownerUid===currentUser.uid) : []; }
+function myTrash(){ return currentUser ? sessions.filter(s=>s.ownerUid===currentUser.uid && s.deletedAt) : []; }
 function personalSetupsRef(){ if(!currentUser) throw new Error('尚未登入'); return db.collection('users').doc(currentUser.uid).collection('setups'); }
+function uiPrefsRef(){ if(!currentUser) throw new Error('尚未登入'); return db.collection('users').doc(currentUser.uid).collection('preferences').doc('ui'); }
 function setupSnapshot(obj){
   const out={id:String(obj.id),garageId:currentGarageId||obj.garageId||'',date:obj.date||'',track:obj.track||'',ownerUid:currentUser?.uid||obj.ownerUid||'',ownerName:displayName(),updatedAt:obj.updatedAt||new Date().toISOString()};
   carryFields.forEach(f=>out[f]=obj[f]??'');
@@ -317,6 +364,18 @@ async function loadPersonalSetups(){
   personalSetups.sort((a,b)=>((b.date||'').localeCompare(a.date||''))||((b.updatedAt||'').localeCompare(a.updatedAt||'')));
   refreshPersonalSuggestions();
 }
+async function loadUiPrefs(){
+  if(!currentUser){hiddenMotorHistory=[];hiddenEscHistory=[];return;}
+  const d=await uiPrefsRef().get();
+  const x=d.exists?d.data():{};
+  hiddenMotorHistory=Array.isArray(x.hiddenMotorHistory)?x.hiddenMotorHistory:[];
+  hiddenEscHistory=Array.isArray(x.hiddenEscHistory)?x.hiddenEscHistory:[];
+}
+async function saveUiPrefs(){
+  if(!currentUser)return;
+  await uiPrefsRef().set({hiddenMotorHistory,hiddenEscHistory,updatedAt:new Date().toISOString()},{merge:true});
+}
+
 function upsertPersonalSetupLocal(obj){
   if(!currentUser)return;
   const snap=setupSnapshot(obj);
@@ -404,19 +463,24 @@ async function uploadSessionToCloud(obj){
   upsertPersonalSetupLocal(obj);
   setSyncStatus('雲端：已同步',true);
 }
-async function deleteSessionFromCloud(id){
-  if(!currentUser||!currentGarageId) return;
-  setSyncStatus('雲端：同步中…');
-  await garageSessionsRef().doc(String(id)).delete();
-  await personalSetupsRef().doc(String(id)).delete().catch(()=>{});
-  personalSetups=personalSetups.filter(x=>String(x.id)!==String(id));
+async function softDeleteSessionFromCloud(id){
+  if(!currentUser||!currentGarageId)return;
+  setSyncStatus('雲端：移到最近刪除…');
+  await garageSessionsRef().doc(String(id)).set({deletedAt:new Date().toISOString(),updatedAt:new Date().toISOString()},{merge:true});
   setSyncStatus('雲端：已同步',true);
+}
+async function restoreSessionFromCloud(id){
+  await garageSessionsRef().doc(String(id)).update({deletedAt:firebase.firestore.FieldValue.delete(),updatedAt:new Date().toISOString()});
+}
+async function purgeSessionFromCloud(id){
+  await garageSessionsRef().doc(String(id)).delete();
 }
 async function loadGarageSessions(){
   if(!currentUser||!currentGarageId)return;
   setSyncStatus('雲端：讀取 Garage…');
   const snap=await garageSessionsRef().get();
   sessions=snap.docs.map(d=>({id:d.id,...d.data()}));
+  await purgeExpiredTrash();
   sortSessions(); cacheSessions(); cloudLoaded=true;
   setSyncStatus('雲端：已同步',true);
   renderDashboard(); refreshPersonalSuggestions();
@@ -445,6 +509,7 @@ async function migrateLegacyPrivateSessions(){
 async function bootstrapGarage(){
   await ensureUserProfile();
   await loadPersonalSetups();
+  await loadUiPrefs();
   const profile=await db.collection('users').doc(currentUser.uid).get();
   await listMyGarages();
   let preferred=profile.exists?profile.data().currentGarageId:null;
@@ -479,7 +544,7 @@ auth.onAuthStateChanged(async user=>{
     catch(err){console.error(err);setSyncStatus('雲端：連線失敗');alert('已登入 Google，但 Garage 初始化失敗。若剛更新到 Garage V2，通常需要同步更新 Firestore Rules。');}
   }else{
     btn.textContent='使用 Google 登入'; st.textContent='目前：僅本機模式';
-    currentGarageId=null;currentGarage=null;userGarages=[];personalSetups=[];sessions=[];cloudLoaded=false;
+    currentGarageId=null;currentGarage=null;userGarages=[];personalSetups=[];hiddenMotorHistory=[];hiddenEscHistory=[];sessions=[];cloudLoaded=false;
     const sel=document.getElementById('garageSelect');sel.innerHTML='<option>請先登入</option>';sel.disabled=true;
     document.getElementById('garageStatus').textContent='';
     setSyncStatus('雲端：未連線');renderDashboard();refreshPersonalSuggestions();
@@ -491,13 +556,17 @@ const fields=['date' ,'track','car','className','motor','esc','pinion','spur','i
 
 const carryFields=['track','car','className','motor','esc','pinion','spur','internalRatio','fdr','tires','additive','warmerTemp','warmerMin','rideF','rideR','downF','downR','toeF','toeR','camberF','camberR','shockF','shockR','diffOil','arb'];
 function refreshPersonalSuggestions(){
-  const mine=personalSetups;
+  const mine=personalSetups.filter(s=>!s.deletedAt);
   const unique=(key)=>[...new Set(mine.map(s=>(s[key]||'').trim()).filter(Boolean))];
+  const motors=unique('motor').filter(v=>!hiddenMotorHistory.includes(v));
+  const escs=unique('esc').filter(v=>!hiddenEscHistory.includes(v));
   const md=document.getElementById('motorHistory'), ed=document.getElementById('escHistory');
-  if(md)md.innerHTML=unique('motor').map(v=>`<option value="${escHtml(v)}"></option>`).join('');
-  if(ed)ed.innerHTML=unique('esc').map(v=>`<option value="${escHtml(v)}"></option>`).join('');
-  const ss=document.getElementById('setupSource'); if(!ss)return;
-  ss.innerHTML='<option value="latest">上一次我的設定（自動）</option><option value="blank">空白設定</option>'+mine.map(s=>`<option value="${escHtml(String(s.id))}">${escHtml(s.date||'無日期')}｜${escHtml(s.car||'未填車型')}｜${escHtml(s.track||'未填場地')}</option>`).join('');
+  if(md)md.innerHTML=motors.map(v=>`<option value="${escHtml(v)}"></option>`).join('');
+  if(ed)ed.innerHTML=escs.map(v=>`<option value="${escHtml(v)}"></option>`).join('');
+  const ss=document.getElementById('setupSource'); if(ss){
+    ss.innerHTML='<option value="latest">上一次我的設定（自動）</option><option value="blank">空白設定</option>'+mine.map(s=>`<option value="${escHtml(String(s.id))}">${escHtml(s.date||'無日期')}｜${escHtml(s.car||'未填車型')}｜${escHtml(s.track||'未填場地')}</option>`).join('');
+  }
+  renderManage();
 }
 function copySetupFromSession(s){
   if(!s)return;
@@ -510,25 +579,28 @@ function applySelectedSetup(){
     carryFields.forEach(f=>document.getElementById(f).value='');
     car.value='Xpress XQ3S';internalRatio.value='1.90';return;
   }
-  const mine=personalSetups;
+  const mine=personalSetups.filter(s=>!s.deletedAt);
   const s=val==='latest'?mine[0]:mine.find(x=>String(x.id)===String(val));
   if(!s){alert('目前還沒有你自己的歷史設定。');return;}
   copySetupFromSession(s);
 }
 function showView(name){
-  ['dashboard','editor','detail','compare'].forEach(id=>document.getElementById(id).classList.toggle('hidden',id!==name));
+  ['dashboard','editor','detail','compare','manage'].forEach(id=>document.getElementById(id).classList.toggle('hidden',id!==name));
   if(name==='dashboard') renderDashboard();
   if(name==='compare') renderCompareSelector();
+  if(name==='manage') renderManage();
 }
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
 function num(v){let n=parseFloat(v);return Number.isFinite(n)?n:null}
 function fmt(t){return Number.isFinite(t)?t.toFixed(3)+' s':'—'}
 function stats(laps){
-  if(!laps.length) return {best:null,avg:null,std:null};
+  if(!laps.length) return {best:null,avg:null,std:null,best3:null,best5:null};
   const avg=laps.reduce((a,b)=>a+b,0)/laps.length;
   const best=Math.min(...laps);
   const std=Math.sqrt(laps.reduce((a,b)=>a+(b-avg)**2,0)/laps.length);
-  return {best,avg,std};
+  const sorted=[...laps].sort((a,b)=>a-b);
+  const topAvg=n=>sorted.length>=n?sorted.slice(0,n).reduce((a,b)=>a+b,0)/n:null;
+  return {best,avg,std,best3:topAvg(3),best5:topAvg(5)};
 }
 function parseTimeToken(s){
   s=String(s).trim();
@@ -562,6 +634,8 @@ function updateLapStats(){
   const s=stats(currentLaps);
   lapCount.textContent=currentLaps.length;
   lapBest.textContent=fmt(s.best);
+  lapBest3.textContent=fmt(s.best3);
+  lapBest5.textContent=fmt(s.best5);
   lapAvg.textContent=fmt(s.avg);
   lapStd.textContent=s.std===null?'—':s.std.toFixed(3);
   drawLineChart('lapChart',currentLaps,'圈數','秒');
@@ -573,7 +647,7 @@ function newSession(){
   car.value='Xpress XQ3S'; internalRatio.value='1.90';
   date.value=new Date().toISOString().slice(0,10);
   lapText.value=''; updateLapStats(); refreshPersonalSuggestions();
-  const latest=personalSetups[0];
+  const latest=personalSetups.find(s=>!s.deletedAt);
   if(latest) copySetupFromSession(latest);
   document.getElementById('setupSource').value=latest?'latest':'blank';
   showView('editor');
@@ -598,14 +672,15 @@ async function saveSession(){
   showView('dashboard');
 }
 function renderDashboard(){
-  let totalLaps=sessions.reduce((n,s)=>n+(s.laps?.length||0),0);
-  let all=sessions.flatMap(s=>s.laps||[]);
-  let last=sessions[0];
-  kSessions.textContent=sessions.length;
+  const visible=activeSessions();
+  let totalLaps=visible.reduce((n,s)=>n+(s.laps?.length||0),0);
+  let all=visible.flatMap(s=>s.laps||[]);
+  let last=visible[0];
+  kSessions.textContent=visible.length;
   kLaps.textContent=totalLaps;
   kBest.textContent=fmt(all.length?Math.min(...all):null);
   kAvg.textContent=fmt(last?stats(last.laps||[]).avg:null);
-  sessionRows.innerHTML=sessions.length?sessions.map(s=>{
+  sessionRows.innerHTML=visible.length?visible.map(s=>{
     const st=stats(s.laps||[]);
     return `<tr>
       <td>${escHtml(s.date||'—')}</td>
@@ -617,7 +692,7 @@ function renderDashboard(){
       <td class="good">${fmt(st.best)}</td>
       <td>${fmt(st.avg)}</td>
       <td>${(s.laps||[]).length}</td>
-      <td><div class="row-actions"><button onclick="openDetail('${s.id}')">查看</button>${s.ownerUid===currentUser?.uid?`<button onclick="editSession('${s.id}')">編輯</button>`:''}</div></td>
+      <td><div class="row-actions"><button onclick="openDetail('${s.id}')">查看</button><button onclick="duplicateSession('${s.id}')">複製</button>${s.ownerUid===currentUser?.uid?`<button onclick="editSession('${s.id}')">編輯</button>`:''}</div></td>
     </tr>`;
   }).join(''):`<tr><td colspan="10" class="muted">還沒有紀錄。先新增第一個練車 Session。</td></tr>`;
 }
@@ -627,7 +702,7 @@ function openDetail(id){
   detailTitle.textContent=`${s.date||''} ${s.track||''} — ${s.car||''}`;
   const own=s.ownerUid===currentUser?.uid;
   const detailButtons=document.querySelector('#detail .row-actions');
-  if(detailButtons) detailButtons.innerHTML=`${own?'<button onclick="editCurrent()">編輯</button><button class="danger" onclick="deleteCurrent()">刪除</button>':''}<button onclick="showView(\'dashboard\')">返回</button>`;
+  if(detailButtons) detailButtons.innerHTML=`<button onclick="duplicateSession('${s.id}')">複製成我的新紀錄</button>${own?'<button onclick="editCurrent()">編輯</button><button class="danger" onclick="deleteCurrent()">刪除</button>':''}<button onclick="showView(\'dashboard\')">返回</button>`;
   const pairs=[
     ['車手',s.ownerName||'舊資料'],['組別',s.className],['馬達',s.motor],['ESC',s.esc],['FDR',s.fdr],
     ['輪胎',s.tires],['胎膠',s.additive],['暖胎',`${s.warmerTemp||'—'}°C / ${s.warmerMin||'—'} min`],
@@ -636,12 +711,14 @@ function openDetail(id){
     ['避震油',`F ${s.shockF||'—'} / R ${s.shockR||'—'} cSt`],['差速油',s.diffOil?`${s.diffOil} cSt`:'—'],['防傾桿',s.arb],
   ];
   detailBody.innerHTML=`
-    <div class="kpis" style="margin:12px 0 16px">
+    <div class="stat5" style="margin:12px 0 16px">
       <div class="kpi"><small>最佳圈</small><b class="good">${fmt(st.best)}</b></div>
+      <div class="kpi"><small>Best 3 Avg</small><b>${fmt(st.best3)}</b></div>
+      <div class="kpi"><small>Best 5 Avg</small><b>${fmt(st.best5)}</b></div>
       <div class="kpi"><small>平均圈</small><b>${fmt(st.avg)}</b></div>
       <div class="kpi"><small>一致性 σ</small><b>${st.std===null?'—':st.std.toFixed(3)}</b></div>
-      <div class="kpi"><small>圈數</small><b>${(s.laps||[]).length}</b></div>
     </div>
+    ${renderSetupChanges(s)}
     <div class="formgrid">${pairs.map(([a,b])=>`<div><label>${a}</label><div>${escHtml(b||'—')}</div></div>`).join('')}
       <div class="full"><label>備註</label><div style="white-space:pre-wrap">${escHtml(s.notes||'—')}</div></div>
     </div>
@@ -664,21 +741,94 @@ function editSession(id){
 async function deleteCurrent(){
   const target=sessions.find(x=>String(x.id)===String(currentId));
   if(target?.ownerUid && target.ownerUid!==currentUser?.uid){alert('只能刪除你自己建立的紀錄。');return;}
-  if(!confirm('確定刪除這筆紀錄？')) return;
-  const deletingId=currentId;
-  sessions=sessions.filter(x=>x.id!==deletingId);
-  cacheSessions();
-  try{
-    await deleteSessionFromCloud(deletingId);
-  }catch(err){
-    console.error(err);
-    setSyncStatus('雲端：刪除同步失敗');
-    alert('這台裝置已刪除，但雲端刪除失敗；重新登入後可能會再次出現。');
-  }
-  currentId=null; showView('dashboard');
+  if(!confirm('把這筆紀錄移到「最近刪除」？30 天內可以還原。')) return;
+  const now=new Date().toISOString(); target.deletedAt=now; target.updatedAt=now; cacheSessions();
+  try{await softDeleteSessionFromCloud(currentId)}catch(err){console.error(err);setSyncStatus('雲端：刪除同步失敗');alert('移到最近刪除失敗，請稍後重試。');target.deletedAt='';}
+  currentId=null; renderDashboard(); showView('dashboard');
+}
+function duplicateSession(id){
+  if(!currentUser){alert('請先登入。');return;}
+  const src=sessions.find(s=>String(s.id)===String(id)); if(!src)return;
+  currentId=null; currentLaps=[];
+  fields.forEach(f=>document.getElementById(f).value='');
+  copySetupFromSession(src);
+  date.value=new Date().toISOString().slice(0,10);
+  notes.value=''; lapText.value=''; updateLapStats();
+  editorTitle.textContent=`複製設定 → 我的新紀錄（來源：${src.ownerName||'車手'}）`;
+  showView('editor');
+}
+const setupCompareFields=[
+  ['馬達','motor'],['ESC','esc'],['Pinion','pinion'],['Spur','spur'],['FDR','fdr'],['輪胎','tires'],['胎膠','additive'],
+  ['暖胎溫度','warmerTemp'],['暖胎時間','warmerMin'],['車高 F','rideF'],['車高 R','rideR'],['Downstop F','downF'],['Downstop R','downR'],
+  ['Toe F','toeF'],['Toe R','toeR'],['Camber F','camberF'],['Camber R','camberR'],['避震油 F','shockF'],['避震油 R','shockR'],['差速油','diffOil'],['防傾桿','arb']
+];
+function previousOwnSession(s){
+  if(!s?.ownerUid)return null;
+  const mine=activeSessions().filter(x=>x.ownerUid===s.ownerUid && String(x.id)!==String(s.id) && (!s.car || x.car===s.car));
+  const curKey=(s.date||'')+'|'+(s.createdAt||'');
+  return mine.filter(x=>((x.date||'')+'|'+(x.createdAt||''))<curKey).sort((a,b)=>(((b.date||'')+'|'+(b.createdAt||'')).localeCompare((a.date||'')+'|'+(a.createdAt||''))))[0]||null;
+}
+function renderSetupChanges(s){
+  const prev=previousOwnSession(s);
+  if(!prev)return '<div class="notice">這是此車手目前可比對到的第一筆同車型紀錄。</div>';
+  const changes=setupCompareFields.filter(([n,k])=>String(prev[k]??'')!==String(s[k]??''));
+  if(!changes.length)return `<div class="notice">相較上一筆同車型紀錄（${escHtml(prev.date||'無日期')}）：設定沒有變更。</div>`;
+  return `<div class="notice"><b>相較上一筆同車型紀錄（${escHtml(prev.date||'無日期')}）</b><ul class="change-list">${changes.map(([n,k])=>`<li>${escHtml(n)}：${escHtml(prev[k]||'—')} → <b>${escHtml(s[k]||'—')}</b></li>`).join('')}</ul></div>`;
+}
+async function restoreTrash(id){
+  const s=sessions.find(x=>String(x.id)===String(id)); if(!s||s.ownerUid!==currentUser?.uid)return;
+  try{await restoreSessionFromCloud(id); delete s.deletedAt; s.updatedAt=new Date().toISOString();cacheSessions();renderDashboard();renderManage();}
+  catch(e){console.error(e);alert('還原失敗：'+(e.message||e));}
+}
+async function purgeTrash(id){
+  const s=sessions.find(x=>String(x.id)===String(id)); if(!s||s.ownerUid!==currentUser?.uid)return;
+  if(!confirm('永久刪除這筆 Session？這次無法還原。'))return;
+  try{await purgeSessionFromCloud(id);sessions=sessions.filter(x=>String(x.id)!==String(id));cacheSessions();renderManage();renderDashboard();}
+  catch(e){console.error(e);alert('永久刪除失敗：'+(e.message||e));}
+}
+async function purgeExpiredTrash(){
+  if(!currentUser||!currentGarageId)return;
+  const cutoff=Date.now()-30*24*60*60*1000;
+  const expired=sessions.filter(s=>s.ownerUid===currentUser.uid && s.deletedAt && new Date(s.deletedAt).getTime()<cutoff);
+  if(!expired.length)return;
+  await Promise.all(expired.map(s=>purgeSessionFromCloud(s.id).catch(()=>{})));
+  const ids=new Set(expired.map(s=>String(s.id))); sessions=sessions.filter(s=>!ids.has(String(s.id)));
+}
+async function deletePersonalSetup(id){
+  const s=personalSetups.find(x=>String(x.id)===String(id)); if(!s)return;
+  if(!confirm('從「我的設定歷史」移除這筆 Setup？原本的 Session 不會被刪除。'))return;
+  const t=new Date().toISOString();
+  try{await personalSetupsRef().doc(String(id)).set({deletedAt:t,updatedAt:t},{merge:true});s.deletedAt=t;refreshPersonalSuggestions();}
+  catch(e){console.error(e);alert('設定歷史刪除失敗：'+(e.message||e));}
+}
+async function restorePersonalSetup(id){
+  const s=personalSetups.find(x=>String(x.id)===String(id)); if(!s)return;
+  try{await personalSetupsRef().doc(String(id)).update({deletedAt:firebase.firestore.FieldValue.delete(),updatedAt:new Date().toISOString()});delete s.deletedAt;refreshPersonalSuggestions();}
+  catch(e){console.error(e);alert('還原失敗：'+(e.message||e));}
+}
+async function hideHistory(type,value){
+  if(type==='motor'&&!hiddenMotorHistory.includes(value))hiddenMotorHistory.push(value);
+  if(type==='esc'&&!hiddenEscHistory.includes(value))hiddenEscHistory.push(value);
+  try{await saveUiPrefs();refreshPersonalSuggestions();}catch(e){console.error(e);alert('歷史項目整理失敗。');}
+}
+async function unhideHistory(type,value){
+  if(type==='motor')hiddenMotorHistory=hiddenMotorHistory.filter(x=>x!==value);
+  if(type==='esc')hiddenEscHistory=hiddenEscHistory.filter(x=>x!==value);
+  try{await saveUiPrefs();refreshPersonalSuggestions();}catch(e){console.error(e);}
+}
+function renderManage(){
+  const trash=document.getElementById('trashList'); if(!trash)return;
+  const t=myTrash().sort((a,b)=>(b.deletedAt||'').localeCompare(a.deletedAt||''));
+  trash.innerHTML=t.length?t.map(s=>`<div class="manage-item"><div class="meta"><b>${escHtml(s.date||'無日期')}｜${escHtml(s.car||'未填車型')}</b><span class="muted">${escHtml(s.track||'')}｜刪除於 ${escHtml((s.deletedAt||'').slice(0,10))}</span></div><div class="row-actions"><button onclick="restoreTrash('${s.id}')">還原</button><button class="danger" onclick="purgeTrash('${s.id}')">永久刪除</button></div></div>`).join(''):'<span class="muted">最近刪除是空的。</span>';
+  const activeSetups=personalSetups.filter(s=>!s.deletedAt), deletedSetups=personalSetups.filter(s=>s.deletedAt);
+  setupManageList.innerHTML=(activeSetups.map(s=>`<div class="manage-item"><div class="meta"><b>${escHtml(s.date||'無日期')}｜${escHtml(s.car||'未填車型')}</b><span class="muted">${escHtml(s.track||'')}｜${escHtml(s.motor||'')}</span></div><button class="danger" onclick="deletePersonalSetup('${s.id}')">移除</button></div>`).join('')||'<span class="muted">沒有設定歷史。</span>')+(deletedSetups.length?`<hr><div class="muted" style="font-size:12px">已移除</div>${deletedSetups.map(s=>`<div class="manage-item"><div class="meta"><b>${escHtml(s.date||'無日期')}｜${escHtml(s.car||'未填車型')}</b></div><button onclick="restorePersonalSetup('${s.id}')">還原</button></div>`).join('')}`:'');
+  const uniq=k=>[...new Set(activeSetups.map(s=>(s[k]||'').trim()).filter(Boolean))];
+  const motors=uniq('motor'), escs=uniq('esc');
+  motorManageList.innerHTML=(motors.map(v=>`<div class="manage-item"><div class="meta"><b>${escHtml(v)}</b></div>${hiddenMotorHistory.includes(v)?`<button onclick='unhideHistory("motor",${JSON.stringify(v)})'>恢復建議</button>`:`<button class="danger" onclick='hideHistory("motor",${JSON.stringify(v)})'>從建議移除</button>`}</div>`).join('')||'<span class="muted">尚無馬達歷史。</span>');
+  escManageList.innerHTML=(escs.map(v=>`<div class="manage-item"><div class="meta"><b>${escHtml(v)}</b></div>${hiddenEscHistory.includes(v)?`<button onclick='unhideHistory("esc",${JSON.stringify(v)})'>恢復建議</button>`:`<button class="danger" onclick='hideHistory("esc",${JSON.stringify(v)})'>從建議移除</button>`}</div>`).join('')||'<span class="muted">尚無 ESC 歷史。</span>');
 }
 function renderCompareSelector(){
-  compareSelect.innerHTML=sessions.map(s=>`<label class="check"><input type="checkbox" value="${s.id}"> ${escHtml(s.date||'')}｜${escHtml(s.ownerName||'舊資料')}｜${escHtml(s.track||'')}｜${escHtml(s.car||'')}</label>`).join('');
+  compareSelect.innerHTML=activeSessions().map(s=>`<label class="check"><input type="checkbox" value="${s.id}"> ${escHtml(s.date||'')}｜${escHtml(s.ownerName||'舊資料')}｜${escHtml(s.track||'')}｜${escHtml(s.car||'')}</label>`).join('');
   drawLineChart('compareChart',[],'','');
   compareTable.innerHTML='';
   compareSummary.innerHTML='<span class="muted">選 2～5 筆紀錄比較。</span>';
@@ -699,7 +849,7 @@ function renderComparison(){
   const bests=sel.map(s=>stats(s.laps||[]).best);
   const avgs=sel.map(s=>stats(s.laps||[]).avg);
   const valid=bests.map((v,i)=>[v,i]).filter(x=>Number.isFinite(x[0])).sort((a,b)=>a[0]-b[0]);
-  let html='<div class="kpis">'+sel.map((s,i)=>`<div class="kpi"><small>#${i+1} ${escHtml(s.date||'')}</small><b>${fmt(bests[i])}</b><small>平均 ${fmt(avgs[i])}</small></div>`).join('')+'</div>';
+  let html='<div class="kpis">'+sel.map((s,i)=>`<div class="kpi"><small>#${i+1} ${escHtml(s.date||'')}</small><b>${fmt(bests[i])}</b><small>Best3 ${fmt(stats(sel[i].laps||[]).best3)}｜Best5 ${fmt(stats(sel[i].laps||[]).best5)}｜平均 ${fmt(avgs[i])}</small></div>`).join('')+'</div>';
   if(valid.length>=2){
     const d=valid[1][0]-valid[0][0];
     html+=`<p>最快的是 <b class="good">#${valid[0][1]+1}</b>，比第二快快 <b>${d.toFixed(3)} s</b>。</p>`;
@@ -731,7 +881,7 @@ function drawMultiChart(id,sel){
 }
 function exportJSON(){
   const mine=mySessions();
-  const blob=new Blob([JSON.stringify({version:2,garageId:currentGarageId,exportedAt:new Date().toISOString(),ownerUid:currentUser?.uid||null,sessions:mine},null,2)],{type:'application/json'});
+  const blob=new Blob([JSON.stringify({version:3,garageId:currentGarageId,exportedAt:new Date().toISOString(),ownerUid:currentUser?.uid||null,sessions:mine},null,2)],{type:'application/json'});
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='my-touring-car-sessions.json';a.click();URL.revokeObjectURL(a.href);
 }
 jsonImport.addEventListener('change',async e=>{
