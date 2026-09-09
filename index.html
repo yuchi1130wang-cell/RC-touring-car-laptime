@@ -59,6 +59,18 @@ hr{border:0;border-top:1px solid var(--line);margin:16px 0}
 footer{color:var(--muted);font-size:12px;text-align:center;padding:25px}
 </style>
 <meta name="theme-color" content="#0b0d10">
+
+<style>
+.authbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px}
+.authstatus{font-size:12px;color:var(--muted)}
+.cloudok{color:var(--good)}
+.cloudoff{color:var(--warn)}
+@media(max-width:700px){
+  input,select,textarea{font-size:16px}
+  button,.btn{min-height:44px}
+}
+</style>
+
 </head>
 <body>
 <header>
@@ -72,6 +84,11 @@ footer{color:var(--muted);font-size:12px;text-align:center;padding:25px}
       <button onclick="exportJSON()">匯出備份</button>
       <label class="btn">匯入備份<input id="jsonImport" type="file" accept=".json" class="hidden"></label>
     </nav>
+    <div class="authbar">
+      <button id="authBtn" onclick="toggleGoogleAuth()">使用 Google 登入</button>
+      <span id="authStatus" class="authstatus">目前：僅本機模式</span>
+      <span id="syncStatus" class="authstatus cloudoff">雲端：未連線</span>
+    </div>
   </div>
 </header>
 
@@ -209,13 +226,147 @@ footer{color:var(--muted);font-size:12px;text-align:center;padding:25px}
 </section>
 </main>
 
-<footer>資料儲存在此瀏覽器的 localStorage。更換裝置或清除瀏覽資料前，請先匯出 JSON 備份。</footer>
+<footer>Firestore 為主要雲端資料庫；localStorage 保留作為本機快取與離線備援。仍建議偶爾匯出 JSON 備份。</footer>
+
+
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
 
 <script>
 const KEY='touring_sessions_v1';
 let sessions = JSON.parse(localStorage.getItem(KEY)||'[]');
 let currentId=null;
 let currentLaps=[];
+
+// Firebase / Firestore
+const firebaseConfig = {
+  apiKey: "AIzaSyC_AMULpvU_KFLrRKE5fIa1EsIkIPMjB3U",
+  authDomain: "rc-touring-car-laptime.firebaseapp.com",
+  projectId: "rc-touring-car-laptime",
+  storageBucket: "rc-touring-car-laptime.firebasestorage.app",
+  messagingSenderId: "679068305899",
+  appId: "1:679068305899:web:727545dfd816ca60f0b1ae",
+  measurementId: "G-N7Z6Q5Z79M"
+};
+
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+const googleProvider = new firebase.auth.GoogleAuthProvider();
+let currentUser = null;
+let cloudLoaded = false;
+
+function setSyncStatus(text, ok=false){
+  const el=document.getElementById('syncStatus');
+  if(!el)return;
+  el.textContent=text;
+  el.className='authstatus '+(ok?'cloudok':'cloudoff');
+}
+function cacheSessions(){
+  localStorage.setItem(KEY,JSON.stringify(sessions));
+}
+function sortSessions(){
+  sessions.sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+}
+function userSessionsRef(){
+  if(!currentUser) throw new Error('尚未登入');
+  return db.collection('users').doc(currentUser.uid).collection('sessions');
+}
+
+async function uploadSessionToCloud(obj){
+  if(!currentUser) return;
+  setSyncStatus('雲端：同步中…');
+  await userSessionsRef().doc(String(obj.id)).set(obj);
+  setSyncStatus('雲端：已同步',true);
+}
+async function deleteSessionFromCloud(id){
+  if(!currentUser) return;
+  setSyncStatus('雲端：同步中…');
+  await userSessionsRef().doc(String(id)).delete();
+  setSyncStatus('雲端：已同步',true);
+}
+async function loadAndMergeCloud(){
+  if(!currentUser) return;
+  setSyncStatus('雲端：讀取中…');
+  const local = Array.isArray(sessions) ? [...sessions] : [];
+  const snap = await userSessionsRef().get();
+  const cloud = snap.docs.map(d=>({id:d.id,...d.data()}));
+
+  // 以 id 合併；同一 id 若雲端已存在，以雲端版本為準。
+  const merged = new Map();
+  local.forEach(x=>x && x.id!=null && merged.set(String(x.id),x));
+  cloud.forEach(x=>x && x.id!=null && merged.set(String(x.id),x));
+  sessions=[...merged.values()];
+  sortSessions();
+  cacheSessions();
+
+  // 把只存在本機的舊紀錄補上雲端，達成第一次登入自動遷移。
+  const cloudIds=new Set(cloud.map(x=>String(x.id)));
+  const missing=local.filter(x=>x && x.id!=null && !cloudIds.has(String(x.id)));
+  if(missing.length){
+    setSyncStatus(`雲端：搬移 ${missing.length} 筆舊資料…`);
+    await Promise.all(missing.map(x=>userSessionsRef().doc(String(x.id)).set(x)));
+  }
+  cloudLoaded=true;
+  setSyncStatus('雲端：已同步',true);
+  renderDashboard();
+}
+
+async function replaceCloudWithSessions(){
+  if(!currentUser) return;
+  setSyncStatus('雲端：匯入同步中…');
+  const ref=userSessionsRef();
+  const snap=await ref.get();
+  const ops=[];
+  snap.docs.forEach(d=>ops.push(d.ref.delete()));
+  sessions.forEach(s=>ops.push(ref.doc(String(s.id)).set(s)));
+  await Promise.all(ops);
+  setSyncStatus('雲端：已同步',true);
+}
+
+async function toggleGoogleAuth(){
+  try{
+    if(currentUser){
+      await auth.signOut();
+      return;
+    }
+    await auth.signInWithPopup(googleProvider);
+  }catch(err){
+    console.error(err);
+    // iPhone/Safari 若封鎖 popup，改走整頁重新導向。
+    if(['auth/popup-blocked','auth/cancelled-popup-request','auth/operation-not-supported-in-this-environment'].includes(err.code)){
+      await auth.signInWithRedirect(googleProvider);
+    }else{
+      alert('Google 登入失敗：'+(err.message||err.code||err));
+    }
+  }
+}
+
+auth.getRedirectResult().catch(err=>console.error('redirect auth',err));
+auth.onAuthStateChanged(async user=>{
+  currentUser=user||null;
+  const btn=document.getElementById('authBtn');
+  const st=document.getElementById('authStatus');
+  if(user){
+    btn.textContent='登出 Google';
+    st.textContent=`已登入：${user.displayName || user.email || 'Google 帳號'}`;
+    try{ await loadAndMergeCloud(); }
+    catch(err){
+      console.error(err);
+      setSyncStatus('雲端：連線失敗');
+      alert('已登入 Google，但 Firestore 同步失敗。請檢查 Authorized domains 與 Firestore Rules。');
+    }
+  }else{
+    btn.textContent='使用 Google 登入';
+    st.textContent='目前：僅本機模式';
+    cloudLoaded=false;
+    setSyncStatus('雲端：未連線');
+    sessions=JSON.parse(localStorage.getItem(KEY)||'[]');
+    sortSessions();
+    renderDashboard();
+  }
+});
 
 const fields=['date','track','car','className','motor','esc','pinion','spur','internalRatio','fdr','tires','additive','warmerTemp','warmerMin','rideF','rideR','downF','downR','toeF','toeR','camberF','camberR','shockF','shockR','diffOil','arb','notes'];
 
@@ -286,14 +437,21 @@ function calcFDR(){
 }
 pinion.addEventListener('input',calcFDR); spur.addEventListener('input',calcFDR); internalRatio.addEventListener('input',calcFDR);
 
-function saveSession(){
+async function saveSession(){
   const obj={id:currentId||uid(),createdAt:new Date().toISOString(),laps:[...currentLaps]};
   fields.forEach(f=>obj[f]=document.getElementById(f).value);
   const idx=sessions.findIndex(x=>x.id===obj.id);
   if(idx>=0) sessions[idx]=obj; else sessions.push(obj);
-  sessions.sort((a,b)=>(b.date||'').localeCompare(a.date||''));
-  localStorage.setItem(KEY,JSON.stringify(sessions));
+  sortSessions();
+  cacheSessions();
   currentId=obj.id;
+  try{
+    await uploadSessionToCloud(obj);
+  }catch(err){
+    console.error(err);
+    setSyncStatus('雲端：同步失敗');
+    alert('紀錄已保存在這台裝置，但雲端同步失敗。');
+  }
   showView('dashboard');
 }
 function renderDashboard(){
@@ -355,10 +513,18 @@ function editSession(id){
   updateLapStats();
   showView('editor');
 }
-function deleteCurrent(){
+async function deleteCurrent(){
   if(!confirm('確定刪除這筆紀錄？')) return;
-  sessions=sessions.filter(x=>x.id!==currentId);
-  localStorage.setItem(KEY,JSON.stringify(sessions));
+  const deletingId=currentId;
+  sessions=sessions.filter(x=>x.id!==deletingId);
+  cacheSessions();
+  try{
+    await deleteSessionFromCloud(deletingId);
+  }catch(err){
+    console.error(err);
+    setSyncStatus('雲端：刪除同步失敗');
+    alert('這台裝置已刪除，但雲端刪除失敗；重新登入後可能會再次出現。');
+  }
   currentId=null; showView('dashboard');
 }
 function renderCompareSelector(){
@@ -422,7 +588,16 @@ jsonImport.addEventListener('change',async e=>{
   try{
     const o=JSON.parse(await f.text()); const arr=Array.isArray(o)?o:o.sessions;
     if(!Array.isArray(arr))throw new Error();
-    if(confirm(`匯入 ${arr.length} 筆資料並覆蓋目前資料？`)){sessions=arr;localStorage.setItem(KEY,JSON.stringify(sessions));renderDashboard();}
+    if(confirm(`匯入 ${arr.length} 筆資料並覆蓋目前資料？`)){
+      sessions=arr;
+      sortSessions();
+      cacheSessions();
+      if(currentUser){
+        try{await replaceCloudWithSessions();}
+        catch(err){console.error(err);setSyncStatus('雲端：匯入同步失敗');alert('本機已匯入，但雲端同步失敗。');}
+      }
+      renderDashboard();
+    }
   }catch{alert('無法讀取這個 JSON 備份。')}
   e.target.value='';
 });
