@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>RC On-road 設定・圈速紀錄 V4</title>
+<title>RC On-road 設定・圈速紀錄 V4.2</title>
 <style>
 :root{
   --bg:#0b0d10;--panel:#141820;--panel2:#1b202a;--text:#eef2f7;--muted:#9aa6b2;
@@ -171,7 +171,7 @@ details.advanced summary{cursor:pointer;font-weight:700;color:#dce7f6}
 <header>
   <div class="wrap">
     <h1>RC On-road 設定・圈速紀錄</h1>
-    <div class="sub compact-version"><span class="tag">V4</span></div>
+    <div class="sub compact-version"><span class="tag">V4.2</span></div>
     <nav>
       <button onclick="showView('dashboard')">總覽</button>
       <button onclick="newSession()" class="primary">＋ 新增</button>
@@ -532,8 +532,29 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 const googleProvider = new firebase.auth.GoogleAuthProvider();
+googleProvider.setCustomParameters({prompt:'select_account'});
 let currentUser = null;
 let cloudLoaded = false;
+let authPersistenceReady = auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(err=>{
+  console.warn('Auth LOCAL persistence unavailable', err);
+});
+
+function isInAppBrowser(){
+  const ua=navigator.userAgent||'';
+  return /FBAN|FBAV|Instagram|Line\/|MicroMessenger|; wv\)|\bwv\b|WebView/i.test(ua);
+}
+
+// 某些行動瀏覽器從歷史紀錄 / BFCache 還原頁面時會連舊的 Auth 暫存狀態一起恢復。
+// 重新載入一次，讓 Firebase Auth 從 LOCAL persistence 重新初始化。
+window.addEventListener('pageshow',event=>{
+  if(event.persisted){
+    location.reload();
+  }
+});
+
+window.addEventListener('load',()=>{
+  if(isInAppBrowser()) openAuthHelp('你目前可能是在 App 內建瀏覽器中開啟。這類瀏覽器常會限制 Google 登入與網站儲存空間。請複製網址後，用 Chrome、Safari、Firefox 或 Edge 的完整瀏覽器開啟。');
+});
 
 function setSyncStatus(text, ok=false){
   const el=document.getElementById('syncStatus');
@@ -746,7 +767,13 @@ async function copyCurrentUrl(){
 async function toggleGoogleAuth(){
   try{
     if(currentUser){await auth.signOut();return;}
-    // V4 Auth Fix：只使用 Popup，不再 fallback 到 Redirect。
+    if(isInAppBrowser()){
+      openAuthHelp('目前是在 App 內建瀏覽器或 WebView 中。為避免 Google 登入失敗，請複製網址後改用 Chrome、Safari、Firefox 或 Edge 開啟。');
+      return;
+    }
+    // V4.2 Auth Fix：先確保 LOCAL persistence，再只使用 Popup，不 fallback 到 Redirect。
+    await authPersistenceReady;
+    await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
     await auth.signInWithPopup(googleProvider);
   }catch(err){
     console.error('Google sign-in',err);
