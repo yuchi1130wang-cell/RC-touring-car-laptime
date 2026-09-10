@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>1/10 電房車設定・圈速紀錄 V3</title>
+<title>RC On-road 設定・圈速紀錄 V4</title>
 <style>
 :root{
   --bg:#0b0d10;--panel:#141820;--panel2:#1b202a;--text:#eef2f7;--muted:#9aa6b2;
@@ -69,6 +69,59 @@ footer{color:var(--muted);font-size:12px;text-align:center;padding:25px}
 .stat5{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
 @media(max-width:800px){.stat5{grid-template-columns:repeat(2,1fr)}}
 .pill{display:inline-block;padding:3px 7px;border-radius:999px;background:#243044;color:#cfe1ff;font-size:11px}
+
+.type-switch{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px}
+.type-card{background:#0e1218;border:1px solid var(--line);border-radius:10px;padding:10px}
+.nitro-note{margin-top:8px;font-size:12px;color:var(--muted)}
+details.advanced{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-top:14px;background:#10151c}
+details.advanced summary{cursor:pointer;font-weight:700;color:#dce7f6}
+.wearbox{padding:8px 10px;border-radius:9px;background:#182131;font-size:12px;color:#cfe1ff}
+@media(max-width:850px){.type-switch{grid-template-columns:repeat(2,1fr)}}
+
+.mode-gate{position:fixed;inset:0;z-index:9999;background:rgba(7,10,14,.98);display:flex;align-items:center;justify-content:center;padding:22px}
+.mode-panel{width:min(760px,100%);background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:24px}
+.mode-panel h2{font-size:24px;margin-bottom:6px}.mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px}
+.mode-card{background:var(--panel2);border:1px solid var(--line);border-radius:15px;padding:20px;text-align:left;min-height:150px}
+.mode-card:hover{border-color:var(--accent)}.mode-card b{display:block;font-size:20px;margin-bottom:8px}.mode-card span{color:var(--muted);font-weight:400;line-height:1.5}
+.mode-chip{display:inline-flex;align-items:center;gap:8px;background:#182131;border:1px solid var(--line);padding:7px 10px;border-radius:999px;font-size:12px}
+.optional-note{font-size:12px;color:var(--muted);margin-top:8px}
+@media(max-width:650px){.mode-grid{grid-template-columns:1fr}.mode-card{min-height:120px}}
+
+/* V4 compact trackside layout */
+.compact-version{margin-top:2px;line-height:1}.compact-version .tag{font-size:10px;padding:2px 6px}
+@media(max-width:700px){
+  header{position:relative;top:auto;backdrop-filter:none}
+  header .wrap{padding:10px 12px 8px}
+  h1{font-size:21px;margin:0;line-height:1.15}
+  .compact-version{position:absolute;right:12px;top:12px;margin:0}
+  nav{margin-top:8px;display:flex;flex-wrap:nowrap;overflow-x:auto;gap:6px;padding-bottom:3px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  nav::-webkit-scrollbar,.authbar::-webkit-scrollbar,.garagebar::-webkit-scrollbar{display:none}
+  nav>button,nav>.btn{flex:0 0 auto;min-height:36px!important;padding:7px 10px;font-size:13px;white-space:nowrap;border-radius:9px}
+  .mode-chip{order:-1;flex:0 0 auto;min-height:36px;padding:4px 5px 4px 9px;gap:5px;font-size:12px;white-space:nowrap}
+  .mode-chip .mini{min-height:28px!important;padding:4px 7px;font-size:11px;border-radius:7px}
+  .authbar{margin-top:5px;display:flex;flex-wrap:nowrap;overflow-x:auto;gap:7px;align-items:center;white-space:nowrap;-webkit-overflow-scrolling:touch}
+  .authbar button{flex:0 0 auto;min-height:34px!important;padding:6px 9px;font-size:12px}
+  .authstatus{font-size:11px}
+  .garagebar{margin-top:5px;display:flex;flex-wrap:nowrap;overflow-x:auto;gap:6px;align-items:center;white-space:nowrap;padding-bottom:2px;-webkit-overflow-scrolling:touch}
+  .garagebar>span:first-child{display:none}
+  .garagebar select{flex:0 0 145px;min-width:145px;width:145px;padding:6px 8px;font-size:13px!important;height:34px}
+  .garagebar .mini{flex:0 0 auto;min-height:34px!important;padding:5px 8px;font-size:12px}
+  #garageStatus{flex:0 0 auto;max-width:150px;overflow:hidden;text-overflow:ellipsis}
+  main.wrap{padding:8px 10px 36px}
+  #editor>.grid{gap:8px}
+  #editor>.grid>.card{padding:12px}
+  #editor>.grid>.card:first-child{min-height:58vh;max-height:68vh;overflow-y:auto;-webkit-overflow-scrolling:touch;scrollbar-gutter:stable}
+  #editor>.grid>.card:first-child h2{position:sticky;top:-12px;z-index:2;background:var(--panel);padding:4px 0 8px;margin:0 0 8px}
+  #editor .setupbar{margin-bottom:8px;gap:6px}
+  #editor .setupbar button{min-height:38px!important;padding:7px 10px}
+  #editor .notice{padding:7px 9px;font-size:11px;line-height:1.35}
+  #editor br{line-height:4px}
+  #editor h3{margin:12px 0 7px}
+  #editor .formgrid{gap:7px}
+  #editor label{margin-bottom:3px;font-size:11px}
+  #editor input,#editor select,#editor textarea{padding:7px 8px}
+  #editor .optional-note{font-size:11px;margin-top:5px}
+}
 </style>
 <meta name="theme-color" content="#0b0d10">
 
@@ -87,21 +140,46 @@ footer{color:var(--muted);font-size:12px;text-align:center;padding:25px}
   input,select,textarea{font-size:16px}
   button,.btn{min-height:44px}
 }
+.auth-help{position:fixed;inset:0;z-index:10050;background:rgba(0,0,0,.78);display:flex;align-items:center;justify-content:center;padding:20px}
+.auth-help-card{width:min(520px,100%);background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px}
+.auth-help-card h3{font-size:20px;margin:0 0 8px}.auth-help-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.auth-help-actions button{flex:1;min-width:120px}
 </style>
 
 </head>
 <body>
+<div id="modeGate" class="mode-gate">
+  <div class="mode-panel">
+    <h2>今天要記哪一種車？</h2>
+    <div class="muted">先選今天要操作的車種；進站後的總覽、新增、比較與資料管理都只顯示該車種，之後可隨時切換。</div>
+    <div class="mode-grid">
+      <button class="mode-card" onclick="chooseSiteMode('touring')"><b>1/10 Touring 電房車</b><span>目前的 Touring 設定、圈速、Garage 與比較功能。</span></button>
+      <button class="mode-card" onclick="chooseSiteMode('nitro8')"><b>1/8 Nitro On-road 油平跑</b><span>泡棉胎、引擎、離合器、二速與 1/8 平跑車幾何設定。</span></button>
+    </div>
+  </div>
+</div>
+<div id="authHelp" class="auth-help hidden">
+  <div class="auth-help-card">
+    <h3>這個瀏覽器無法完成 Google 登入</h3>
+    <div class="muted" id="authHelpText">請用 Chrome、Safari 或其他完整瀏覽器開啟這個網站，再按一次 Google 登入。</div>
+    <div class="auth-help-actions">
+      <button class="primary" onclick="copyCurrentUrl()">複製網站網址</button>
+      <button onclick="closeAuthHelp()">關閉</button>
+    </div>
+  </div>
+</div>
 <header>
   <div class="wrap">
-    <h1>1/10 電房車設定・圈速紀錄</h1>
-    <div class="sub">Shared Garage｜共同圈速資料庫｜個人設定沿用｜多場次比較 <span class="tag">Garage V2</span></div>
+    <h1>RC On-road 設定・圈速紀錄</h1>
+    <div class="sub compact-version"><span class="tag">V4</span></div>
     <nav>
       <button onclick="showView('dashboard')">總覽</button>
-      <button onclick="newSession()" class="primary">＋ 新增練車紀錄</button>
+      <button onclick="newSession()" class="primary">＋ 新增</button>
       <button onclick="showView('compare')">比較</button>
       <button onclick="showView('manage')">資料管理</button>
-      <button onclick="exportJSON()">匯出備份</button>
-      <label class="btn">匯入備份<input id="jsonImport" type="file" accept=".json" class="hidden"></label>
+      <button onclick="exportJSON()">匯出</button>
+      <label class="btn">匯入<input id="jsonImport" type="file" accept=".json" class="hidden"></label>
+      <span class="mode-chip"><b id="modeLabel">尚未選擇</b><button class="mini" onclick="openModeGate()">切換</button></span>
     </nav>
     <div class="authbar">
       <button id="authBtn" onclick="toggleGoogleAuth()">使用 Google 登入</button>
@@ -131,10 +209,10 @@ footer{color:var(--muted);font-size:12px;text-align:center;padding:25px}
       </div>
     </div>
     <div class="card span-12">
-      <h2>練車紀錄</h2>
+      <h2 id="sessionListTitle">練車紀錄</h2>
       <div style="overflow:auto">
         <table>
-          <thead><tr><th>日期</th><th>車手</th><th>場地</th><th>車</th><th>馬達 / FDR</th><th>輪胎</th><th>最佳圈</th><th>平均圈</th><th>圈數</th><th></th></tr></thead>
+          <thead><tr><th>日期</th><th>車手</th><th>場地</th><th>車型</th><th>動力 / 傳動</th><th>輪胎</th><th>最佳圈</th><th>平均圈</th><th>圈數</th><th></th></tr></thead>
           <tbody id="sessionRows"></tbody>
         </table>
       </div>
@@ -148,56 +226,184 @@ footer{color:var(--muted);font-size:12px;text-align:center;padding:25px}
       <h2 id="editorTitle">新增練車紀錄</h2>
       <div class="setupbar">
         <div>
-          <label>設定來源（只顯示「我自己」以前的紀錄）</label>
+          <label>設定來源（只顯示「我自己」同車種／同車型的紀錄）</label>
           <select id="setupSource"></select>
         </div>
         <button onclick="applySelectedSetup()">套用設定</button>
       </div>
-      <div class="notice">新增紀錄時會自動沿用你自己上一筆設定。朋友的 Session 即使車型相同，也不會出現在你的設定來源裡。</div>
+      <div class="notice">新增紀錄只會自動沿用你自己的同車種／同車型設定。1/10 Touring 與 1/8 油平跑互不混用；朋友的設定也不會自動帶入。</div>
       <br>
       <div class="formgrid">
         <div><label>日期</label><input id="date" type="date"></div>
         <div><label>場地</label><input id="track" placeholder="例如：柑園"></div>
-        <div><label>車型</label><input id="car" value="Xpress XQ3S"></div>
-        <div><label>組別 / 規則</label><input id="className" placeholder="13.5 Open / 17.5 GT"></div>
+        <input id="carType" type="hidden" value="touring">
+        <div><label>車型</label><input id="car" value="Xpress XQ3S" placeholder="例如：Xpress XQ3S / Mugen MRX7"></div>
+        <div id="classField"><label>組別 / 規則</label><input id="className" placeholder="例如：13.5 Open / 17.5 Stock GT"></div>
+      </div>
+      <div class="optional-note">除登入與選擇 Garage 外，其餘設定資料都可以留白後直接儲存；1/8 油平跑不顯示組別／規則。</div>
+
+      <div id="touringFields">
+        <h3>電裝 / 傳動</h3>
+        <div class="formgrid">
+          <div class="wide"><label>馬達</label><input id="motor" list="motorHistory" placeholder="例如：Justock 13.5T"><datalist id="motorHistory"></datalist></div>
+          <div class="wide"><label>ESC</label><input id="esc" list="escHistory" placeholder="例如：XeRun 120A V3"><datalist id="escHistory"></datalist></div>
+          <div><label>Pinion</label><input id="pinion" type="number" step="1"></div>
+          <div><label>Spur</label><input id="spur" type="number" step="1"></div>
+          <div><label>內齒比</label><input id="internalRatio" type="number" step="0.01" value="1.90"></div>
+          <div><label>FDR</label><input id="fdr" type="number" step="0.01"></div>
+        </div>
+
+        <h3>輪胎 / 暖胎</h3>
+        <div class="formgrid">
+          <div><label>輪胎</label><input id="tires" placeholder="RUSH 36X / 40X"></div>
+          <div><label>胎膠</label><input id="additive" placeholder="品牌 / 時間"></div>
+          <div><label>暖胎溫度 °C</label><input id="warmerTemp" type="number" placeholder="70"></div>
+          <div><label>暖胎時間 min</label><input id="warmerMin" type="number" step="0.5" placeholder="5"></div>
+        </div>
+
+        <h3>底盤設定</h3>
+        <div class="formgrid">
+          <div><label>車高 前 mm</label><input id="rideF" type="number" step="0.1"></div>
+          <div><label>車高 後 mm</label><input id="rideR" type="number" step="0.1"></div>
+          <div><label>Downstop 前</label><input id="downF" type="number" step="0.1"></div>
+          <div><label>Downstop 後</label><input id="downR" type="number" step="0.1"></div>
+          <div><label>前束 °</label><input id="toeF" type="number" step="0.1" placeholder="-1 = out 1°"></div>
+          <div><label>後束 °</label><input id="toeR" type="number" step="0.1" placeholder="3 = in 3°"></div>
+          <div><label>外傾 前 °</label><input id="camberF" type="number" step="0.1"></div>
+          <div><label>外傾 後 °</label><input id="camberR" type="number" step="0.1"></div>
+          <div><label>避震油 前 cSt</label><input id="shockF" type="number"></div>
+          <div><label>避震油 後 cSt</label><input id="shockR" type="number"></div>
+          <div><label>差速油 cSt</label><input id="diffOil" type="number"></div>
+          <div><label>防傾桿</label><input id="arb" placeholder="前/後線徑或備註"></div>
+        </div>
       </div>
 
-      <h3>電裝 / 傳動</h3>
-      <div class="formgrid">
-        <div class="wide"><label>馬達</label><input id="motor" list="motorHistory" placeholder="例如：Justock 13.5T"><datalist id="motorHistory"></datalist></div>
-        <div class="wide"><label>ESC</label><input id="esc" list="escHistory" placeholder="例如：XeRun 120A V3"><datalist id="escHistory"></datalist></div>
-        <div><label>Pinion</label><input id="pinion" type="number" step="1"></div>
-        <div><label>Spur</label><input id="spur" type="number" step="1"></div>
-        <div><label>內齒比</label><input id="internalRatio" type="number" step="0.01" value="1.90"></div>
-        <div><label>FDR</label><input id="fdr" type="number" step="0.01"></div>
-      </div>
+      <div id="nitroFields" class="hidden">
+        <details class="advanced">
+          <summary>遙控 / Servo（選填）</summary>
+          <div class="formgrid" style="margin-top:12px">
+            <div><label>Transmitter</label><input id="nTransmitter" placeholder="Sanwa / Futaba / ..."></div>
+            <div><label>Receiver</label><input id="nReceiver" placeholder="型號"></div>
+            <div><label>Steering Servo</label><input id="nSteeringServo" placeholder="型號"></div>
+            <div><label>Steering Expo %</label><input id="nSteeringExpo" type="number" step="1"></div>
+            <div><label>Steering Speed %</label><input id="nSteeringSpeed" type="number" step="1"></div>
+            <div><label>Throttle Servo</label><input id="nThrottleServo" placeholder="型號"></div>
+            <div><label>Throttle Expo %</label><input id="nThrottleExpo" type="number" step="1"></div>
+            <div><label>Throttle Speed %</label><input id="nThrottleSpeed" type="number" step="1"></div>
+          </div>
+        </details>
 
-      <h3>輪胎 / 暖胎</h3>
-      <div class="formgrid">
-        <div><label>輪胎</label><input id="tires" placeholder="RUSH 36X / 40X"></div>
-        <div><label>胎膠</label><input id="additive" placeholder="品牌 / 時間"></div>
-        <div><label>暖胎溫度 °C</label><input id="warmerTemp" type="number" placeholder="70"></div>
-        <div><label>暖胎時間 min</label><input id="warmerMin" type="number" step="0.5" placeholder="5"></div>
-      </div>
+        <h3>引擎 / 排氣 / 燃油</h3>
+        <div class="formgrid">
+          <div class="wide"><label>引擎</label><input id="nEngine" placeholder="例如：O.S. R2105 / Novarossi"></div>
+          <div><label>排氣管 Pipe</label><input id="nPipe" placeholder="型號"></div>
+          <div><label>歧管 Manifold</label><input id="nManifold" placeholder="型號 / 長度"></div>
+          <div><label>火星塞 Glow Plug</label><input id="nGlowPlug" placeholder="例如：P3 / RP6"></div>
+          <div class="wide"><label>燃油</label><input id="nFuel" placeholder="品牌 / 配方"></div>
+          <div><label>Nitro %</label><input id="nNitroPct" type="number" step="1" placeholder="16"></div>
+          <div><label>化油器口徑 mm</label><input id="nCarbDia" type="number" step="0.1" placeholder="選填"></div>
+          <div><label>Head Clearance mm</label><input id="nHeadClearance" type="number" step="0.01" placeholder="選填"></div>
+          <div><label>環境溫度 °C</label><input id="nAirTemp" type="number" step="1"></div>
+          <div><label>路面溫度 °C</label><input id="nTrackTemp" type="number" step="1"></div>
+          <div><label>抓地</label><input id="nTraction" placeholder="低 / 中 / 高"></div>
+          <div><label>賽道特性</label><input id="nLayout" placeholder="技術 / 混合 / 高速"></div>
+          <div><label>路面狀況</label><input id="nTrackCondition" placeholder="平整 / 顛簸 / ..."></div>
+          <div class="wide"><label>成績 / 測試條件</label><input id="nResult" placeholder="Practice / Qualify / Final"></div>
+        </div>
 
-      <h3>底盤設定</h3>
-      <div class="formgrid">
-        <div><label>車高 前 mm</label><input id="rideF" type="number" step="0.1"></div>
-        <div><label>車高 後 mm</label><input id="rideR" type="number" step="0.1"></div>
-        <div><label>Downstop 前</label><input id="downF" type="number" step="0.1"></div>
-        <div><label>Downstop 後</label><input id="downR" type="number" step="0.1"></div>
-        <div><label>前束 °</label><input id="toeF" type="number" step="0.1" placeholder="-1 = out 1°"></div>
-        <div><label>後束 °</label><input id="toeR" type="number" step="0.1" placeholder="3 = in 3°"></div>
-        <div><label>外傾 前 °</label><input id="camberF" type="number" step="0.1"></div>
-        <div><label>外傾 後 °</label><input id="camberR" type="number" step="0.1"></div>
-        <div><label>避震油 前 cSt</label><input id="shockF" type="number"></div>
-        <div><label>避震油 後 cSt</label><input id="shockR" type="number"></div>
-        <div><label>差速油 cSt</label><input id="diffOil" type="number"></div>
-        <div><label>防傾桿</label><input id="arb" placeholder="前/後線徑或備註"></div>
+        <h3>離合器 / 二速</h3>
+        <div class="formgrid">
+          <div><label>離合器 Type</label><input id="nClutchType" placeholder="品牌 / 型式"></div>
+          <div><label>Clutch Shoe</label><input id="nClutchShoe" placeholder="材質 / 型號"></div>
+          <div><label>Clutch Spring</label><input id="nClutchSpring" placeholder="型號 / 硬度"></div>
+          <div><label>Spring Preload</label><input id="nClutchPreload" placeholder="mm / 圈數"></div>
+          <div><label>Clutch Gap mm</label><input id="nClutchGap" type="number" step="0.01"></div>
+          <div><label>Bell End Play mm</label><input id="nClutchEndplay" type="number" step="0.01"></div>
+          <div><label>煞車碟 / Brake Disc</label><input id="nBrakeDisc" placeholder="型式 / 材質"></div>
+          <div><label>煞車皮 / Brake Pad</label><input id="nBrakePad" placeholder="型式 / 材質"></div>
+          <div><label>1st Pinion</label><input id="nGear1Pinion" type="number" step="1"></div>
+          <div><label>1st Spur</label><input id="nGear1Spur" type="number" step="1"></div>
+          <div><label>2nd Pinion</label><input id="nGear2Pinion" type="number" step="1"></div>
+          <div><label>2nd Spur</label><input id="nGear2Spur" type="number" step="1"></div>
+          <div class="wide"><label>二速切換設定</label><input id="nShift" placeholder="預壓 / 切換時機備註"></div>
+        </div>
+
+        <h3>泡棉胎</h3>
+        <div class="notice">常用起始預設：前 69 mm／後 76 mm。沒有量胎徑可直接保留；若有量跑完胎徑，會自動計算磨耗。</div>
+        <br>
+        <div class="formgrid">
+          <div><label>前胎品牌</label><input id="nTireBrandF" placeholder="Matrix / Hot Race / Contact"></div>
+          <div><label>後胎品牌</label><input id="nTireBrandR" placeholder="Matrix / Hot Race / Contact"></div>
+          <div><label>前胎 Shore</label><input id="nShoreF" type="number" step="1" placeholder="例如 32"></div>
+          <div><label>後胎 Shore</label><input id="nShoreR" type="number" step="1" placeholder="例如 35"></div>
+          <div><label>前胎起始直徑 mm</label><input id="nTireDiaFStart" type="number" step="0.1" value="69"></div>
+          <div><label>後胎起始直徑 mm</label><input id="nTireDiaRStart" type="number" step="0.1" value="76"></div>
+          <div><label>前胎結束直徑 mm</label><input id="nTireDiaFEnd" type="number" step="0.1"></div>
+          <div><label>後胎結束直徑 mm</label><input id="nTireDiaREnd" type="number" step="0.1"></div>
+          <div><label>前胎 Additive</label><input id="nAdditiveF" placeholder="品牌 / 時間"></div>
+          <div><label>後胎 Additive</label><input id="nAdditiveR" placeholder="品牌 / 時間"></div>
+          <div class="wide"><label>輪胎磨耗</label><div id="nitroWear" class="wearbox">前 — / 後 —</div></div>
+        </div>
+
+        <h3>常用底盤設定</h3>
+        <div class="formgrid">
+          <div><label>車高 前 mm</label><input id="nRideF" type="number" step="0.1"></div>
+          <div><label>車高 後 mm</label><input id="nRideR" type="number" step="0.1"></div>
+          <div><label>Downstop 前</label><input id="nDownF" type="number" step="0.1"></div>
+          <div><label>Downstop 後</label><input id="nDownR" type="number" step="0.1"></div>
+          <div><label>Toe 前 °</label><input id="nToeF" type="number" step="0.1"></div>
+          <div><label>Toe 後 °</label><input id="nToeR" type="number" step="0.1"></div>
+          <div><label>Camber 前 °</label><input id="nCamberF" type="number" step="0.1"></div>
+          <div><label>Camber 後 °</label><input id="nCamberR" type="number" step="0.1"></div>
+          <div><label>前防傾桿 mm</label><input id="nArbF" type="number" step="0.1"></div>
+          <div><label>後防傾桿 mm</label><input id="nArbR" type="number" step="0.1"></div>
+          <div><label>前彈簧</label><input id="nSpringF" placeholder="型號 / 硬度"></div>
+          <div><label>後彈簧</label><input id="nSpringR" placeholder="型號 / 硬度"></div>
+          <div><label>前避震油 cSt</label><input id="nShockOilF" type="number"></div>
+          <div><label>後避震油 cSt</label><input id="nShockOilR" type="number"></div>
+          <div><label>前活塞</label><input id="nPistonF" placeholder="孔數 × 孔徑"></div>
+          <div><label>後活塞</label><input id="nPistonR" placeholder="孔數 × 孔徑"></div>
+          <div><label>前 Rebound %</label><input id="nReboundF" type="number" step="1"></div>
+          <div><label>後 Rebound %</label><input id="nReboundR" type="number" step="1"></div>
+          <div><label>前避震安裝位置</label><input id="nShockPosF" placeholder="孔位 / Shim"></div>
+          <div><label>後避震安裝位置</label><input id="nShockPosR" placeholder="孔位 / Shim"></div>
+        </div>
+
+        <details class="advanced">
+          <summary>進階底盤 / 幾何設定</summary>
+          <div class="formgrid" style="margin-top:12px">
+            <div><label>Caster 前（° / Shim mm）</label><input id="nCaster" placeholder="角度或 caster shim"></div>
+            <div><label>前車寬 mm</label><input id="nWidthF" type="number" step="0.1"></div>
+            <div><label>後車寬 mm</label><input id="nWidthR" type="number" step="0.1"></div>
+            <div><label>Wheelbase</label><input id="nWheelbase" placeholder="Long / Short / Shim"></div>
+            <div><label>Ackermann</label><input id="nAckermann" placeholder="Insert / Position"></div>
+            <div><label>Bump Steer</label><input id="nBumpSteer" placeholder="Shim / mm"></div>
+            <div><label>前 Upper Arm / Shim</label><input id="nUpperArmF" placeholder="位置 / Shim"></div>
+            <div><label>後 Upper Arm / Shim</label><input id="nUpperArmR" placeholder="位置 / Shim"></div>
+            <div><label>前 Roll Center / Link</label><input id="nRollCenterF" placeholder="位置 / Shim"></div>
+            <div><label>後 Roll Center / Link</label><input id="nRollCenterR" placeholder="位置 / Shim"></div>
+            <div><label>前 Upright Insert</label><input id="nUprightF" placeholder="Centric / Eccentric / Position"></div>
+            <div><label>後 Upright Insert</label><input id="nUprightR" placeholder="Position"></div>
+            <div><label>Front Axle</label><input id="nFrontAxle" placeholder="Solid / Split / One-way"></div>
+            <div><label>Flex</label><input id="nFlex" placeholder="Flex screw / brace"></div>
+          </div>
+        </details>
+
+        <details class="advanced">
+          <summary>車殼 / 配重</summary>
+          <div class="formgrid" style="margin-top:12px">
+            <div class="wide"><label>Body</label><input id="nBody" placeholder="車殼型號"></div>
+            <div><label>Body Position</label><input id="nBodyPos" placeholder="前後位置 / 柱位"></div>
+            <div><label>距離保桿 mm</label><input id="nBumperDist" type="number" step="0.5"></div>
+            <div><label>Wing Position</label><input id="nWingPos" placeholder="位置"></div>
+            <div><label>Wing Height mm</label><input id="nWingHeight" type="number" step="0.5"></div>
+            <div class="wide"><label>配重 / 電池板</label><input id="nWeight" placeholder="位置 / 克數 / 材質"></div>
+          </div>
+        </details>
       </div>
 
       <h3>備註</h3>
-      <textarea id="notes" placeholder="例如：前防傾桿左右反應、右上擺臂阻力、前束是否跑掉、左後 downstop…"></textarea>
+      <textarea id="notes" placeholder="記錄車感、調整方向、引擎狀況、輪胎磨耗或其他注意事項…"></textarea>
     </div>
 
     <div class="card span-4">
@@ -279,11 +485,11 @@ footer{color:var(--muted);font-size:12px;text-align:center;padding:25px}
       <div class="muted" style="font-size:12px;margin-bottom:10px">這裡只包含你自己的 Setup。刪除後不會再出現在「設定來源」，但不會刪掉原 Session。</div>
       <div id="setupManageList" class="manage-list"></div>
     </div>
-    <div class="card span-6">
+    <div class="card span-6" id="motorHistoryCard">
       <h2>馬達歷史建議</h2>
       <div id="motorManageList" class="manage-list"></div>
     </div>
-    <div class="card span-6">
+    <div class="card span-6" id="escHistoryCard">
       <h2>ESC 歷史建議</h2>
       <div id="escManageList" class="manage-list"></div>
     </div>
@@ -291,7 +497,7 @@ footer{color:var(--muted);font-size:12px;text-align:center;padding:25px}
 </section>
 </main>
 
-<footer>Garage V3｜Session 共享；個人設定歷史與電裝建議仍依 Google UID 分開。Session 採 30 天最近刪除。</footer>
+<footer>Garage V4｜支援 1/10 Touring 與 1/8 Nitro On-road；Session 共享，個人設定歷史仍依 Google UID 分開。</footer>
 
 
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
@@ -300,7 +506,7 @@ footer{color:var(--muted);font-size:12px;text-align:center;padding:25px}
 
 <script>
 const LEGACY_KEY='touring_sessions_v1';
-const CACHE_PREFIX='touring_garage_v3_';
+const CACHE_PREFIX='rc_onroad_garage_v4_';
 let sessions=[];
 let currentId=null;
 let currentLaps=[];
@@ -521,18 +727,37 @@ async function bootstrapGarage(){
   if(id){ await migrateLegacyPrivateSessions(); await loadGarageSessions(); }
 }
 
+function openAuthHelp(message){
+  const box=document.getElementById('authHelp');
+  const text=document.getElementById('authHelpText');
+  if(message&&text) text.textContent=message;
+  box?.classList.remove('hidden');
+}
+function closeAuthHelp(){ document.getElementById('authHelp')?.classList.add('hidden'); }
+async function copyCurrentUrl(){
+  const url=location.href;
+  try{
+    await navigator.clipboard.writeText(url);
+    alert('網站網址已複製。請貼到 Chrome 或 Safari 開啟。');
+  }catch{
+    prompt('複製這個網址，改用 Chrome 或 Safari 開啟：',url);
+  }
+}
 async function toggleGoogleAuth(){
   try{
     if(currentUser){await auth.signOut();return;}
+    // V4 Auth Fix：只使用 Popup，不再 fallback 到 Redirect。
     await auth.signInWithPopup(googleProvider);
   }catch(err){
-    console.error(err);
-    if(['auth/popup-blocked','auth/cancelled-popup-request','auth/operation-not-supported-in-this-environment'].includes(err.code)) await auth.signInWithRedirect(googleProvider);
-    else alert('Google 登入失敗：'+(err.message||err.code||err));
+    console.error('Google sign-in',err);
+    const browserIssue=['auth/popup-blocked','auth/cancelled-popup-request','auth/operation-not-supported-in-this-environment','auth/web-storage-unsupported'].includes(err.code);
+    if(browserIssue){
+      openAuthHelp('目前這個瀏覽器無法完成 Google 登入。請複製網站網址，改用 Chrome、Safari 或其他完整瀏覽器開啟，再按一次 Google 登入。');
+    }else{
+      openAuthHelp('Google 登入失敗：'+(err.message||err.code||err)+'。如果你是在 App 內建瀏覽器，請改用 Chrome 或 Safari。');
+    }
   }
 }
-
-auth.getRedirectResult().catch(err=>console.error('redirect auth',err));
 auth.onAuthStateChanged(async user=>{
   currentUser=user||null;
   const btn=document.getElementById('authBtn');
@@ -541,7 +766,7 @@ auth.onAuthStateChanged(async user=>{
     btn.textContent='登出 Google';
     st.textContent=`已登入：${displayName()}`;
     try{await bootstrapGarage();}
-    catch(err){console.error(err);setSyncStatus('雲端：連線失敗');alert('已登入 Google，但 Garage 初始化失敗。若剛更新到 Garage V2，通常需要同步更新 Firestore Rules。');}
+    catch(err){console.error(err);setSyncStatus('雲端：連線失敗');alert('已登入 Google，但 Garage 初始化失敗。若 Garage 初始化失敗，請先確認 Firestore Rules 與登入權限。');}
   }else{
     btn.textContent='使用 Google 登入'; st.textContent='目前：僅本機模式';
     currentGarageId=null;currentGarage=null;userGarages=[];personalSetups=[];hiddenMotorHistory=[];hiddenEscHistory=[];sessions=[];cloudLoaded=false;
@@ -551,38 +776,124 @@ auth.onAuthStateChanged(async user=>{
   }
 });
 
-const fields=['date' ,'track','car','className','motor','esc','pinion','spur','internalRatio','fdr','tires','additive','warmerTemp','warmerMin','rideF','rideR','downF','downR','toeF','toeR','camberF','camberR','shockF','shockR','diffOil','arb','notes'];
-
-
-const carryFields=['track','car','className','motor','esc','pinion','spur','internalRatio','fdr','tires','additive','warmerTemp','warmerMin','rideF','rideR','downF','downR','toeF','toeR','camberF','camberR','shockF','shockR','diffOil','arb'];
+const touringFields=['motor','esc','pinion','spur','internalRatio','fdr','tires','additive','warmerTemp','warmerMin','rideF','rideR','downF','downR','toeF','toeR','camberF','camberR','shockF','shockR','diffOil','arb'];
+const nitroFieldsList=['nEngine','nPipe','nManifold','nGlowPlug','nFuel','nNitroPct','nCarbDia','nHeadClearance','nAirTemp','nTrackTemp','nTraction','nLayout','nTrackCondition','nResult','nTransmitter','nReceiver','nSteeringServo','nSteeringExpo','nSteeringSpeed','nThrottleServo','nThrottleExpo','nThrottleSpeed','nClutchType','nClutchShoe','nClutchSpring','nClutchPreload','nClutchGap','nClutchEndplay','nBrakeDisc','nBrakePad','nGear1Pinion','nGear1Spur','nGear2Pinion','nGear2Spur','nShift','nTireBrandF','nTireBrandR','nShoreF','nShoreR','nTireDiaFStart','nTireDiaRStart','nTireDiaFEnd','nTireDiaREnd','nAdditiveF','nAdditiveR','nRideF','nRideR','nDownF','nDownR','nToeF','nToeR','nCamberF','nCamberR','nArbF','nArbR','nSpringF','nSpringR','nShockOilF','nShockOilR','nPistonF','nPistonR','nReboundF','nReboundR','nShockPosF','nShockPosR','nCaster','nWidthF','nWidthR','nWheelbase','nAckermann','nBumpSteer','nUpperArmF','nUpperArmR','nRollCenterF','nRollCenterR','nUprightF','nUprightR','nFrontAxle','nFlex','nBody','nBodyPos','nBumperDist','nWingPos','nWingHeight','nWeight'];
+const fields=['date','track','carType','car','className',...touringFields,...nitroFieldsList,'notes'];
+const nitroCarryFields=nitroFieldsList.filter(f=>!['nAirTemp','nTrackTemp','nTraction','nLayout','nTrackCondition','nResult','nTireDiaFEnd','nTireDiaREnd'].includes(f));
+const carryFields=['track','carType','car','className',...touringFields,...nitroCarryFields];
+let siteMode=null;
+function openModeGate(){ document.getElementById('modeGate')?.classList.remove('hidden'); }
+function chooseSiteMode(type){
+  if(!['touring','nitro8'].includes(type))return;
+  siteMode=type;
+  const ct=document.getElementById('carType'); if(ct)ct.value=type;
+  const ml=document.getElementById('modeLabel'); if(ml)ml.textContent=typeLabel(type);
+  const title=document.getElementById('sessionListTitle'); if(title)title.textContent=type==='nitro8'?'1/8 油平跑紀錄':'1/10 Touring 練車紀錄';
+  document.getElementById('modeGate')?.classList.add('hidden');
+  toggleTypeUI(); refreshPersonalSuggestions(); renderDashboard(); renderManage();
+  if(!document.getElementById('editor')?.classList.contains('hidden')) newSession();
+}
+function filteredActiveSessions(){ return activeSessions().filter(s=>!siteMode || typeOf(s)===siteMode); }
+function typeOf(s){return s?.carType||'touring'}
+function typeLabel(t){return t==='nitro8'?'1/8 Nitro 油平跑':'1/10 Touring'}
+function currentType(){return document.getElementById('carType')?.value||'touring'}
+function setNitroDefaults(force=false){
+  const f=document.getElementById('nTireDiaFStart'),r=document.getElementById('nTireDiaRStart');
+  if(f && (force||!f.value))f.value='69';
+  if(r && (force||!r.value))r.value='76';
+  updateNitroTireWear();
+}
+function toggleTypeUI(){
+  const nitro=currentType()==='nitro8';
+  document.getElementById('touringFields')?.classList.toggle('hidden',nitro);
+  document.getElementById('nitroFields')?.classList.toggle('hidden',!nitro);
+  document.getElementById('classField')?.classList.toggle('hidden',nitro);
+  const carEl=document.getElementById('car'); if(carEl)carEl.placeholder=nitro?'例如：MRX7 / RX8 / Viper 990':'例如：Xpress XQ3S';
+  if(nitro){ const cf=document.getElementById('className'); if(cf)cf.value=''; setNitroDefaults(false); }
+}
 function refreshPersonalSuggestions(){
-  const mine=personalSetups.filter(s=>!s.deletedAt);
-  const unique=(key)=>[...new Set(mine.map(s=>(s[key]||'').trim()).filter(Boolean))];
-  const motors=unique('motor').filter(v=>!hiddenMotorHistory.includes(v));
-  const escs=unique('esc').filter(v=>!hiddenEscHistory.includes(v));
+  const type=currentType();
+  const model=(document.getElementById('car')?.value||'').trim();
+  const mine=personalSetups.filter(s=>!s.deletedAt && typeOf(s)===type && (!model || !s.car || s.car===model));
+  const allTouring=personalSetups.filter(s=>!s.deletedAt && typeOf(s)==='touring');
+  const unique=(list,key)=>[...new Set(list.map(s=>(s[key]||'').trim()).filter(Boolean))];
+  const motors=unique(allTouring,'motor').filter(v=>!hiddenMotorHistory.includes(v));
+  const escs=unique(allTouring,'esc').filter(v=>!hiddenEscHistory.includes(v));
   const md=document.getElementById('motorHistory'), ed=document.getElementById('escHistory');
   if(md)md.innerHTML=motors.map(v=>`<option value="${escHtml(v)}"></option>`).join('');
   if(ed)ed.innerHTML=escs.map(v=>`<option value="${escHtml(v)}"></option>`).join('');
   const ss=document.getElementById('setupSource'); if(ss){
-    ss.innerHTML='<option value="latest">上一次我的設定（自動）</option><option value="blank">空白設定</option>'+mine.map(s=>`<option value="${escHtml(String(s.id))}">${escHtml(s.date||'無日期')}｜${escHtml(s.car||'未填車型')}｜${escHtml(s.track||'未填場地')}</option>`).join('');
+    ss.innerHTML='<option value="latest">上一次我的同車種／同車型設定（自動）</option><option value="blank">空白設定</option>'+mine.map(s=>`<option value="${escHtml(String(s.id))}">${escHtml(s.date||'無日期')}｜${escHtml(s.car||'未填車型')}｜${escHtml(s.track||'未填場地')}</option>`).join('');
   }
   renderManage();
 }
+function onCarModelChange(){
+  const type=currentType(), model=(document.getElementById('car')?.value||'').trim();
+  refreshPersonalSuggestions();
+  const latest=personalSetups.find(s=>!s.deletedAt && typeOf(s)===type && model && s.car===model);
+  const ss=document.getElementById('setupSource'); if(ss)ss.value=latest?'latest':'blank';
+  // 新增紀錄時切換車型，避免上一台車的設定殘留；編輯既有紀錄時則不自動覆蓋。
+  if(currentId || !model)return;
+  const keepCar=model;
+  clearTypeFields(type);
+  document.getElementById('car').value=keepCar;
+  if(latest) copySetupFromSession(latest);
+  else { document.getElementById('car').value=keepCar; if(type==='nitro8')setNitroDefaults(true); }
+  if(ss)ss.value=latest?'latest':'blank';
+}
+function clearTypeFields(type){
+  const list=type==='nitro8'?nitroFieldsList:touringFields;
+  list.forEach(f=>{const el=document.getElementById(f);if(el)el.value='';});
+  if(type==='nitro8')setNitroDefaults(true);
+  if(type==='touring'){document.getElementById('internalRatio').value='1.90';}
+}
 function copySetupFromSession(s){
   if(!s)return;
-  carryFields.forEach(f=>{const el=document.getElementById(f); if(el)el.value=s[f]??''});
+  const type=typeOf(s);
+  const ct=document.getElementById('carType'); if(ct)ct.value=type;
+  toggleTypeUI();
+  carryFields.forEach(f=>{const el=document.getElementById(f); if(el && s[f]!==undefined)el.value=s[f]??''});
+  if(type==='nitro8')setNitroDefaults(false);
+  updateNitroTireWear();
+  refreshPersonalSuggestions();
 }
 function applySelectedSetup(){
   if(!currentUser){alert('請先登入，才能讀取你自己的歷史設定。');return;}
+  const type=currentType();
   const val=document.getElementById('setupSource').value;
   if(val==='blank'){
-    carryFields.forEach(f=>document.getElementById(f).value='');
-    car.value='Xpress XQ3S';internalRatio.value='1.90';return;
+    clearTypeFields(type);
+    if(type==='touring'){car.value='Xpress XQ3S';internalRatio.value='1.90';}
+    else if(car.value==='Xpress XQ3S'||!car.value)car.value='';
+    return;
   }
-  const mine=personalSetups.filter(s=>!s.deletedAt);
-  const s=val==='latest'?mine[0]:mine.find(x=>String(x.id)===String(val));
-  if(!s){alert('目前還沒有你自己的歷史設定。');return;}
-  copySetupFromSession(s);
+  const model=(document.getElementById('car')?.value||'').trim();
+  const mine=personalSetups.filter(s=>!s.deletedAt && typeOf(s)===type && (!model || !s.car || s.car===model));
+  const chosen=val==='latest'?mine[0]:mine.find(x=>String(x.id)===String(val));
+  if(!chosen){alert('目前還沒有你自己的同車種／同車型歷史設定。');return;}
+  copySetupFromSession(chosen);
+}
+function onCarTypeChange(autoApply=false){
+  const type=currentType();
+  toggleTypeUI();
+  refreshPersonalSuggestions();
+  if(!autoApply || currentId)return;
+  clearTypeFields(type);
+  if(type==='touring'){
+    if(!car.value||car.value==='1/8 Nitro On-road')car.value='Xpress XQ3S';
+    const latest=personalSetups.find(s=>!s.deletedAt && typeOf(s)==='touring');
+    if(latest)copySetupFromSession(latest);
+  }else{
+    if(car.value==='Xpress XQ3S')car.value='';
+    const latest=personalSetups.find(s=>!s.deletedAt && typeOf(s)==='nitro8');
+    if(latest)copySetupFromSession(latest); else setNitroDefaults(true);
+  }
+  const ss=document.getElementById('setupSource');if(ss)ss.value=personalSetups.some(s=>!s.deletedAt&&typeOf(s)===type)?'latest':'blank';
+}
+function updateNitroTireWear(){
+  const out=document.getElementById('nitroWear');if(!out)return;
+  const wear=(a,b)=>{const x=num(document.getElementById(a)?.value),y=num(document.getElementById(b)?.value);return x!==null&&y!==null?(x-y).toFixed(1)+' mm':'—'};
+  out.textContent=`前 ${wear('nTireDiaFStart','nTireDiaFEnd')} / 後 ${wear('nTireDiaRStart','nTireDiaREnd')}`;
 }
 function showView(name){
   ['dashboard','editor','detail','compare','manage'].forEach(id=>document.getElementById(id).classList.toggle('hidden',id!==name));
@@ -643,12 +954,15 @@ function updateLapStats(){
 function newSession(){
   currentId=null; currentLaps=[];
   editorTitle.textContent='新增練車紀錄';
-  fields.forEach(f=>document.getElementById(f).value='');
-  car.value='Xpress XQ3S'; internalRatio.value='1.90';
+  fields.forEach(f=>{const el=document.getElementById(f);if(el)el.value='';});
+  const type=siteMode||'touring';
+  carType.value=type; car.value=type==='touring'?'Xpress XQ3S':''; internalRatio.value='1.90';
   date.value=new Date().toISOString().slice(0,10);
+  setNitroDefaults(true); toggleTypeUI();
   lapText.value=''; updateLapStats(); refreshPersonalSuggestions();
-  const latest=personalSetups.find(s=>!s.deletedAt);
+  const latest=personalSetups.find(s=>!s.deletedAt && typeOf(s)===type);
   if(latest) copySetupFromSession(latest);
+  else { carType.value=type; toggleTypeUI(); if(type==='nitro8')setNitroDefaults(true); }
   document.getElementById('setupSource').value=latest?'latest':'blank';
   showView('editor');
 }
@@ -664,15 +978,34 @@ async function saveSession(){
   if(existing && existing.ownerUid && existing.ownerUid!==currentUser.uid){alert('這筆紀錄是其他車手建立的。為避免互相覆蓋，目前只有建立者能編輯。');return;}
   const now=new Date().toISOString();
   const obj={id:currentId||uid(),createdAt:existing?.createdAt||now,updatedAt:now,laps:[...currentLaps],ownerUid:currentUser.uid,ownerName:displayName()};
-  fields.forEach(f=>obj[f]=document.getElementById(f).value);
+  fields.forEach(f=>{const el=document.getElementById(f);obj[f]=el?el.value:'';});
+  obj.carType=siteMode||obj.carType||'touring';
+  // V4：所有設定欄位都允許留白；不同車種的專用欄位不交叉寫入，避免隱藏欄位污染另一種車的 Setup。
+  if(obj.carType==='nitro8'){ obj.className=''; touringFields.forEach(f=>obj[f]=''); }
+  else nitroFieldsList.forEach(f=>obj[f]='');
   const idx=sessions.findIndex(x=>String(x.id)===String(obj.id));
   if(idx>=0) sessions[idx]=obj; else sessions.push(obj);
   sortSessions(); cacheSessions(); currentId=obj.id; refreshPersonalSuggestions();
   try{await uploadSessionToCloud(obj)}catch(err){console.error(err);setSyncStatus('雲端：同步失敗');alert('紀錄已保存在這台裝置，但雲端同步失敗。');}
   showView('dashboard');
 }
+function powerSummary(s){
+  if(typeOf(s)==='nitro8'){
+    const gears=(s.nGear1Pinion||s.nGear1Spur||s.nGear2Pinion||s.nGear2Spur)?`1st ${s.nGear1Pinion||'—'}/${s.nGear1Spur||'—'} · 2nd ${s.nGear2Pinion||'—'}/${s.nGear2Spur||'—'}`:'二速 —';
+    return `${escHtml(s.nEngine||'—')}<br><span class="muted">${escHtml(gears)}</span>`;
+  }
+  return `${escHtml(s.motor||'—')}<br><span class="muted">FDR ${escHtml(s.fdr||'—')}</span>`;
+}
+function tireSummary(s){
+  if(typeOf(s)==='nitro8'){
+    const f=`F ${s.nTireBrandF||'—'} ${s.nShoreF? s.nShoreF+'sh':''} ${s.nTireDiaFStart||'69'}mm`;
+    const r=`R ${s.nTireBrandR||'—'} ${s.nShoreR? s.nShoreR+'sh':''} ${s.nTireDiaRStart||'76'}mm`;
+    return `${escHtml(f)}<br><span class="muted">${escHtml(r)}</span>`;
+  }
+  return escHtml(s.tires||'—');
+}
 function renderDashboard(){
-  const visible=activeSessions();
+  const visible=filteredActiveSessions();
   let totalLaps=visible.reduce((n,s)=>n+(s.laps?.length||0),0);
   let all=visible.flatMap(s=>s.laps||[]);
   let last=visible[0];
@@ -687,14 +1020,18 @@ function renderDashboard(){
       <td class="creator">${escHtml(s.ownerName||'舊資料')}</td>
       <td>${escHtml(s.track||'—')}</td>
       <td>${escHtml(s.car||'—')}</td>
-      <td>${escHtml(s.motor||'—')}<br><span class="muted">FDR ${escHtml(s.fdr||'—')}</span></td>
-      <td>${escHtml(s.tires||'—')}</td>
+      <td>${powerSummary(s)}</td>
+      <td>${tireSummary(s)}</td>
       <td class="good">${fmt(st.best)}</td>
       <td>${fmt(st.avg)}</td>
       <td>${(s.laps||[]).length}</td>
       <td><div class="row-actions"><button onclick="openDetail('${s.id}')">查看</button><button onclick="duplicateSession('${s.id}')">複製</button>${s.ownerUid===currentUser?.uid?`<button onclick="editSession('${s.id}')">編輯</button>`:''}</div></td>
     </tr>`;
   }).join(''):`<tr><td colspan="10" class="muted">還沒有紀錄。先新增第一個練車 Session。</td></tr>`;
+}
+function nitroWearValue(s,axis){
+  const a=num(s[axis==='F'?'nTireDiaFStart':'nTireDiaRStart']),b=num(s[axis==='F'?'nTireDiaFEnd':'nTireDiaREnd']);
+  return a!==null&&b!==null?(a-b).toFixed(1)+' mm':'—';
 }
 function openDetail(id){
   const s=sessions.find(x=>x.id===id); if(!s)return;
@@ -703,13 +1040,25 @@ function openDetail(id){
   const own=s.ownerUid===currentUser?.uid;
   const detailButtons=document.querySelector('#detail .row-actions');
   if(detailButtons) detailButtons.innerHTML=`<button onclick="duplicateSession('${s.id}')">複製成我的新紀錄</button>${own?'<button onclick="editCurrent()">編輯</button><button class="danger" onclick="deleteCurrent()">刪除</button>':''}<button onclick="showView(\'dashboard\')">返回</button>`;
-  const pairs=[
-    ['車手',s.ownerName||'舊資料'],['組別',s.className],['馬達',s.motor],['ESC',s.esc],['FDR',s.fdr],
-    ['輪胎',s.tires],['胎膠',s.additive],['暖胎',`${s.warmerTemp||'—'}°C / ${s.warmerMin||'—'} min`],
-    ['車高',`F ${s.rideF||'—'} / R ${s.rideR||'—'}`],['Downstop',`F ${s.downF||'—'} / R ${s.downR||'—'}`],
-    ['Toe',`F ${s.toeF||'—'}° / R ${s.toeR||'—'}°`],['Camber',`F ${s.camberF||'—'}° / R ${s.camberR||'—'}°`],
-    ['避震油',`F ${s.shockF||'—'} / R ${s.shockR||'—'} cSt`],['差速油',s.diffOil?`${s.diffOil} cSt`:'—'],['防傾桿',s.arb],
-  ];
+  let pairs;
+  if(typeOf(s)==='nitro8'){
+    pairs=[
+      ['車手',s.ownerName||'舊資料'],['車種',typeLabel(typeOf(s))],['引擎',s.nEngine],['Pipe',s.nPipe],['Manifold',s.nManifold],['Glow Plug',s.nGlowPlug],['燃油',`${s.nFuel||'—'}${s.nNitroPct?` / ${s.nNitroPct}% Nitro`:''}`],['Carb / Head',`${s.nCarbDia||'—'} mm / ${s.nHeadClearance||'—'} mm`],
+      ['環境 / 路面',`${s.nAirTemp||'—'}°C / ${s.nTrackTemp||'—'}°C`],['抓地 / 賽道',`${s.nTraction||'—'} / ${s.nLayout||'—'} / ${s.nTrackCondition||'—'}`],['離合器',`${s.nClutchType||'—'} / Shoe ${s.nClutchShoe||'—'} / Spring ${s.nClutchSpring||'—'}`],['Clutch Preload / Gap',`${s.nClutchPreload||'—'} / ${s.nClutchGap||'—'} mm`],['Bell End Play',s.nClutchEndplay?`${s.nClutchEndplay} mm`:'—'],['煞車',`${s.nBrakeDisc||'—'} / ${s.nBrakePad||'—'}`],
+      ['1st Gear',`${s.nGear1Pinion||'—'} / ${s.nGear1Spur||'—'}`],['2nd Gear',`${s.nGear2Pinion||'—'} / ${s.nGear2Spur||'—'}`],['二速切換',s.nShift],
+      ['前胎',`${s.nTireBrandF||'—'} / ${s.nShoreF||'—'} Shore / ${s.nTireDiaFStart||'69'} → ${s.nTireDiaFEnd||'—'} mm`],['後胎',`${s.nTireBrandR||'—'} / ${s.nShoreR||'—'} Shore / ${s.nTireDiaRStart||'76'} → ${s.nTireDiaREnd||'—'} mm`],['磨耗',`F ${nitroWearValue(s,'F')} / R ${nitroWearValue(s,'R')}`],['Additive',`F ${s.nAdditiveF||'—'} / R ${s.nAdditiveR||'—'}`],
+      ['車高',`F ${s.nRideF||'—'} / R ${s.nRideR||'—'} mm`],['Downstop',`F ${s.nDownF||'—'} / R ${s.nDownR||'—'}`],['Toe',`F ${s.nToeF||'—'}° / R ${s.nToeR||'—'}°`],['Camber',`F ${s.nCamberF||'—'}° / R ${s.nCamberR||'—'}°`],['ARB',`F ${s.nArbF||'—'} / R ${s.nArbR||'—'} mm`],['Spring',`F ${s.nSpringF||'—'} / R ${s.nSpringR||'—'}`],['Shock Oil',`F ${s.nShockOilF||'—'} / R ${s.nShockOilR||'—'} cSt`],['Piston',`F ${s.nPistonF||'—'} / R ${s.nPistonR||'—'}`],['Rebound',`F ${s.nReboundF||'—'}% / R ${s.nReboundR||'—'}%`],['Shock Position',`F ${s.nShockPosF||'—'} / R ${s.nShockPosR||'—'}`],
+      ['Caster',s.nCaster?`${s.nCaster}°`:'—'],['車寬',`F ${s.nWidthF||'—'} / R ${s.nWidthR||'—'} mm`],['Wheelbase',s.nWheelbase],['Ackermann',s.nAckermann],['Bump Steer',s.nBumpSteer],['Upper Arm',`F ${s.nUpperArmF||'—'} / R ${s.nUpperArmR||'—'}`],['Roll Center / Link',`F ${s.nRollCenterF||'—'} / R ${s.nRollCenterR||'—'}`],['Upright',`F ${s.nUprightF||'—'} / R ${s.nUprightR||'—'}`],['Front Axle',s.nFrontAxle],['Flex',s.nFlex],['Body',s.nBody],['Body Position',s.nBodyPos],['Bumper Distance',s.nBumperDist?`${s.nBumperDist} mm`:'—'],['Wing',`${s.nWingPos||'—'} / ${s.nWingHeight||'—'} mm`],['配重',s.nWeight],['成績 / 條件',s.nResult]
+    ];
+  }else{
+    pairs=[
+      ['車手',s.ownerName||'舊資料'],['車種',typeLabel(typeOf(s))],['組別',s.className],['馬達',s.motor],['ESC',s.esc],['FDR',s.fdr],
+      ['輪胎',s.tires],['胎膠',s.additive],['暖胎',`${s.warmerTemp||'—'}°C / ${s.warmerMin||'—'} min`],
+      ['車高',`F ${s.rideF||'—'} / R ${s.rideR||'—'}`],['Downstop',`F ${s.downF||'—'} / R ${s.downR||'—'}`],
+      ['Toe',`F ${s.toeF||'—'}° / R ${s.toeR||'—'}°`],['Camber',`F ${s.camberF||'—'}° / R ${s.camberR||'—'}°`],
+      ['避震油',`F ${s.shockF||'—'} / R ${s.shockR||'—'} cSt`],['差速油',s.diffOil?`${s.diffOil} cSt`:'—'],['防傾桿',s.arb],
+    ];
+  }
   detailBody.innerHTML=`
     <div class="stat5" style="margin:12px 0 16px">
       <div class="kpi"><small>最佳圈</small><b class="good">${fmt(st.best)}</b></div>
@@ -732,7 +1081,8 @@ function editSession(id){
   if(s.ownerUid && s.ownerUid!==currentUser?.uid){alert('只能編輯你自己建立的紀錄。');return;}
   currentId=id;
   editorTitle.textContent='編輯練車紀錄';
-  fields.forEach(f=>document.getElementById(f).value=s[f]??'');
+  fields.forEach(f=>{const el=document.getElementById(f);if(el)el.value=s[f]??'';});
+  carType.value=typeOf(s);toggleTypeUI();refreshPersonalSuggestions();updateNitroTireWear();
   currentLaps=[...(s.laps||[])];
   lapText.value=currentLaps.map(x=>x.toFixed(3)).join('\n');
   updateLapStats();
@@ -750,30 +1100,41 @@ function duplicateSession(id){
   if(!currentUser){alert('請先登入。');return;}
   const src=sessions.find(s=>String(s.id)===String(id)); if(!src)return;
   currentId=null; currentLaps=[];
-  fields.forEach(f=>document.getElementById(f).value='');
+  fields.forEach(f=>{const el=document.getElementById(f);if(el)el.value='';});
   copySetupFromSession(src);
   date.value=new Date().toISOString().slice(0,10);
+  if(typeOf(src)==='nitro8'){nTireDiaFEnd.value='';nTireDiaREnd.value='';nAirTemp.value='';nTrackTemp.value='';nTraction.value='';nLayout.value='';nTrackCondition.value='';nResult.value='';updateNitroTireWear();}
   notes.value=''; lapText.value=''; updateLapStats();
   editorTitle.textContent=`複製設定 → 我的新紀錄（來源：${src.ownerName||'車手'}）`;
   showView('editor');
 }
-const setupCompareFields=[
+const touringSetupCompareFields=[
   ['馬達','motor'],['ESC','esc'],['Pinion','pinion'],['Spur','spur'],['FDR','fdr'],['輪胎','tires'],['胎膠','additive'],
   ['暖胎溫度','warmerTemp'],['暖胎時間','warmerMin'],['車高 F','rideF'],['車高 R','rideR'],['Downstop F','downF'],['Downstop R','downR'],
   ['Toe F','toeF'],['Toe R','toeR'],['Camber F','camberF'],['Camber R','camberR'],['避震油 F','shockF'],['避震油 R','shockR'],['差速油','diffOil'],['防傾桿','arb']
 ];
+const nitroSetupCompareFields=[
+  ['Transmitter','nTransmitter'],['Receiver','nReceiver'],['Steering Servo','nSteeringServo'],['Steering Expo','nSteeringExpo'],['Steering Speed','nSteeringSpeed'],['Throttle Servo','nThrottleServo'],['Throttle Expo','nThrottleExpo'],['Throttle Speed','nThrottleSpeed'],['引擎','nEngine'],['Pipe','nPipe'],['Manifold','nManifold'],['Glow Plug','nGlowPlug'],['燃油','nFuel'],['Nitro %','nNitroPct'],['Carb Dia','nCarbDia'],['Head Clearance','nHeadClearance'],['路面溫度','nTrackTemp'],['賽道特性','nLayout'],['路面狀況','nTrackCondition'],
+  ['Clutch Type','nClutchType'],['Clutch Shoe','nClutchShoe'],['Clutch Spring','nClutchSpring'],['Clutch Preload','nClutchPreload'],['Clutch Gap','nClutchGap'],['Bell End Play','nClutchEndplay'],['Brake Disc','nBrakeDisc'],['Brake Pad','nBrakePad'],
+  ['1st Pinion','nGear1Pinion'],['1st Spur','nGear1Spur'],['2nd Pinion','nGear2Pinion'],['2nd Spur','nGear2Spur'],['二速切換','nShift'],
+  ['前胎品牌','nTireBrandF'],['後胎品牌','nTireBrandR'],['前 Shore','nShoreF'],['後 Shore','nShoreR'],['前胎起始直徑','nTireDiaFStart'],['後胎起始直徑','nTireDiaRStart'],['前 Additive','nAdditiveF'],['後 Additive','nAdditiveR'],
+  ['車高 F','nRideF'],['車高 R','nRideR'],['Downstop F','nDownF'],['Downstop R','nDownR'],['Toe F','nToeF'],['Toe R','nToeR'],['Camber F','nCamberF'],['Camber R','nCamberR'],['ARB F','nArbF'],['ARB R','nArbR'],
+  ['Spring F','nSpringF'],['Spring R','nSpringR'],['Shock Oil F','nShockOilF'],['Shock Oil R','nShockOilR'],['Piston F','nPistonF'],['Piston R','nPistonR'],['Rebound F','nReboundF'],['Rebound R','nReboundR'],['Shock Position F','nShockPosF'],['Shock Position R','nShockPosR'],['Caster','nCaster'],['Width F','nWidthF'],['Width R','nWidthR'],['Wheelbase','nWheelbase'],['Ackermann','nAckermann'],['Bump Steer','nBumpSteer'],['Upper Arm F','nUpperArmF'],['Upper Arm R','nUpperArmR'],['Roll Center F','nRollCenterF'],['Roll Center R','nRollCenterR'],['Front Axle','nFrontAxle'],['Flex','nFlex'],['Body','nBody'],['Body Position','nBodyPos'],['Wing','nWingPos'],['Wing Height','nWingHeight'],['配重','nWeight']
+];
 function previousOwnSession(s){
   if(!s?.ownerUid)return null;
-  const mine=activeSessions().filter(x=>x.ownerUid===s.ownerUid && String(x.id)!==String(s.id) && (!s.car || x.car===s.car));
+  const t=typeOf(s);
+  const mine=activeSessions().filter(x=>x.ownerUid===s.ownerUid && String(x.id)!==String(s.id) && typeOf(x)===t && (!s.car || x.car===s.car));
   const curKey=(s.date||'')+'|'+(s.createdAt||'');
   return mine.filter(x=>((x.date||'')+'|'+(x.createdAt||''))<curKey).sort((a,b)=>(((b.date||'')+'|'+(b.createdAt||'')).localeCompare((a.date||'')+'|'+(a.createdAt||''))))[0]||null;
 }
 function renderSetupChanges(s){
   const prev=previousOwnSession(s);
-  if(!prev)return '<div class="notice">這是此車手目前可比對到的第一筆同車型紀錄。</div>';
-  const changes=setupCompareFields.filter(([n,k])=>String(prev[k]??'')!==String(s[k]??''));
-  if(!changes.length)return `<div class="notice">相較上一筆同車型紀錄（${escHtml(prev.date||'無日期')}）：設定沒有變更。</div>`;
-  return `<div class="notice"><b>相較上一筆同車型紀錄（${escHtml(prev.date||'無日期')}）</b><ul class="change-list">${changes.map(([n,k])=>`<li>${escHtml(n)}：${escHtml(prev[k]||'—')} → <b>${escHtml(s[k]||'—')}</b></li>`).join('')}</ul></div>`;
+  if(!prev)return '<div class="notice">這是此車手目前可比對到的第一筆同車種、同車型紀錄。</div>';
+  const rows=typeOf(s)==='nitro8'?nitroSetupCompareFields:touringSetupCompareFields;
+  const changes=rows.filter(([n,k])=>String(prev[k]??'')!==String(s[k]??''));
+  if(!changes.length)return `<div class="notice">相較上一筆同車種、同車型紀錄（${escHtml(prev.date||'無日期')}）：設定沒有變更。</div>`;
+  return `<div class="notice"><b>相較上一筆同車種、同車型紀錄（${escHtml(prev.date||'無日期')}）</b><ul class="change-list">${changes.map(([n,k])=>`<li>${escHtml(n)}：${escHtml(prev[k]||'—')} → <b>${escHtml(s[k]||'—')}</b></li>`).join('')}</ul></div>`;
 }
 async function restoreTrash(id){
   const s=sessions.find(x=>String(x.id)===String(id)); if(!s||s.ownerUid!==currentUser?.uid)return;
@@ -818,42 +1179,39 @@ async function unhideHistory(type,value){
 }
 function renderManage(){
   const trash=document.getElementById('trashList'); if(!trash)return;
-  const t=myTrash().sort((a,b)=>(b.deletedAt||'').localeCompare(a.deletedAt||''));
+  const t=myTrash().filter(s=>!siteMode||typeOf(s)===siteMode).sort((a,b)=>(b.deletedAt||'').localeCompare(a.deletedAt||''));
   trash.innerHTML=t.length?t.map(s=>`<div class="manage-item"><div class="meta"><b>${escHtml(s.date||'無日期')}｜${escHtml(s.car||'未填車型')}</b><span class="muted">${escHtml(s.track||'')}｜刪除於 ${escHtml((s.deletedAt||'').slice(0,10))}</span></div><div class="row-actions"><button onclick="restoreTrash('${s.id}')">還原</button><button class="danger" onclick="purgeTrash('${s.id}')">永久刪除</button></div></div>`).join(''):'<span class="muted">最近刪除是空的。</span>';
-  const activeSetups=personalSetups.filter(s=>!s.deletedAt), deletedSetups=personalSetups.filter(s=>s.deletedAt);
-  setupManageList.innerHTML=(activeSetups.map(s=>`<div class="manage-item"><div class="meta"><b>${escHtml(s.date||'無日期')}｜${escHtml(s.car||'未填車型')}</b><span class="muted">${escHtml(s.track||'')}｜${escHtml(s.motor||'')}</span></div><button class="danger" onclick="deletePersonalSetup('${s.id}')">移除</button></div>`).join('')||'<span class="muted">沒有設定歷史。</span>')+(deletedSetups.length?`<hr><div class="muted" style="font-size:12px">已移除</div>${deletedSetups.map(s=>`<div class="manage-item"><div class="meta"><b>${escHtml(s.date||'無日期')}｜${escHtml(s.car||'未填車型')}</b></div><button onclick="restorePersonalSetup('${s.id}')">還原</button></div>`).join('')}`:'');
-  const uniq=k=>[...new Set(activeSetups.map(s=>(s[k]||'').trim()).filter(Boolean))];
+  const activeSetups=personalSetups.filter(s=>!s.deletedAt && (!siteMode||typeOf(s)===siteMode)), deletedSetups=personalSetups.filter(s=>s.deletedAt && (!siteMode||typeOf(s)===siteMode));
+  setupManageList.innerHTML=(activeSetups.map(s=>`<div class="manage-item"><div class="meta"><b>${escHtml(s.date||'無日期')}｜${escHtml(typeLabel(typeOf(s)))}｜${escHtml(s.car||'未填車型')}</b><span class="muted">${escHtml(s.track||'')}｜${escHtml(typeOf(s)==='nitro8'?(s.nEngine||''):(s.motor||''))}</span></div><button class="danger" onclick="deletePersonalSetup('${s.id}')">移除</button></div>`).join('')||'<span class="muted">沒有設定歷史。</span>')+(deletedSetups.length?`<hr><div class="muted" style="font-size:12px">已移除</div>${deletedSetups.map(s=>`<div class="manage-item"><div class="meta"><b>${escHtml(s.date||'無日期')}｜${escHtml(typeLabel(typeOf(s)))}｜${escHtml(s.car||'未填車型')}</b></div><button onclick="restorePersonalSetup('${s.id}')">還原</button></div>`).join('')}`:'');
+  document.getElementById('motorHistoryCard')?.classList.toggle('hidden',siteMode==='nitro8');
+  document.getElementById('escHistoryCard')?.classList.toggle('hidden',siteMode==='nitro8');
+  const uniq=k=>[...new Set(activeSetups.filter(s=>typeOf(s)==='touring').map(s=>(s[k]||'').trim()).filter(Boolean))];
   const motors=uniq('motor'), escs=uniq('esc');
   motorManageList.innerHTML=(motors.map(v=>`<div class="manage-item"><div class="meta"><b>${escHtml(v)}</b></div>${hiddenMotorHistory.includes(v)?`<button onclick='unhideHistory("motor",${JSON.stringify(v)})'>恢復建議</button>`:`<button class="danger" onclick='hideHistory("motor",${JSON.stringify(v)})'>從建議移除</button>`}</div>`).join('')||'<span class="muted">尚無馬達歷史。</span>');
   escManageList.innerHTML=(escs.map(v=>`<div class="manage-item"><div class="meta"><b>${escHtml(v)}</b></div>${hiddenEscHistory.includes(v)?`<button onclick='unhideHistory("esc",${JSON.stringify(v)})'>恢復建議</button>`:`<button class="danger" onclick='hideHistory("esc",${JSON.stringify(v)})'>從建議移除</button>`}</div>`).join('')||'<span class="muted">尚無 ESC 歷史。</span>');
 }
 function renderCompareSelector(){
-  compareSelect.innerHTML=activeSessions().map(s=>`<label class="check"><input type="checkbox" value="${s.id}"> ${escHtml(s.date||'')}｜${escHtml(s.ownerName||'舊資料')}｜${escHtml(s.track||'')}｜${escHtml(s.car||'')}</label>`).join('');
+  compareSelect.innerHTML=filteredActiveSessions().map(s=>`<label class="check"><input type="checkbox" value="${s.id}"> ${escHtml(s.date||'')}｜${escHtml(s.ownerName||'舊資料')}｜${escHtml(s.track||'')}｜${escHtml(s.car||'')}</label>`).join('');
   drawLineChart('compareChart',[],'','');
   compareTable.innerHTML='';
-  compareSummary.innerHTML='<span class="muted">選 2～5 筆紀錄比較。</span>';
+  compareSummary.innerHTML='<span class="muted">選 2～5 筆目前車種的紀錄比較。</span>';
 }
 function renderComparison(){
   const ids=[...compareSelect.querySelectorAll('input:checked')].map(x=>x.value).slice(0,5);
   const sel=ids.map(id=>sessions.find(s=>s.id===id)).filter(Boolean);
   if(sel.length<2){compareSummary.innerHTML='<span class="warn">至少選兩筆。</span>';return;}
+  const types=[...new Set(sel.map(typeOf))];
+  if(types.length!==1){compareSummary.innerHTML='<span class="warn">請只選相同車種比較：Touring 與 1/8 油平跑的設定欄位不同。</span>';compareTable.innerHTML='';drawLineChart('compareChart',[]);return;}
   drawMultiChart('compareChart',sel);
-  const rows=[
-    ['車手','ownerName'],['日期','date'],['場地','track'],['馬達','motor'],['ESC','esc'],['FDR','fdr'],['輪胎','tires'],['胎膠','additive'],
-    ['暖胎 °C','warmerTemp'],['暖胎 min','warmerMin'],['車高 F','rideF'],['車高 R','rideR'],['Downstop F','downF'],['Downstop R','downR'],
-    ['Toe F','toeF'],['Toe R','toeR'],['Camber F','camberF'],['Camber R','camberR'],['避震油 F','shockF'],['避震油 R','shockR'],['差速油','diffOil'],['防傾桿','arb']
-  ];
-  compareTable.innerHTML='<thead><tr><th>項目</th>'+sel.map((s,i)=>`<th>#${i+1} ${escHtml(s.date||'')}</th>`).join('')+'</tr></thead><tbody>'+
-    rows.map(([name,key])=>`<tr><td>${name}</td>${sel.map(s=>`<td>${escHtml(s[key]||'—')}</td>`).join('')}</tr>`).join('')+
-    '</tbody>';
+  const rows=types[0]==='nitro8'?
+    [['車手','ownerName'],['日期','date'],['場地','track'],['車型','car'],...nitroSetupCompareFields]:
+    [['車手','ownerName'],['日期','date'],['場地','track'],['車型','car'],...touringSetupCompareFields];
+  compareTable.innerHTML='<thead><tr><th>項目</th>'+sel.map((s,i)=>`<th>#${i+1} ${escHtml(s.date||'')}</th>`).join('')+'</tr></thead><tbody>'+rows.map(([name,key])=>`<tr><td>${escHtml(name)}</td>${sel.map(s=>`<td>${escHtml(s[key]||'—')}</td>`).join('')}</tr>`).join('')+'</tbody>';
   const bests=sel.map(s=>stats(s.laps||[]).best);
   const avgs=sel.map(s=>stats(s.laps||[]).avg);
   const valid=bests.map((v,i)=>[v,i]).filter(x=>Number.isFinite(x[0])).sort((a,b)=>a[0]-b[0]);
   let html='<div class="kpis">'+sel.map((s,i)=>`<div class="kpi"><small>#${i+1} ${escHtml(s.date||'')}</small><b>${fmt(bests[i])}</b><small>Best3 ${fmt(stats(sel[i].laps||[]).best3)}｜Best5 ${fmt(stats(sel[i].laps||[]).best5)}｜平均 ${fmt(avgs[i])}</small></div>`).join('')+'</div>';
-  if(valid.length>=2){
-    const d=valid[1][0]-valid[0][0];
-    html+=`<p>最快的是 <b class="good">#${valid[0][1]+1}</b>，比第二快快 <b>${d.toFixed(3)} s</b>。</p>`;
-  }
+  if(valid.length>=2){const d=valid[1][0]-valid[0][0];html+=`<p>最快的是 <b class="good">#${valid[0][1]+1}</b>，比第二快快 <b>${d.toFixed(3)} s</b>。</p>`;}
   compareSummary.innerHTML=html;
 }
 function drawLineChart(id,data){
@@ -881,8 +1239,8 @@ function drawMultiChart(id,sel){
 }
 function exportJSON(){
   const mine=mySessions();
-  const blob=new Blob([JSON.stringify({version:3,garageId:currentGarageId,exportedAt:new Date().toISOString(),ownerUid:currentUser?.uid||null,sessions:mine},null,2)],{type:'application/json'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='my-touring-car-sessions.json';a.click();URL.revokeObjectURL(a.href);
+  const blob=new Blob([JSON.stringify({version:4,garageId:currentGarageId,exportedAt:new Date().toISOString(),ownerUid:currentUser?.uid||null,sessions:mine},null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='my-rc-onroad-sessions-v4.json';a.click();URL.revokeObjectURL(a.href);
 }
 jsonImport.addEventListener('change',async e=>{
   const f=e.target.files[0]; if(!f)return;
@@ -909,6 +1267,9 @@ jsonImport.addEventListener('change',async e=>{
   }catch(err){console.error(err);alert('無法匯入：'+(err.message||'JSON 備份格式錯誤'));}
   e.target.value='';
 });
+['nTireDiaFStart','nTireDiaRStart','nTireDiaFEnd','nTireDiaREnd'].forEach(id=>document.getElementById(id)?.addEventListener('input',updateNitroTireWear));
+document.getElementById('car')?.addEventListener('change',onCarModelChange);
+toggleTypeUI();setNitroDefaults(false);
 lapFile.addEventListener('change',async e=>{
   const f=e.target.files[0];if(!f)return;lapText.value=await f.text();parseLapText();e.target.value='';
 });
