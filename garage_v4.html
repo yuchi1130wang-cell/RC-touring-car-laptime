@@ -140,6 +140,10 @@ details.advanced summary{cursor:pointer;font-weight:700;color:#dce7f6}
   input,select,textarea{font-size:16px}
   button,.btn{min-height:44px}
 }
+.auth-help{position:fixed;inset:0;z-index:10050;background:rgba(0,0,0,.78);display:flex;align-items:center;justify-content:center;padding:20px}
+.auth-help-card{width:min(520px,100%);background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px}
+.auth-help-card h3{font-size:20px;margin:0 0 8px}.auth-help-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.auth-help-actions button{flex:1;min-width:120px}
 </style>
 
 </head>
@@ -151,6 +155,16 @@ details.advanced summary{cursor:pointer;font-weight:700;color:#dce7f6}
     <div class="mode-grid">
       <button class="mode-card" onclick="chooseSiteMode('touring')"><b>1/10 Touring 電房車</b><span>目前的 Touring 設定、圈速、Garage 與比較功能。</span></button>
       <button class="mode-card" onclick="chooseSiteMode('nitro8')"><b>1/8 Nitro On-road 油平跑</b><span>泡棉胎、引擎、離合器、二速與 1/8 平跑車幾何設定。</span></button>
+    </div>
+  </div>
+</div>
+<div id="authHelp" class="auth-help hidden">
+  <div class="auth-help-card">
+    <h3>這個瀏覽器無法完成 Google 登入</h3>
+    <div class="muted" id="authHelpText">請用 Chrome、Safari 或其他完整瀏覽器開啟這個網站，再按一次 Google 登入。</div>
+    <div class="auth-help-actions">
+      <button class="primary" onclick="copyCurrentUrl()">複製網站網址</button>
+      <button onclick="closeAuthHelp()">關閉</button>
     </div>
   </div>
 </div>
@@ -713,18 +727,37 @@ async function bootstrapGarage(){
   if(id){ await migrateLegacyPrivateSessions(); await loadGarageSessions(); }
 }
 
+function openAuthHelp(message){
+  const box=document.getElementById('authHelp');
+  const text=document.getElementById('authHelpText');
+  if(message&&text) text.textContent=message;
+  box?.classList.remove('hidden');
+}
+function closeAuthHelp(){ document.getElementById('authHelp')?.classList.add('hidden'); }
+async function copyCurrentUrl(){
+  const url=location.href;
+  try{
+    await navigator.clipboard.writeText(url);
+    alert('網站網址已複製。請貼到 Chrome 或 Safari 開啟。');
+  }catch{
+    prompt('複製這個網址，改用 Chrome 或 Safari 開啟：',url);
+  }
+}
 async function toggleGoogleAuth(){
   try{
     if(currentUser){await auth.signOut();return;}
+    // V4 Auth Fix：只使用 Popup，不再 fallback 到 Redirect。
     await auth.signInWithPopup(googleProvider);
   }catch(err){
-    console.error(err);
-    if(['auth/popup-blocked','auth/cancelled-popup-request','auth/operation-not-supported-in-this-environment'].includes(err.code)) await auth.signInWithRedirect(googleProvider);
-    else alert('Google 登入失敗：'+(err.message||err.code||err));
+    console.error('Google sign-in',err);
+    const browserIssue=['auth/popup-blocked','auth/cancelled-popup-request','auth/operation-not-supported-in-this-environment','auth/web-storage-unsupported'].includes(err.code);
+    if(browserIssue){
+      openAuthHelp('目前這個瀏覽器無法完成 Google 登入。請複製網站網址，改用 Chrome、Safari 或其他完整瀏覽器開啟，再按一次 Google 登入。');
+    }else{
+      openAuthHelp('Google 登入失敗：'+(err.message||err.code||err)+'。如果你是在 App 內建瀏覽器，請改用 Chrome 或 Safari。');
+    }
   }
 }
-
-auth.getRedirectResult().catch(err=>console.error('redirect auth',err));
 auth.onAuthStateChanged(async user=>{
   currentUser=user||null;
   const btn=document.getElementById('authBtn');
