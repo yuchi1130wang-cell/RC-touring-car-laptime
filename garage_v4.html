@@ -86,6 +86,42 @@ details.advanced summary{cursor:pointer;font-weight:700;color:#dce7f6}
 .mode-chip{display:inline-flex;align-items:center;gap:8px;background:#182131;border:1px solid var(--line);padding:7px 10px;border-radius:999px;font-size:12px}
 .optional-note{font-size:12px;color:var(--muted);margin-top:8px}
 @media(max-width:650px){.mode-grid{grid-template-columns:1fr}.mode-card{min-height:120px}}
+
+/* V4 compact trackside layout */
+.compact-version{margin-top:2px;line-height:1}.compact-version .tag{font-size:10px;padding:2px 6px}
+@media(max-width:700px){
+  header{position:relative;top:auto;backdrop-filter:none}
+  header .wrap{padding:10px 12px 8px}
+  h1{font-size:21px;margin:0;line-height:1.15}
+  .compact-version{position:absolute;right:12px;top:12px;margin:0}
+  nav{margin-top:8px;display:flex;flex-wrap:nowrap;overflow-x:auto;gap:6px;padding-bottom:3px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  nav::-webkit-scrollbar,.authbar::-webkit-scrollbar,.garagebar::-webkit-scrollbar{display:none}
+  nav>button,nav>.btn{flex:0 0 auto;min-height:36px!important;padding:7px 10px;font-size:13px;white-space:nowrap;border-radius:9px}
+  .mode-chip{order:-1;flex:0 0 auto;min-height:36px;padding:4px 5px 4px 9px;gap:5px;font-size:12px;white-space:nowrap}
+  .mode-chip .mini{min-height:28px!important;padding:4px 7px;font-size:11px;border-radius:7px}
+  .authbar{margin-top:5px;display:flex;flex-wrap:nowrap;overflow-x:auto;gap:7px;align-items:center;white-space:nowrap;-webkit-overflow-scrolling:touch}
+  .authbar button{flex:0 0 auto;min-height:34px!important;padding:6px 9px;font-size:12px}
+  .authstatus{font-size:11px}
+  .garagebar{margin-top:5px;display:flex;flex-wrap:nowrap;overflow-x:auto;gap:6px;align-items:center;white-space:nowrap;padding-bottom:2px;-webkit-overflow-scrolling:touch}
+  .garagebar>span:first-child{display:none}
+  .garagebar select{flex:0 0 145px;min-width:145px;width:145px;padding:6px 8px;font-size:13px!important;height:34px}
+  .garagebar .mini{flex:0 0 auto;min-height:34px!important;padding:5px 8px;font-size:12px}
+  #garageStatus{flex:0 0 auto;max-width:150px;overflow:hidden;text-overflow:ellipsis}
+  main.wrap{padding:8px 10px 36px}
+  #editor>.grid{gap:8px}
+  #editor>.grid>.card{padding:12px}
+  #editor>.grid>.card:first-child{min-height:58vh;max-height:68vh;overflow-y:auto;-webkit-overflow-scrolling:touch;scrollbar-gutter:stable}
+  #editor>.grid>.card:first-child h2{position:sticky;top:-12px;z-index:2;background:var(--panel);padding:4px 0 8px;margin:0 0 8px}
+  #editor .setupbar{margin-bottom:8px;gap:6px}
+  #editor .setupbar button{min-height:38px!important;padding:7px 10px}
+  #editor .notice{padding:7px 9px;font-size:11px;line-height:1.35}
+  #editor br{line-height:4px}
+  #editor h3{margin:12px 0 7px}
+  #editor .formgrid{gap:7px}
+  #editor label{margin-bottom:3px;font-size:11px}
+  #editor input,#editor select,#editor textarea{padding:7px 8px}
+  #editor .optional-note{font-size:11px;margin-top:5px}
+}
 </style>
 <meta name="theme-color" content="#0b0d10">
 
@@ -111,7 +147,7 @@ details.advanced summary{cursor:pointer;font-weight:700;color:#dce7f6}
 <div id="modeGate" class="mode-gate">
   <div class="mode-panel">
     <h2>今天要記哪一種車？</h2>
-    <div class="muted">先選車種；進站後的總覽、新增與比較只顯示該車種，之後可隨時切換。</div>
+    <div class="muted">先選今天要操作的車種；進站後的總覽、新增、比較與資料管理都只顯示該車種，之後可隨時切換。</div>
     <div class="mode-grid">
       <button class="mode-card" onclick="chooseSiteMode('touring')"><b>1/10 Touring 電房車</b><span>目前的 Touring 設定、圈速、Garage 與比較功能。</span></button>
       <button class="mode-card" onclick="chooseSiteMode('nitro8')"><b>1/8 Nitro On-road 油平跑</b><span>泡棉胎、引擎、離合器、二速與 1/8 平跑車幾何設定。</span></button>
@@ -121,15 +157,15 @@ details.advanced summary{cursor:pointer;font-weight:700;color:#dce7f6}
 <header>
   <div class="wrap">
     <h1>RC On-road 設定・圈速紀錄</h1>
-    <div class="sub">Shared Garage｜依車種分流｜個人設定沿用｜多場次比較 <span class="tag">Garage V4</span></div>
+    <div class="sub compact-version"><span class="tag">V4</span></div>
     <nav>
       <button onclick="showView('dashboard')">總覽</button>
-      <button onclick="newSession()" class="primary">＋ 新增練車紀錄</button>
+      <button onclick="newSession()" class="primary">＋ 新增</button>
       <button onclick="showView('compare')">比較</button>
       <button onclick="showView('manage')">資料管理</button>
-      <button onclick="exportJSON()">匯出備份</button>
-      <label class="btn">匯入備份<input id="jsonImport" type="file" accept=".json" class="hidden"></label>
-      <span class="mode-chip">目前：<b id="modeLabel">尚未選擇</b> <button class="mini" onclick="openModeGate()">切換車種</button></span>
+      <button onclick="exportJSON()">匯出</button>
+      <label class="btn">匯入<input id="jsonImport" type="file" accept=".json" class="hidden"></label>
+      <span class="mode-chip"><b id="modeLabel">尚未選擇</b><button class="mini" onclick="openModeGate()">切換</button></span>
     </nav>
     <div class="authbar">
       <button id="authBtn" onclick="toggleGoogleAuth()">使用 Google 登入</button>
@@ -176,12 +212,12 @@ details.advanced summary{cursor:pointer;font-weight:700;color:#dce7f6}
       <h2 id="editorTitle">新增練車紀錄</h2>
       <div class="setupbar">
         <div>
-          <label>設定來源（只顯示「我自己」同車種的紀錄）</label>
+          <label>設定來源（只顯示「我自己」同車種／同車型的紀錄）</label>
           <select id="setupSource"></select>
         </div>
         <button onclick="applySelectedSetup()">套用設定</button>
       </div>
-      <div class="notice">新增紀錄只會自動沿用你自己的同車種設定。1/10 Touring 與 1/8 油平跑互不混用；朋友的設定也不會自動帶入。</div>
+      <div class="notice">新增紀錄只會自動沿用你自己的同車種／同車型設定。1/10 Touring 與 1/8 油平跑互不混用；朋友的設定也不會自動帶入。</div>
       <br>
       <div class="formgrid">
         <div><label>日期</label><input id="date" type="date"></div>
@@ -190,6 +226,7 @@ details.advanced summary{cursor:pointer;font-weight:700;color:#dce7f6}
         <div><label>車型</label><input id="car" value="Xpress XQ3S" placeholder="例如：Xpress XQ3S / Mugen MRX7"></div>
         <div id="classField"><label>組別 / 規則</label><input id="className" placeholder="例如：13.5 Open / 17.5 Stock GT"></div>
       </div>
+      <div class="optional-note">除登入與選擇 Garage 外，其餘設定資料都可以留白後直接儲存；1/8 油平跑不顯示組別／規則。</div>
 
       <div id="touringFields">
         <h3>電裝 / 傳動</h3>
@@ -434,11 +471,11 @@ details.advanced summary{cursor:pointer;font-weight:700;color:#dce7f6}
       <div class="muted" style="font-size:12px;margin-bottom:10px">這裡只包含你自己的 Setup。刪除後不會再出現在「設定來源」，但不會刪掉原 Session。</div>
       <div id="setupManageList" class="manage-list"></div>
     </div>
-    <div class="card span-6">
+    <div class="card span-6" id="motorHistoryCard">
       <h2>馬達歷史建議</h2>
       <div id="motorManageList" class="manage-list"></div>
     </div>
-    <div class="card span-6">
+    <div class="card span-6" id="escHistoryCard">
       <h2>ESC 歷史建議</h2>
       <div id="escManageList" class="manage-list"></div>
     </div>
@@ -720,7 +757,7 @@ function chooseSiteMode(type){
   const ml=document.getElementById('modeLabel'); if(ml)ml.textContent=typeLabel(type);
   const title=document.getElementById('sessionListTitle'); if(title)title.textContent=type==='nitro8'?'1/8 油平跑紀錄':'1/10 Touring 練車紀錄';
   document.getElementById('modeGate')?.classList.add('hidden');
-  toggleTypeUI(); refreshPersonalSuggestions(); renderDashboard();
+  toggleTypeUI(); refreshPersonalSuggestions(); renderDashboard(); renderManage();
   if(!document.getElementById('editor')?.classList.contains('hidden')) newSession();
 }
 function filteredActiveSessions(){ return activeSessions().filter(s=>!siteMode || typeOf(s)===siteMode); }
@@ -753,15 +790,23 @@ function refreshPersonalSuggestions(){
   if(md)md.innerHTML=motors.map(v=>`<option value="${escHtml(v)}"></option>`).join('');
   if(ed)ed.innerHTML=escs.map(v=>`<option value="${escHtml(v)}"></option>`).join('');
   const ss=document.getElementById('setupSource'); if(ss){
-    ss.innerHTML='<option value="latest">上一次我的同車種設定（自動）</option><option value="blank">空白設定</option>'+mine.map(s=>`<option value="${escHtml(String(s.id))}">${escHtml(s.date||'無日期')}｜${escHtml(s.car||'未填車型')}｜${escHtml(s.track||'未填場地')}</option>`).join('');
+    ss.innerHTML='<option value="latest">上一次我的同車種／同車型設定（自動）</option><option value="blank">空白設定</option>'+mine.map(s=>`<option value="${escHtml(String(s.id))}">${escHtml(s.date||'無日期')}｜${escHtml(s.car||'未填車型')}｜${escHtml(s.track||'未填場地')}</option>`).join('');
   }
   renderManage();
 }
 function onCarModelChange(){
-  refreshPersonalSuggestions();
   const type=currentType(), model=(document.getElementById('car')?.value||'').trim();
-  const latest=personalSetups.find(s=>!s.deletedAt && typeOf(s)===type && (!model || s.car===model));
+  refreshPersonalSuggestions();
+  const latest=personalSetups.find(s=>!s.deletedAt && typeOf(s)===type && model && s.car===model);
   const ss=document.getElementById('setupSource'); if(ss)ss.value=latest?'latest':'blank';
+  // 新增紀錄時切換車型，避免上一台車的設定殘留；編輯既有紀錄時則不自動覆蓋。
+  if(currentId || !model)return;
+  const keepCar=model;
+  clearTypeFields(type);
+  document.getElementById('car').value=keepCar;
+  if(latest) copySetupFromSession(latest);
+  else { document.getElementById('car').value=keepCar; if(type==='nitro8')setNitroDefaults(true); }
+  if(ss)ss.value=latest?'latest':'blank';
 }
 function clearTypeFields(type){
   const list=type==='nitro8'?nitroFieldsList:touringFields;
@@ -792,7 +837,7 @@ function applySelectedSetup(){
   const model=(document.getElementById('car')?.value||'').trim();
   const mine=personalSetups.filter(s=>!s.deletedAt && typeOf(s)===type && (!model || !s.car || s.car===model));
   const chosen=val==='latest'?mine[0]:mine.find(x=>String(x.id)===String(val));
-  if(!chosen){alert('目前還沒有你自己的同車種歷史設定。');return;}
+  if(!chosen){alert('目前還沒有你自己的同車種／同車型歷史設定。');return;}
   copySetupFromSession(chosen);
 }
 function onCarTypeChange(autoApply=false){
@@ -901,7 +946,8 @@ async function saveSession(){
   const now=new Date().toISOString();
   const obj={id:currentId||uid(),createdAt:existing?.createdAt||now,updatedAt:now,laps:[...currentLaps],ownerUid:currentUser.uid,ownerName:displayName()};
   fields.forEach(f=>{const el=document.getElementById(f);obj[f]=el?el.value:'';});
-  // V4：不同車種的專用欄位不交叉寫入，避免隱藏欄位污染另一種車的 Setup。
+  obj.carType=siteMode||obj.carType||'touring';
+  // V4：所有設定欄位都允許留白；不同車種的專用欄位不交叉寫入，避免隱藏欄位污染另一種車的 Setup。
   if(obj.carType==='nitro8'){ obj.className=''; touringFields.forEach(f=>obj[f]=''); }
   else nitroFieldsList.forEach(f=>obj[f]='');
   const idx=sessions.findIndex(x=>String(x.id)===String(obj.id));
@@ -1100,11 +1146,13 @@ async function unhideHistory(type,value){
 }
 function renderManage(){
   const trash=document.getElementById('trashList'); if(!trash)return;
-  const t=myTrash().sort((a,b)=>(b.deletedAt||'').localeCompare(a.deletedAt||''));
+  const t=myTrash().filter(s=>!siteMode||typeOf(s)===siteMode).sort((a,b)=>(b.deletedAt||'').localeCompare(a.deletedAt||''));
   trash.innerHTML=t.length?t.map(s=>`<div class="manage-item"><div class="meta"><b>${escHtml(s.date||'無日期')}｜${escHtml(s.car||'未填車型')}</b><span class="muted">${escHtml(s.track||'')}｜刪除於 ${escHtml((s.deletedAt||'').slice(0,10))}</span></div><div class="row-actions"><button onclick="restoreTrash('${s.id}')">還原</button><button class="danger" onclick="purgeTrash('${s.id}')">永久刪除</button></div></div>`).join(''):'<span class="muted">最近刪除是空的。</span>';
-  const activeSetups=personalSetups.filter(s=>!s.deletedAt), deletedSetups=personalSetups.filter(s=>s.deletedAt);
+  const activeSetups=personalSetups.filter(s=>!s.deletedAt && (!siteMode||typeOf(s)===siteMode)), deletedSetups=personalSetups.filter(s=>s.deletedAt && (!siteMode||typeOf(s)===siteMode));
   setupManageList.innerHTML=(activeSetups.map(s=>`<div class="manage-item"><div class="meta"><b>${escHtml(s.date||'無日期')}｜${escHtml(typeLabel(typeOf(s)))}｜${escHtml(s.car||'未填車型')}</b><span class="muted">${escHtml(s.track||'')}｜${escHtml(typeOf(s)==='nitro8'?(s.nEngine||''):(s.motor||''))}</span></div><button class="danger" onclick="deletePersonalSetup('${s.id}')">移除</button></div>`).join('')||'<span class="muted">沒有設定歷史。</span>')+(deletedSetups.length?`<hr><div class="muted" style="font-size:12px">已移除</div>${deletedSetups.map(s=>`<div class="manage-item"><div class="meta"><b>${escHtml(s.date||'無日期')}｜${escHtml(typeLabel(typeOf(s)))}｜${escHtml(s.car||'未填車型')}</b></div><button onclick="restorePersonalSetup('${s.id}')">還原</button></div>`).join('')}`:'');
-  const uniq=k=>[...new Set(activeSetups.map(s=>(s[k]||'').trim()).filter(Boolean))];
+  document.getElementById('motorHistoryCard')?.classList.toggle('hidden',siteMode==='nitro8');
+  document.getElementById('escHistoryCard')?.classList.toggle('hidden',siteMode==='nitro8');
+  const uniq=k=>[...new Set(activeSetups.filter(s=>typeOf(s)==='touring').map(s=>(s[k]||'').trim()).filter(Boolean))];
   const motors=uniq('motor'), escs=uniq('esc');
   motorManageList.innerHTML=(motors.map(v=>`<div class="manage-item"><div class="meta"><b>${escHtml(v)}</b></div>${hiddenMotorHistory.includes(v)?`<button onclick='unhideHistory("motor",${JSON.stringify(v)})'>恢復建議</button>`:`<button class="danger" onclick='hideHistory("motor",${JSON.stringify(v)})'>從建議移除</button>`}</div>`).join('')||'<span class="muted">尚無馬達歷史。</span>');
   escManageList.innerHTML=(escs.map(v=>`<div class="manage-item"><div class="meta"><b>${escHtml(v)}</b></div>${hiddenEscHistory.includes(v)?`<button onclick='unhideHistory("esc",${JSON.stringify(v)})'>恢復建議</button>`:`<button class="danger" onclick='hideHistory("esc",${JSON.stringify(v)})'>從建議移除</button>`}</div>`).join('')||'<span class="muted">尚無 ESC 歷史。</span>');
@@ -1187,7 +1235,7 @@ jsonImport.addEventListener('change',async e=>{
   e.target.value='';
 });
 ['nTireDiaFStart','nTireDiaRStart','nTireDiaFEnd','nTireDiaREnd'].forEach(id=>document.getElementById(id)?.addEventListener('input',updateNitroTireWear));
-document.getElementById('car')?.addEventListener('change',refreshPersonalSuggestions);
+document.getElementById('car')?.addEventListener('change',onCarModelChange);
 toggleTypeUI();setNitroDefaults(false);
 lapFile.addEventListener('change',async e=>{
   const f=e.target.files[0];if(!f)return;lapText.value=await f.text();parseLapText();e.target.value='';
