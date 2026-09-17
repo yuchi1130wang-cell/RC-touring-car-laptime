@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>RC On-road 設定・圈速紀錄 V4.2</title>
+<title>RC On-road 設定・圈速紀錄 V6</title>
 <style>
 :root{
   --bg:#0b0d10;--panel:#141820;--panel2:#1b202a;--text:#eef2f7;--muted:#9aa6b2;
@@ -161,7 +161,7 @@ details.advanced summary{cursor:pointer;font-weight:700;color:#dce7f6}
 <div id="authHelp" class="auth-help hidden">
   <div class="auth-help-card">
     <h3>這個瀏覽器無法完成 Google 登入</h3>
-    <div class="muted" id="authHelpText">請用 Chrome、Safari 或其他完整瀏覽器開啟這個網站，再按一次 Google 登入。</div>
+    <div class="muted" id="authHelpText">請確認瀏覽器允許彈出式視窗，然後再按一次 Google 登入。若你是在 App 內建瀏覽器，再改用 Safari 或 Chrome。</div>
     <div class="auth-help-actions">
       <button class="primary" onclick="copyCurrentUrl()">複製網站網址</button>
       <button onclick="closeAuthHelp()">關閉</button>
@@ -171,7 +171,7 @@ details.advanced summary{cursor:pointer;font-weight:700;color:#dce7f6}
 <header>
   <div class="wrap">
     <h1>RC On-road 設定・圈速紀錄</h1>
-    <div class="sub compact-version"><span class="tag">V4.2</span></div>
+    <div class="sub compact-version"><span class="tag">V6</span></div>
     <nav>
       <button onclick="showView('dashboard')">總覽</button>
       <button onclick="newSession()" class="primary">＋ 新增</button>
@@ -482,7 +482,7 @@ details.advanced summary{cursor:pointer;font-weight:700;color:#dce7f6}
     </div>
     <div class="card span-6">
       <h2>我的設定歷史</h2>
-      <div class="muted" style="font-size:12px;margin-bottom:10px">這裡只包含你自己的 Setup。刪除後不會再出現在「設定來源」，但不會刪掉原 Session。</div>
+      <div class="muted" style="font-size:12px;margin-bottom:10px">這裡只管理「自動帶入／設定來源」的個人 Setup 快照，不等於刪除 Session。要讓一筆紀錄從總覽、比較與所有統計消失，請進入該 Session 按「刪除」。</div>
       <div id="setupManageList" class="manage-list"></div>
     </div>
     <div class="card span-6" id="motorHistoryCard">
@@ -497,7 +497,7 @@ details.advanced summary{cursor:pointer;font-weight:700;color:#dce7f6}
 </section>
 </main>
 
-<footer>Garage V4｜支援 1/10 Touring 與 1/8 Nitro On-road；Session 共享，個人設定歷史仍依 Google UID 分開。</footer>
+<footer>Garage V6｜支援 1/10 Touring 與 1/8 Nitro On-road；Session 共享，個人設定歷史仍依 Google UID 分開。</footer>
 
 
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
@@ -552,9 +552,6 @@ window.addEventListener('pageshow',event=>{
   }
 });
 
-window.addEventListener('load',()=>{
-  if(isInAppBrowser()) openAuthHelp('你目前可能是在 App 內建瀏覽器中開啟。這類瀏覽器常會限制 Google 登入與網站儲存空間。請複製網址後，用 Chrome、Safari、Firefox 或 Edge 的完整瀏覽器開啟。');
-});
 
 function setSyncStatus(text, ok=false){
   const el=document.getElementById('syncStatus');
@@ -702,6 +699,27 @@ async function restoreSessionFromCloud(id){
 async function purgeSessionFromCloud(id){
   await garageSessionsRef().doc(String(id)).delete();
 }
+async function softDeletePersonalSetupMirror(id, deletedAt){
+  if(!currentUser)return;
+  await personalSetupsRef().doc(String(id)).set({deletedAt,updatedAt:deletedAt},{merge:true});
+  const p=personalSetups.find(x=>String(x.id)===String(id));
+  if(p){p.deletedAt=deletedAt;p.updatedAt=deletedAt;}
+}
+async function restorePersonalSetupMirror(id){
+  if(!currentUser)return;
+  const ref=personalSetupsRef().doc(String(id));
+  const snap=await ref.get();
+  if(snap.exists){
+    await ref.update({deletedAt:firebase.firestore.FieldValue.delete(),updatedAt:new Date().toISOString()});
+    const p=personalSetups.find(x=>String(x.id)===String(id));
+    if(p){delete p.deletedAt;p.updatedAt=new Date().toISOString();}
+  }
+}
+async function purgePersonalSetupMirror(id){
+  if(!currentUser)return;
+  await personalSetupsRef().doc(String(id)).delete().catch(()=>{});
+  personalSetups=personalSetups.filter(x=>String(x.id)!==String(id));
+}
 async function loadGarageSessions(){
   if(!currentUser||!currentGarageId)return;
   setSyncStatus('雲端：讀取 Garage…');
@@ -764,26 +782,38 @@ async function copyCurrentUrl(){
     prompt('複製這個網址，改用 Chrome 或 Safari 開啟：',url);
   }
 }
-async function toggleGoogleAuth(){
-  try{
-    if(currentUser){await auth.signOut();return;}
-    if(isInAppBrowser()){
-      openAuthHelp('目前是在 App 內建瀏覽器或 WebView 中。為避免 Google 登入失敗，請複製網址後改用 Chrome、Safari、Firefox 或 Edge 開啟。');
-      return;
-    }
-    // V4.2 Auth Fix：先確保 LOCAL persistence，再只使用 Popup，不 fallback 到 Redirect。
-    await authPersistenceReady;
-    await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
-    await auth.signInWithPopup(googleProvider);
-  }catch(err){
-    console.error('Google sign-in',err);
-    const browserIssue=['auth/popup-blocked','auth/cancelled-popup-request','auth/operation-not-supported-in-this-environment','auth/web-storage-unsupported'].includes(err.code);
-    if(browserIssue){
-      openAuthHelp('目前這個瀏覽器無法完成 Google 登入。請複製網站網址，改用 Chrome、Safari 或其他完整瀏覽器開啟，再按一次 Google 登入。');
-    }else{
-      openAuthHelp('Google 登入失敗：'+(err.message||err.code||err)+'。如果你是在 App 內建瀏覽器，請改用 Chrome 或 Safari。');
-    }
+function toggleGoogleAuth(){
+  if(currentUser){
+    auth.signOut().catch(err=>{
+      console.error('Google sign-out',err);
+      alert('登出失敗：'+(err.message||err.code||err));
+    });
+    return;
   }
+
+  // V6 Auth Fix：
+  // Google popup 必須直接由使用者點擊觸發。
+  // 不在這裡 await setPersistence，避免 Safari / iOS 把它視為非使用者觸發彈窗而封鎖。
+  // LOCAL persistence 已在 Firebase 初始化後背景設定。
+  auth.signInWithPopup(googleProvider).catch(err=>{
+    console.error('Google sign-in',err);
+
+    const browserIssue=[
+      'auth/popup-blocked',
+      'auth/cancelled-popup-request',
+      'auth/operation-not-supported-in-this-environment',
+      'auth/web-storage-unsupported'
+    ].includes(err.code);
+
+    if(browserIssue){
+      const msg=isInAppBrowser()
+        ? '目前可能是在 App 內建瀏覽器中，Google 登入可能受到限制。請複製網址後，用 Safari、Chrome、Firefox 或 Edge 的完整瀏覽器開啟。'
+        : 'Google 登入視窗沒有成功開啟。請確認瀏覽器沒有封鎖彈出式視窗，然後再按一次「使用 Google 登入」。';
+      openAuthHelp(msg);
+    }else{
+      openAuthHelp('Google 登入失敗：'+(err.message||err.code||err));
+    }
+  });
 }
 auth.onAuthStateChanged(async user=>{
   currentUser=user||null;
@@ -1061,7 +1091,7 @@ function nitroWearValue(s,axis){
   return a!==null&&b!==null?(a-b).toFixed(1)+' mm':'—';
 }
 function openDetail(id){
-  const s=sessions.find(x=>x.id===id); if(!s)return;
+  const s=sessions.find(x=>String(x.id)===String(id) && !x.deletedAt); if(!s){showView('dashboard');return;}
   currentId=id; const st=stats(s.laps||[]);
   detailTitle.textContent=`${s.date||''} ${s.track||''} — ${s.car||''}`;
   const own=s.ownerUid===currentUser?.uid;
@@ -1116,16 +1146,31 @@ function editSession(id){
   showView('editor');
 }
 async function deleteCurrent(){
-  const target=sessions.find(x=>String(x.id)===String(currentId));
-  if(target?.ownerUid && target.ownerUid!==currentUser?.uid){alert('只能刪除你自己建立的紀錄。');return;}
-  if(!confirm('把這筆紀錄移到「最近刪除」？30 天內可以還原。')) return;
-  const now=new Date().toISOString(); target.deletedAt=now; target.updatedAt=now; cacheSessions();
-  try{await softDeleteSessionFromCloud(currentId)}catch(err){console.error(err);setSyncStatus('雲端：刪除同步失敗');alert('移到最近刪除失敗，請稍後重試。');target.deletedAt='';}
-  currentId=null; renderDashboard(); showView('dashboard');
+  const id=String(currentId);
+  const target=sessions.find(x=>String(x.id)===id);
+  if(!target)return;
+  if(target.ownerUid && target.ownerUid!==currentUser?.uid){alert('只能刪除你自己建立的紀錄。');return;}
+  if(!confirm('把這筆紀錄移到「最近刪除」？刪除後會立即從總覽、比較、設定來源與歷史建議中隱藏；30 天內可以還原。')) return;
+  const now=new Date().toISOString();
+  target.deletedAt=now; target.updatedAt=now;
+  const mirror=personalSetups.find(x=>String(x.id)===id);
+  if(mirror){mirror.deletedAt=now;mirror.updatedAt=now;}
+  cacheSessions();
+  currentId=null;
+  refreshPersonalSuggestions();renderDashboard();renderCompareSelector();renderManage();showView('dashboard');
+  try{
+    await Promise.all([softDeleteSessionFromCloud(id),softDeletePersonalSetupMirror(id,now)]);
+    setSyncStatus('雲端：已同步',true);
+  }catch(err){
+    console.error(err);setSyncStatus('雲端：刪除同步失敗');
+    delete target.deletedAt;if(mirror)delete mirror.deletedAt;
+    cacheSessions();refreshPersonalSuggestions();renderDashboard();renderCompareSelector();renderManage();
+    alert('移到最近刪除失敗，已恢復原資料，請稍後重試。');
+  }
 }
 function duplicateSession(id){
   if(!currentUser){alert('請先登入。');return;}
-  const src=sessions.find(s=>String(s.id)===String(id)); if(!src)return;
+  const src=sessions.find(s=>String(s.id)===String(id) && !s.deletedAt); if(!src){alert('這筆紀錄已刪除或不存在。');return;}
   currentId=null; currentLaps=[];
   fields.forEach(f=>{const el=document.getElementById(f);if(el)el.value='';});
   copySetupFromSession(src);
@@ -1165,22 +1210,32 @@ function renderSetupChanges(s){
 }
 async function restoreTrash(id){
   const s=sessions.find(x=>String(x.id)===String(id)); if(!s||s.ownerUid!==currentUser?.uid)return;
-  try{await restoreSessionFromCloud(id); delete s.deletedAt; s.updatedAt=new Date().toISOString();cacheSessions();renderDashboard();renderManage();}
-  catch(e){console.error(e);alert('還原失敗：'+(e.message||e));}
+  try{
+    await Promise.all([restoreSessionFromCloud(id),restorePersonalSetupMirror(id)]);
+    delete s.deletedAt;s.updatedAt=new Date().toISOString();
+    cacheSessions();refreshPersonalSuggestions();renderDashboard();renderCompareSelector();renderManage();
+  }catch(e){console.error(e);alert('還原失敗：'+(e.message||e));}
 }
 async function purgeTrash(id){
   const s=sessions.find(x=>String(x.id)===String(id)); if(!s||s.ownerUid!==currentUser?.uid)return;
-  if(!confirm('永久刪除這筆 Session？這次無法還原。'))return;
-  try{await purgeSessionFromCloud(id);sessions=sessions.filter(x=>String(x.id)!==String(id));cacheSessions();renderManage();renderDashboard();}
-  catch(e){console.error(e);alert('永久刪除失敗：'+(e.message||e));}
+  if(!confirm('永久刪除這筆 Session？Session 與對應的個人設定歷史都會永久移除，無法還原。'))return;
+  try{
+    await Promise.all([purgeSessionFromCloud(id),purgePersonalSetupMirror(id)]);
+    sessions=sessions.filter(x=>String(x.id)!==String(id));
+    cacheSessions();refreshPersonalSuggestions();renderManage();renderDashboard();renderCompareSelector();
+  }catch(e){console.error(e);alert('永久刪除失敗：'+(e.message||e));}
 }
 async function purgeExpiredTrash(){
   if(!currentUser||!currentGarageId)return;
   const cutoff=Date.now()-30*24*60*60*1000;
   const expired=sessions.filter(s=>s.ownerUid===currentUser.uid && s.deletedAt && new Date(s.deletedAt).getTime()<cutoff);
   if(!expired.length)return;
-  await Promise.all(expired.map(s=>purgeSessionFromCloud(s.id).catch(()=>{})));
-  const ids=new Set(expired.map(s=>String(s.id))); sessions=sessions.filter(s=>!ids.has(String(s.id)));
+  await Promise.all(expired.map(s=>Promise.all([
+    purgeSessionFromCloud(s.id).catch(()=>{}),
+    purgePersonalSetupMirror(s.id).catch(()=>{})
+  ])));
+  const ids=new Set(expired.map(s=>String(s.id)));sessions=sessions.filter(s=>!ids.has(String(s.id)));
+  refreshPersonalSuggestions();
 }
 async function deletePersonalSetup(id){
   const s=personalSetups.find(x=>String(x.id)===String(id)); if(!s)return;
@@ -1209,7 +1264,7 @@ function renderManage(){
   const t=myTrash().filter(s=>!siteMode||typeOf(s)===siteMode).sort((a,b)=>(b.deletedAt||'').localeCompare(a.deletedAt||''));
   trash.innerHTML=t.length?t.map(s=>`<div class="manage-item"><div class="meta"><b>${escHtml(s.date||'無日期')}｜${escHtml(s.car||'未填車型')}</b><span class="muted">${escHtml(s.track||'')}｜刪除於 ${escHtml((s.deletedAt||'').slice(0,10))}</span></div><div class="row-actions"><button onclick="restoreTrash('${s.id}')">還原</button><button class="danger" onclick="purgeTrash('${s.id}')">永久刪除</button></div></div>`).join(''):'<span class="muted">最近刪除是空的。</span>';
   const activeSetups=personalSetups.filter(s=>!s.deletedAt && (!siteMode||typeOf(s)===siteMode)), deletedSetups=personalSetups.filter(s=>s.deletedAt && (!siteMode||typeOf(s)===siteMode));
-  setupManageList.innerHTML=(activeSetups.map(s=>`<div class="manage-item"><div class="meta"><b>${escHtml(s.date||'無日期')}｜${escHtml(typeLabel(typeOf(s)))}｜${escHtml(s.car||'未填車型')}</b><span class="muted">${escHtml(s.track||'')}｜${escHtml(typeOf(s)==='nitro8'?(s.nEngine||''):(s.motor||''))}</span></div><button class="danger" onclick="deletePersonalSetup('${s.id}')">移除</button></div>`).join('')||'<span class="muted">沒有設定歷史。</span>')+(deletedSetups.length?`<hr><div class="muted" style="font-size:12px">已移除</div>${deletedSetups.map(s=>`<div class="manage-item"><div class="meta"><b>${escHtml(s.date||'無日期')}｜${escHtml(typeLabel(typeOf(s)))}｜${escHtml(s.car||'未填車型')}</b></div><button onclick="restorePersonalSetup('${s.id}')">還原</button></div>`).join('')}`:'');
+  setupManageList.innerHTML=(activeSetups.map(s=>`<div class="manage-item"><div class="meta"><b>${escHtml(s.date||'無日期')}｜${escHtml(typeLabel(typeOf(s)))}｜${escHtml(s.car||'未填車型')}</b><span class="muted">${escHtml(s.track||'')}｜${escHtml(typeOf(s)==='nitro8'?(s.nEngine||''):(s.motor||''))}</span></div><button class="danger" onclick="deletePersonalSetup('${s.id}')">從設定來源隱藏</button></div>`).join('')||'<span class="muted">沒有設定歷史。</span>')+(deletedSetups.length?`<hr><div class="muted" style="font-size:12px">已移除</div>${deletedSetups.map(s=>`<div class="manage-item"><div class="meta"><b>${escHtml(s.date||'無日期')}｜${escHtml(typeLabel(typeOf(s)))}｜${escHtml(s.car||'未填車型')}</b></div><button onclick="restorePersonalSetup('${s.id}')">還原</button></div>`).join('')}`:'');
   document.getElementById('motorHistoryCard')?.classList.toggle('hidden',siteMode==='nitro8');
   document.getElementById('escHistoryCard')?.classList.toggle('hidden',siteMode==='nitro8');
   const uniq=k=>[...new Set(activeSetups.filter(s=>typeOf(s)==='touring').map(s=>(s[k]||'').trim()).filter(Boolean))];
@@ -1225,7 +1280,7 @@ function renderCompareSelector(){
 }
 function renderComparison(){
   const ids=[...compareSelect.querySelectorAll('input:checked')].map(x=>x.value).slice(0,5);
-  const sel=ids.map(id=>sessions.find(s=>s.id===id)).filter(Boolean);
+  const sel=ids.map(id=>sessions.find(s=>String(s.id)===String(id) && !s.deletedAt)).filter(Boolean);
   if(sel.length<2){compareSummary.innerHTML='<span class="warn">至少選兩筆。</span>';return;}
   const types=[...new Set(sel.map(typeOf))];
   if(types.length!==1){compareSummary.innerHTML='<span class="warn">請只選相同車種比較：Touring 與 1/8 油平跑的設定欄位不同。</span>';compareTable.innerHTML='';drawLineChart('compareChart',[]);return;}
