@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>RC On-road 設定・圈速紀錄 V13</title>
+<title>RC On-road 設定・圈速紀錄 V14</title>
 <style>
 :root{
   --bg:#0b0d10;--panel:#141820;--panel2:#1b202a;--text:#eef2f7;--muted:#9aa6b2;
@@ -148,7 +148,7 @@ details.advanced summary{cursor:pointer;font-weight:700;color:#dce7f6}
 
 
 <style>
-/* V13 Track Hub / public timing board */
+/* V14 Track Hub / public timing board */
 .track-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
 .track-card{border:1px solid var(--line);background:#0e1218;border-radius:12px;padding:12px;min-width:0}
 .track-card.active{border-color:var(--accent);background:#152035}
@@ -184,7 +184,7 @@ details.advanced summary{cursor:pointer;font-weight:700;color:#dce7f6}
 
 
 <style>
-/* V13 mobile/readability pass */
+/* V14 mobile/readability pass */
 
 /* First screen: literally only two choices */
 .mode-panel-simple{
@@ -347,7 +347,7 @@ input,select,textarea,button,.btn{max-width:100%}
 </style>
 
 
-<link rel="manifest" href="manifest_v13.webmanifest">
+<link rel="manifest" href="manifest_v14.webmanifest">
 <meta name="theme-color" content="#0b0d10">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -356,7 +356,7 @@ input,select,textarea,button,.btn{max-width:100%}
 
 
 <style>
-/* V13 Add to Home Screen */
+/* V14 Add to Home Screen */
 .a2hs-backdrop{
   position:fixed;
   inset:0;
@@ -455,7 +455,7 @@ input,select,textarea,button,.btn{max-width:100%}
 
 
 <style>
-/* V13: unified private/public Session flow */
+/* V14: unified private/public Session flow */
 .standalone-net-hint{
   margin-top:7px;
   padding:7px 9px;
@@ -493,6 +493,79 @@ input,select,textarea,button,.btn{max-width:100%}
 @media(max-width:700px){
   .standalone-net-hint{font-size:11px}
   .public-sync-box{padding:10px}
+}
+</style>
+
+
+<style>
+/* V14 lap-entry modes */
+.lap-mode-tabs{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:6px;
+  margin:10px 0 14px;
+}
+.lap-mode-tabs button{
+  min-width:0;
+  padding:10px 6px;
+  font-size:13px;
+  white-space:nowrap;
+}
+.lap-mode-tabs button.active{
+  background:var(--accent);
+  border-color:var(--accent);
+  color:#07111f;
+}
+.lap-mode-panel{
+  display:grid;
+  gap:9px;
+}
+.lap-mode-panel.hidden{display:none}
+.lap-actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+.best-lap-entry{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:8px;
+}
+.best-lap-entry input{
+  font-size:22px;
+  font-variant-numeric:tabular-nums;
+  text-align:center;
+}
+.timer-import-status{
+  padding:9px 10px;
+  border:1px solid var(--line);
+  border-radius:9px;
+  background:#0e131a;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.45;
+}
+.timer-import-status.good{
+  border-color:#315f40;
+  color:var(--good);
+}
+.timer-import-status.bad{
+  border-color:#6a2c2c;
+  color:var(--bad);
+}
+.source-pill{
+  display:inline-flex;
+  align-items:center;
+  border:1px solid var(--line);
+  border-radius:999px;
+  padding:3px 7px;
+  font-size:11px;
+  white-space:nowrap;
+}
+@media(max-width:390px){
+  .lap-mode-tabs{gap:4px}
+  .lap-mode-tabs button{font-size:12px;padding:9px 3px}
+  .best-lap-entry{grid-template-columns:1fr}
 }
 </style>
 
@@ -543,7 +616,7 @@ input,select,textarea,button,.btn{max-width:100%}
 <header>
   <div class="wrap">
     <h1>RC On-road 設定・圈速紀錄</h1>
-    <div class="sub compact-version"><span class="tag">V13</span></div>
+    <div class="sub compact-version"><span class="tag">V14</span></div>
     <nav>
       <button onclick="showView('dashboard')">總覽</button>
       <button onclick="newSession()" class="primary">＋ 新增</button>
@@ -803,14 +876,57 @@ input,select,textarea,button,.btn{max-width:100%}
 
     <div class="card span-4">
       <h2>圈速</h2>
-      <div class="notice">可直接貼入「每行一圈」，或上傳 CSV/TXT。支援 12.345、0:12.345、Lap 1,12.345 等格式。</div>
-      <br>
-      <label>貼上圈速</label>
-      <textarea id="lapText" placeholder="12.842&#10;12.515&#10;12.301&#10;12.404"></textarea>
-      <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
-        <button onclick="parseLapText()">解析圈速</button>
-        <label class="btn">上傳 CSV/TXT<input id="lapFile" type="file" accept=".csv,.txt" class="hidden"></label>
+
+      <div class="lap-mode-tabs" role="tablist" aria-label="圈速輸入方式">
+        <button type="button" id="lapModeBtnFull" class="active" onclick="setLapInputMode('full')">完整圈速</button>
+        <button type="button" id="lapModeBtnBest" onclick="setLapInputMode('best')">最快圈</button>
+        <button type="button" id="lapModeBtnTimer" onclick="setLapInputMode('timer')">從計時器匯入</button>
       </div>
+
+      <div id="lapModeFull" class="lap-mode-panel">
+        <div class="notice">貼上完整逐圈資料，每行一圈即可。支援 12.345、0:12.345、Lap 1,12.345 等格式。</div>
+        <label>完整圈速</label>
+        <textarea id="lapText" placeholder="12.842&#10;12.515&#10;12.301&#10;12.404"></textarea>
+        <div class="lap-actions">
+          <button type="button" onclick="parseLapText()">解析圈速</button>
+        </div>
+      </div>
+
+      <div id="lapModeBest" class="lap-mode-panel hidden">
+        <div class="notice">只有最快圈也可以建立紀錄與上公開榜；Best 3、平均圈與一致性會保留為「—」。</div>
+        <label>最快圈</label>
+        <div class="best-lap-entry">
+          <input id="bestLapOnly" inputmode="decimal" placeholder="例如 20.510">
+          <button type="button" onclick="applyBestLapOnly()">套用</button>
+        </div>
+      </div>
+
+      <div id="lapModeTimer" class="lap-mode-panel hidden">
+        <div class="notice">
+          支援 CSV、TXT、JSON，也可以把 LapMonitor、SkyRC LapWiz 或手機照片「原況文字」複製出的內容整段貼進來。
+        </div>
+        <label>計時器來源</label>
+        <select id="timerSource">
+          <option value="Auto">自動判斷</option>
+          <option value="LapMonitor">LapMonitor</option>
+          <option value="SkyRC LapWiz">SkyRC LapWiz</option>
+          <option value="其他計時器">其他計時器</option>
+        </select>
+
+        <div class="lap-actions">
+          <label class="btn">選擇計時器檔案
+            <input id="timerImportFile" type="file" accept=".csv,.txt,.json,text/csv,text/plain,application/json" class="hidden">
+          </label>
+        </div>
+
+        <label>或貼上計時器文字</label>
+        <textarea id="timerImportText" placeholder="Lap 1  20.842&#10;Lap 2  20.515&#10;Lap 3  20.301"></textarea>
+        <div class="lap-actions">
+          <button type="button" onclick="parseTimerImport()">解析匯入</button>
+        </div>
+        <div id="timerImportStatus" class="timer-import-status">尚未匯入資料</div>
+      </div>
+
       <hr>
       <div class="stat5">
         <div class="kpi"><small>有效圈</small><b id="lapCount">0</b></div>
@@ -909,7 +1025,7 @@ input,select,textarea,button,.btn{max-width:100%}
         <div>
           <h2>台灣 RC 賽道・公開圈速板</h2>
           <div class="muted" style="font-size:13px;line-height:1.55">
-            依賽道分開顯示「最近上車」與排行榜。V13 的榜單資料來自車手主動發布的 Session，
+            依賽道分開顯示「最近上車」與排行榜。V14 的榜單資料來自車手主動發布的 Session，
             屬於自報圈速；未接入場地官方計時器前，不標示為官方紀錄。
           </div>
         </div>
@@ -973,7 +1089,7 @@ input,select,textarea,button,.btn{max-width:100%}
       <div class="table-scroll track-table-scroll">
         <table class="track-table">
           <thead>
-            <tr><th>#</th><th>車手</th><th>組別</th><th>車型</th><th>最佳圈</th><th>Best 3</th><th>設定</th><th>日期</th><th>操作</th></tr>
+            <tr><th>#</th><th>車手</th><th>組別</th><th>車型</th><th>最佳圈</th><th>Best 3</th><th>資料</th><th>設定</th><th>日期</th><th>操作</th></tr>
           </thead>
           <tbody id="trackLeaderboardRows"></tbody>
         </table>
@@ -986,7 +1102,7 @@ input,select,textarea,button,.btn{max-width:100%}
       <div class="table-scroll track-table-scroll">
         <table class="track-table">
           <thead>
-            <tr><th>時間</th><th>車手</th><th>組別</th><th>車型</th><th>最佳圈</th><th>平均</th><th>圈數</th><th>設定</th><th>操作</th></tr>
+            <tr><th>時間</th><th>車手</th><th>組別</th><th>車型</th><th>最佳圈</th><th>平均</th><th>圈數</th><th>資料</th><th>設定</th><th>操作</th></tr>
           </thead>
           <tbody id="trackRecentRows"></tbody>
         </table>
@@ -999,7 +1115,7 @@ input,select,textarea,button,.btn{max-width:100%}
 
 </main>
 
-<footer>Garage V13｜個人練車紀錄・設定比較・台灣 RC 賽道公開圈速板</footer>
+<footer>Garage V14｜個人練車紀錄・設定比較・台灣 RC 賽道公開圈速板</footer>
 
 
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
@@ -1012,6 +1128,8 @@ const CACHE_PREFIX='rc_onroad_garage_v4_';
 let sessions=[];
 let currentId=null;
 let currentLaps=[];
+let lapInputMode='full'; // full | best | timer
+let lapTimerSource='manual';
 let currentGarageId=null;
 let currentGarage=null;
 let userGarages=[];
@@ -1019,7 +1137,7 @@ let personalSetups=[];
 let hiddenMotorHistory=[];
 let hiddenEscHistory=[];
 
-// V13 public track timing board
+// V14 public track timing board
 let currentTrackId='ganyuan';
 let trackEntries=[];
 let trackUnsub=null;
@@ -1298,7 +1416,7 @@ function toggleGoogleAuth(){
     return;
   }
 
-  // V13 Auth Fix：
+  // V14 Auth Fix：
   // Google popup 必須直接由使用者點擊觸發。
   // 不在這裡 await setPersistence，避免 Safari / iOS 把它視為非使用者觸發彈窗而封鎖。
   // LOCAL persistence 已在 Firebase 初始化後背景設定。
@@ -1483,42 +1601,214 @@ function stats(laps){
   return {best,avg,std,best3:topAvg(3),best5:topAvg(5)};
 }
 function parseTimeToken(s){
-  s=String(s).trim();
-  let m=s.match(/(?:(\d+):)?(\d{1,3}(?:\.\d+)?)/);
-  if(!m) return null;
-  let sec=parseFloat(m[2]), min=m[1]?parseInt(m[1]):0;
-  let t=min*60+sec;
-  return (t>0 && t<300)?t:null;
-}
-function parseLapText(){
-  const text=document.getElementById('lapText').value;
-  const lines=text.split(/\r?\n/);
-  let arr=[];
-  for(const line of lines){
-    if(!line.trim()) continue;
-    const parts=line.split(/[,;\t]/).map(x=>x.trim()).filter(Boolean);
-    let candidates=parts.map(parseTimeToken).filter(x=>x!==null);
-    if(candidates.length){
-      // If line starts with lap number and has another numeric field, prefer last plausible time.
-      let pick=candidates[candidates.length-1];
-      arr.push(pick);
-    } else {
-      let t=parseTimeToken(line);
-      if(t!==null) arr.push(t);
-    }
+  s=String(s??'').trim().replace(/,/g,'.');
+  if(!s)return null;
+
+  // Prefer m:ss.xxx when present.
+  let m=s.match(/(?:^|[^\d])(\d{1,2}):(\d{1,2}(?:\.\d{1,4})?)(?:$|[^\d])/);
+  if(m){
+    const t=parseInt(m[1],10)*60+parseFloat(m[2]);
+    return (t>0 && t<300)?t:null;
   }
-  currentLaps=arr;
+
+  // Prefer a decimal number so "Lap 12 20.531" does not become lap #12.
+  let dec=null;
+  const re=/(?:^|[^\d])(\d{1,3}\.\d{2,4})(?=$|[^\d])/g;
+  let hit;
+  while((hit=re.exec(s))!==null){
+    const v=parseFloat(hit[1]);
+    if(v>0 && v<300)dec=v;
+  }
+  if(dec!==null)return dec;
+
+  // Plain numeric input is accepted for the dedicated fastest-lap box / JSON fields.
+  if(/^\d{1,3}(?:\.\d+)?$/.test(s)){
+    const v=parseFloat(s);
+    return (v>0 && v<300)?v:null;
+  }
+  return null;
+}
+
+function extractLapTimesFromText(raw){
+  const lines=String(raw||'').split(/\r?\n/);
+  const arr=[];
+  for(const original of lines){
+    const line=original.trim();
+    if(!line)continue;
+
+    // Summary rows often repeat the best/average/total and should not become extra laps.
+    if(/(?:best|fastest|average|\bavg\b|total|race\s*time|mean|最佳|最快|平均|總時間)/i.test(line)
+       && !/(?:lap|圈)\s*#?\s*\d+/i.test(line)){
+      continue;
+    }
+
+    // CSV / TSV / semicolon fields: use the last plausible time field.
+    const parts=line.split(/[,;\t]/).map(x=>x.trim()).filter(Boolean);
+    const candidates=parts.map(parseTimeToken).filter(v=>v!==null);
+    if(candidates.length){
+      arr.push(candidates[candidates.length-1]);
+      continue;
+    }
+
+    const t=parseTimeToken(line);
+    if(t!==null)arr.push(t);
+  }
+  return arr.slice(0,500);
+}
+
+function collectLapTimesFromJson(value,key='',out=[]){
+  if(out.length>=500)return out;
+  if(Array.isArray(value)){
+    value.forEach(v=>collectLapTimesFromJson(v,key,out));
+    return out;
+  }
+  if(value && typeof value==='object'){
+    Object.entries(value).forEach(([k,v])=>collectLapTimesFromJson(v,k,out));
+    return out;
+  }
+
+  const k=String(key||'').toLowerCase();
+  const likelyTimeKey=/(laptime|lap_time|lap-time|lap.*time|duration|seconds|lap_sec|lapsec|^time$|^laps?$)/i.test(k);
+  if(!likelyTimeKey)return out;
+
+  if(typeof value==='number'){
+    let v=value;
+    if(/(?:ms|millisecond)/i.test(k) && v>300)v/=1000;
+    if(v>0 && v<300)out.push(v);
+    return out;
+  }
+
+  const t=parseTimeToken(value);
+  if(t!==null)out.push(t);
+  return out;
+}
+
+function detectTimerSource(raw,selected='Auto'){
+  if(selected && selected!=='Auto')return selected;
+  const s=String(raw||'').toLowerCase();
+  if(s.includes('lapmonitor'))return 'LapMonitor';
+  if(s.includes('lapwiz')||s.includes('skyrc'))return 'SkyRC LapWiz';
+  return '其他計時器';
+}
+
+function parseTimerData(raw,fileName=''){
+  const txt=String(raw||'').trim();
+  if(!txt)return [];
+
+  if((fileName||'').toLowerCase().endsWith('.json') || /^[\[{]/.test(txt)){
+    try{
+      const obj=JSON.parse(txt);
+      const fromJson=collectLapTimesFromJson(obj);
+      if(fromJson.length)return fromJson.slice(0,500);
+    }catch(_){}
+  }
+  return extractLapTimesFromText(txt);
+}
+
+function setLapInputMode(mode,keepData=false){
+  if(!['full','best','timer'].includes(mode))mode='full';
+  lapInputMode=mode;
+
+  ['full','best','timer'].forEach(m=>{
+    const cap=m[0].toUpperCase()+m.slice(1);
+    document.getElementById('lapModeBtn'+cap)?.classList.toggle('active',m===mode);
+    document.getElementById('lapMode'+cap)?.classList.toggle('hidden',m!==mode);
+  });
+
+  if(!keepData){
+    currentLaps=[];
+    if(mode!=='full' && document.getElementById('lapText'))lapText.value='';
+    if(mode!=='best' && document.getElementById('bestLapOnly'))bestLapOnly.value='';
+    if(mode!=='timer'){
+      if(document.getElementById('timerImportText'))timerImportText.value='';
+      const status=document.getElementById('timerImportStatus');
+      if(status){status.textContent='尚未匯入資料';status.className='timer-import-status';}
+    }
+    updateLapStats();
+  }
+}
+
+function parseLapText(){
+  lapInputMode='full';
+  lapTimerSource='manual';
+  currentLaps=extractLapTimesFromText(document.getElementById('lapText').value);
   updateLapStats();
 }
+
+function applyBestLapOnly(){
+  const t=parseTimeToken(document.getElementById('bestLapOnly')?.value||'');
+  if(t===null){
+    currentLaps=[];
+    updateLapStats();
+    alert('請輸入有效的最快圈，例如 20.510。');
+    return;
+  }
+  lapInputMode='best';
+  lapTimerSource='manual';
+  currentLaps=[t];
+  updateLapStats();
+}
+
+function parseTimerImport(fileName=''){
+  const raw=document.getElementById('timerImportText')?.value||'';
+  const arr=parseTimerData(raw,fileName);
+  const status=document.getElementById('timerImportStatus');
+
+  if(!arr.length){
+    currentLaps=[];
+    if(status){
+      status.textContent='沒有辨識到逐圈時間。可以改貼完整文字，或先用「最快圈」模式只輸入最佳圈。';
+      status.className='timer-import-status bad';
+    }
+    updateLapStats();
+    return;
+  }
+
+  lapInputMode='timer';
+  lapTimerSource=detectTimerSource(raw,document.getElementById('timerSource')?.value||'Auto');
+  currentLaps=arr;
+  updateLapStats();
+
+  const s=stats(arr);
+  if(status){
+    status.textContent=`已辨識 ${arr.length} 圈｜最佳 ${fmt(s.best)}｜來源：${lapTimerSource}`;
+    status.className='timer-import-status good';
+  }
+}
+
+function finiteMetric(v){
+  return v!==null && v!==undefined && v!=='' && Number.isFinite(Number(v));
+}
+
+function lapDataLabel(mode=lapInputMode,source=lapTimerSource){
+  if(mode==='best')return '最快圈';
+  if(mode==='timer')return source && source!=='manual' ? source : '計時器匯入';
+  return '完整圈速';
+}
+
 function updateLapStats(){
   const s=stats(currentLaps);
-  lapCount.textContent=currentLaps.length;
+  const bestOnly=lapInputMode==='best';
+
+  lapCount.textContent=bestOnly?(currentLaps.length?'—':'0'):currentLaps.length;
   lapBest.textContent=fmt(s.best);
-  lapBest3.textContent=fmt(s.best3);
-  lapBest5.textContent=fmt(s.best5);
-  lapAvg.textContent=fmt(s.avg);
-  lapStd.textContent=s.std===null?'—':s.std.toFixed(3);
-  drawLineChart('lapChart',currentLaps,'圈數','秒');
+  lapBest3.textContent=bestOnly?'—':fmt(s.best3);
+  lapBest5.textContent=bestOnly?'—':fmt(s.best5);
+  lapAvg.textContent=bestOnly?'—':fmt(s.avg);
+  lapStd.textContent=bestOnly?'—':(s.std===null?'—':s.std.toFixed(3));
+
+  if(bestOnly){
+    const canvas=document.getElementById('lapChart');
+    const ctx=canvas?.getContext('2d');
+    if(ctx){
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      ctx.fillStyle='#7f8a98';
+      ctx.font='14px sans-serif';
+      ctx.fillText(currentLaps.length?'最快圈模式：沒有完整逐圈曲線':'尚無圈速資料',20,30);
+    }
+  }else{
+    drawLineChart('lapChart',currentLaps,'圈數','秒');
+  }
 }
 function newSession(){
   currentId=null; currentLaps=[];
@@ -1530,7 +1820,13 @@ function newSession(){
   carType.value=type; car.value=type==='touring'?'Xpress XQ3S':''; internalRatio.value='1.90';
   date.value=new Date().toISOString().slice(0,10);
   setNitroDefaults(true); toggleTypeUI();
-  lapText.value=''; updateLapStats(); refreshPersonalSuggestions();
+  lapText.value='';
+  if(document.getElementById('bestLapOnly'))bestLapOnly.value='';
+  if(document.getElementById('timerImportText'))timerImportText.value='';
+  if(document.getElementById('timerSource'))timerSource.value='Auto';
+  lapTimerSource='manual';
+  setLapInputMode('full',true);
+  updateLapStats(); refreshPersonalSuggestions();
   const latest=personalSetups.find(s=>!s.deletedAt && typeOf(s)===type);
   if(latest) copySetupFromSession(latest);
   else { carType.value=type; toggleTypeUI(); if(type==='nitro8')setNitroDefaults(true); }
@@ -1569,7 +1865,9 @@ async function saveSession(){
     ownerName:displayName(),
     publishPublic,
     shareSetupPublic,
-    trackId:selectedTrackId||''
+    trackId:selectedTrackId||'',
+    lapInputMode,
+    lapTimerSource:lapInputMode==='timer'?lapTimerSource:'manual'
   };
   fields.forEach(f=>{const el=document.getElementById(f);obj[f]=el?el.value:'';});
   obj.carType=siteMode||obj.carType||'touring';
@@ -1677,6 +1975,7 @@ function openDetail(id){
     ];
   }
   detailBody.innerHTML=`
+    <div style="margin:10px 0"><span class="source-pill">${escHtml(lapDataLabel(s.lapInputMode||'full',s.lapTimerSource||'manual'))}</span></div>
     <div class="stat5" style="margin:12px 0 16px">
       <div class="kpi"><small>最佳圈</small><b class="good">${fmt(st.best)}</b></div>
       <div class="kpi"><small>Best 3 Avg</small><b>${fmt(st.best3)}</b></div>
@@ -1705,7 +2004,20 @@ function editSession(id){
   if(share){share.checked=s.publishPublic===true && s.shareSetupPublic===true;share.disabled=!pub?.checked;}
   syncPublicOptionsUI();
   currentLaps=[...(s.laps||[])];
-  lapText.value=currentLaps.map(x=>x.toFixed(3)).join('\n');
+  lapInputMode=['full','best','timer'].includes(s.lapInputMode)?s.lapInputMode:'full';
+  lapTimerSource=s.lapTimerSource||'manual';
+  setLapInputMode(lapInputMode,true);
+  lapText.value=lapInputMode==='full'?currentLaps.map(x=>x.toFixed(3)).join('\n'):'';
+  if(document.getElementById('bestLapOnly'))bestLapOnly.value=lapInputMode==='best'&&currentLaps[0]?currentLaps[0].toFixed(3):'';
+  if(document.getElementById('timerImportText'))timerImportText.value='';
+  if(document.getElementById('timerSource')){
+    const known=['LapMonitor','SkyRC LapWiz','其他計時器'];
+    timerSource.value=known.includes(lapTimerSource)?lapTimerSource:'Auto';
+  }
+  if(lapInputMode==='timer' && document.getElementById('timerImportStatus')){
+    timerImportStatus.textContent=`已儲存 ${currentLaps.length} 圈｜來源：${lapTimerSource}`;
+    timerImportStatus.className='timer-import-status good';
+  }
   updateLapStats();
   showView('editor');
 }
@@ -1746,7 +2058,11 @@ function duplicateSession(id){
   copySetupFromSession(src);
   date.value=new Date().toISOString().slice(0,10);
   if(typeOf(src)==='nitro8'){nTireDiaFEnd.value='';nTireDiaREnd.value='';nAirTemp.value='';nTrackTemp.value='';nTraction.value='';nLayout.value='';nTrackCondition.value='';nResult.value='';updateNitroTireWear();}
-  notes.value=''; lapText.value=''; updateLapStats();
+  notes.value='';lapText.value='';
+  if(document.getElementById('bestLapOnly'))bestLapOnly.value='';
+  if(document.getElementById('timerImportText'))timerImportText.value='';
+  if(document.getElementById('timerSource'))timerSource.value='Auto';
+  lapTimerSource='manual';setLapInputMode('full',true);updateLapStats();
   editorTitle.textContent=`複製設定 → 我的新紀錄（來源：${src.ownerName||'車手'}）`;
   showView('editor');
 }
@@ -1843,7 +2159,7 @@ function renderManage(){
   escManageList.innerHTML=(escs.map(v=>`<div class="manage-item"><div class="meta"><b>${escHtml(v)}</b></div>${hiddenEscHistory.includes(v)?`<button onclick='unhideHistory("esc",${JSON.stringify(v)})'>恢復建議</button>`:`<button class="danger" onclick='hideHistory("esc",${JSON.stringify(v)})'>從建議移除</button>`}</div>`).join('')||'<span class="muted">尚無 ESC 歷史。</span>');
 }
 
-// ---------------- V13 Track Hub / Public Timing Board ----------------
+// ---------------- V14 Track Hub / Public Timing Board ----------------
 const TRACK_CATALOG=[
   {
     id:'ganyuan',
@@ -1969,11 +2285,13 @@ async function syncSavedSessionToPublic(s){
     car:s.car||'',
     date:s.date||'',
     bestLap:st.best,
-    best3:st.best3,
-    best5:st.best5,
-    avgLap:st.avg,
+    best3:s.lapInputMode==='best'?null:st.best3,
+    best5:s.lapInputMode==='best'?null:st.best5,
+    avgLap:s.lapInputMode==='best'?null:st.avg,
     lapCount:(s.laps||[]).length,
     laps:[...(s.laps||[])],
+    lapDataMode:['full','best','timer'].includes(s.lapInputMode)?s.lapInputMode:'full',
+    timingSource:s.lapInputMode==='timer'?(s.lapTimerSource||'其他計時器'):'manual',
     shareSetup:s.shareSetupPublic===true,
     setup:s.shareSetupPublic===true?publicSetupSnapshot(s):{},
     createdAt:s.createdAt||now,
@@ -2033,7 +2351,7 @@ function renderTrackCatalog(){
   const box=document.getElementById('trackCards'); if(!box)return;
   box.innerHTML=TRACK_CATALOG.map(t=>`
     <div class="track-card ${t.id===currentTrackId?'active':''} ${t.enabled?'':'track-unsupported'}">
-      <button onclick="${t.enabled?`selectTrack('${t.id}')`:`alert('這個場地先收錄資訊；目前 Garage V13 的公開圈速榜先支援 On-road Session。')`}">
+      <button onclick="${t.enabled?`selectTrack('${t.id}')`:`alert('這個場地先收錄資訊；目前 Garage V14 的公開圈速榜先支援 On-road Session。')`}">
         <b>${escHtml(t.name)}</b>
         <small>${escHtml(t.region)}｜${escHtml(t.surface)}</small>
         <div class="track-meta">
@@ -2081,14 +2399,14 @@ function selectTrack(id){
       renderTrackBoard();
     },err=>{
       console.error('track board load',err);
-      document.getElementById('trackLoadStatus').textContent='排行榜讀取失敗。若這是第一次使用 V13，請先更新 Firestore Rules。';
+      document.getElementById('trackLoadStatus').textContent='排行榜讀取失敗。若這是第一次使用 V14，請先更新 Firestore Rules。';
       trackEntries=[];
       renderTrackBoard();
     });
 }
 
 function rebuildTrackClassFilter(){
-  // V13 組別固定為 PUBLIC_CLASSES；不再依已上傳資料動態增加其他組別。
+  // V14 組別固定為 PUBLIC_CLASSES；不再依已上傳資料動態增加其他組別。
 }
 
 function filteredTrackEntries(){
@@ -2122,7 +2440,10 @@ function renderTrackBoard(){
   const sortMode=document.getElementById('trackSortMode')?.value||'best';
 
   let leaders=leaderboardEntries(entries);
-  const metric=e=>sortMode==='best3'?Number(e.best3):Number(e.bestLap);
+  const metric=e=>{
+    const v=sortMode==='best3'?e.best3:e.bestLap;
+    return finiteMetric(v)?Number(v):Infinity;
+  };
   if(sortMode==='recent') leaders.sort((a,b)=>(b.createdAt||'').localeCompare(a.createdAt||''));
   else leaders.sort((a,b)=>{
     const av=metric(a),bv=metric(b);
@@ -2147,13 +2468,14 @@ function renderTrackBoard(){
       <td>${escHtml(e.driverName||'車手')}</td>
       <td>${escHtml(e.className||'未分類')}</td>
       <td>${escHtml(e.car||'—')}</td>
-      <td class="track-best">${Number.isFinite(Number(e.bestLap))?Number(e.bestLap).toFixed(3)+' s':'—'}</td>
-      <td class="track-time">${Number.isFinite(Number(e.best3))?Number(e.best3).toFixed(3)+' s':'—'}</td>
+      <td class="track-best">${finiteMetric(e.bestLap)?Number(e.bestLap).toFixed(3)+' s':'—'}</td>
+      <td class="track-time">${finiteMetric(e.best3)?Number(e.best3).toFixed(3)+' s':'—'}</td>
+      <td><span class="source-pill">${escHtml(lapDataLabel(e.lapDataMode||'full',e.timingSource||'manual'))}</span></td>
       <td>${e.shareSetup===true?'<span class="pill">已分享</span>':'—'}</td>
       <td>${escHtml(e.date||'—')}</td>
       <td><button onclick="showTrackEntry('${e.id}')">查看</button></td>
     </tr>`).join('')
-    : '<tr><td colspan="9" class="muted">目前篩選條件下沒有公開成績。</td></tr>';
+    : '<tr><td colspan="10" class="muted">目前篩選條件下沒有公開成績。</td></tr>';
 
   const recent=[...entries].sort((a,b)=>(b.createdAt||'').localeCompare(a.createdAt||'')).slice(0,40);
   const rr=document.getElementById('trackRecentRows');
@@ -2163,13 +2485,14 @@ function renderTrackBoard(){
       <td>${escHtml(e.driverName||'車手')}</td>
       <td>${escHtml(e.className||'未分類')}</td>
       <td>${escHtml(e.car||'—')}</td>
-      <td class="track-best">${Number.isFinite(Number(e.bestLap))?Number(e.bestLap).toFixed(3)+' s':'—'}</td>
-      <td class="track-time">${Number.isFinite(Number(e.avgLap))?Number(e.avgLap).toFixed(3)+' s':'—'}</td>
-      <td>${Array.isArray(e.laps)?e.laps.length:(e.lapCount||0)}</td>
+      <td class="track-best">${finiteMetric(e.bestLap)?Number(e.bestLap).toFixed(3)+' s':'—'}</td>
+      <td class="track-time">${finiteMetric(e.avgLap)?Number(e.avgLap).toFixed(3)+' s':'—'}</td>
+      <td>${e.lapDataMode==='best'?'—':(Array.isArray(e.laps)?e.laps.length:(e.lapCount||0))}</td>
+      <td><span class="source-pill">${escHtml(lapDataLabel(e.lapDataMode||'full',e.timingSource||'manual'))}</span></td>
       <td>${e.shareSetup===true?'<span class="pill">已分享</span>':'—'}</td>
       <td><div class="row-actions"><button onclick="showTrackEntry('${e.id}')">查看</button>${e.ownerUid===currentUser?.uid?`<button class="danger" onclick="deleteTrackEntry('${e.id}')">撤下</button>`:''}</div></td>
     </tr>`).join('')
-    : '<tr><td colspan="9" class="muted">目前篩選條件下沒有公開 Session。</td></tr>';
+    : '<tr><td colspan="10" class="muted">目前篩選條件下沒有公開 Session。</td></tr>';
 }
 
 function showTrackEntry(id){
@@ -2179,6 +2502,7 @@ function showTrackEntry(id){
   box.innerHTML=`
     <b>${escHtml(e.driverName||'車手')}｜${escHtml(e.className||'未分類')}｜${escHtml(e.car||'—')}</b>
     <div class="muted" style="font-size:12px;margin-top:4px">${escHtml(e.date||'—')}｜${escHtml(trackById(currentTrackId).name)}｜自報圈速</div>
+    <div style="margin-top:8px"><span class="source-pill">${escHtml(lapDataLabel(e.lapDataMode||'full',e.timingSource||'manual'))}</span></div>
     <div class="track-laps">${laps.length?laps.map((v,i)=>`<span class="track-lap">L${i+1} ${v.toFixed(3)}</span>`).join(''):'<span class="muted">沒有逐圈資料</span>'}</div>
     ${e.shareSetup===true && e.setup ? `
       <hr>
@@ -2296,8 +2620,20 @@ jsonImport.addEventListener('change',async e=>{
 ['nTireDiaFStart','nTireDiaRStart','nTireDiaFEnd','nTireDiaREnd'].forEach(id=>document.getElementById(id)?.addEventListener('input',updateNitroTireWear));
 document.getElementById('car')?.addEventListener('change',onCarModelChange);
 toggleTypeUI();setNitroDefaults(false);
-lapFile.addEventListener('change',async e=>{
-  const f=e.target.files[0];if(!f)return;lapText.value=await f.text();parseLapText();e.target.value='';
+document.getElementById('timerImportFile')?.addEventListener('change',async e=>{
+  const f=e.target.files[0];
+  if(!f)return;
+  try{
+    setLapInputMode('timer',true);
+    const raw=await f.text();
+    timerImportText.value=raw;
+    parseTimerImport(f.name);
+  }catch(err){
+    console.error(err);
+    timerImportStatus.textContent='無法讀取這個檔案：'+(err.message||err);
+    timerImportStatus.className='timer-import-status bad';
+  }
+  e.target.value='';
 });
 function escHtml(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
 refreshPersonalSuggestions();
@@ -2305,7 +2641,7 @@ renderDashboard();
 </script>
 <script>
 
-// ---------------- V13 Add to Home Screen ----------------
+// ---------------- V14 Add to Home Screen ----------------
 let deferredInstallPrompt=null;
 
 function isStandaloneMode(){
@@ -2440,7 +2776,7 @@ window.addEventListener('appinstalled',()=>{
 // It deliberately does not cache app HTML, so version testing will not be trapped on an old copy.
 if('serviceWorker' in navigator){
   window.addEventListener('load',()=>{
-    navigator.serviceWorker.register('./sw_v13.js').catch(err=>console.warn('SW register failed',err));
+    navigator.serviceWorker.register('./sw_v14.js').catch(err=>console.warn('SW register failed',err));
   });
 }
 
