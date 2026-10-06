@@ -1,0 +1,2901 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RC On-road 設定・圈速紀錄 V15</title>
+<style>
+:root{
+  --bg:#0b0d10;--panel:#141820;--panel2:#1b202a;--text:#eef2f7;--muted:#9aa6b2;
+  --line:#2b3340;--accent:#6aa9ff;--good:#71d38a;--warn:#ffcf66;--bad:#ff7a7a;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC",sans-serif;background:var(--bg);color:var(--text)}
+header{position:sticky;top:0;z-index:5;background:rgba(11,13,16,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.wrap{max-width:1200px;margin:auto;padding:18px}
+h1{font-size:24px;margin:0 0 4px}
+.sub{color:var(--muted);font-size:14px}
+nav{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+button,.btn{border:1px solid var(--line);background:var(--panel2);color:var(--text);padding:10px 14px;border-radius:10px;cursor:pointer;font-weight:600}
+button:hover,.btn:hover{border-color:#4b5a6f}
+button.primary{background:var(--accent);border-color:var(--accent);color:#07111f}
+button.danger{background:#331a1a;border-color:#6a2c2c;color:#ffd5d5}
+main{padding-bottom:60px}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:14px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px}
+.span-12{grid-column:span 12}.span-8{grid-column:span 8}.span-6{grid-column:span 6}.span-4{grid-column:span 4}
+@media(max-width:850px){.span-8,.span-6,.span-4{grid-column:span 12}}
+h2{font-size:18px;margin:0 0 12px}
+h3{font-size:15px;margin:16px 0 8px;color:#dce7f6}
+label{display:block;font-size:12px;color:var(--muted);margin-bottom:5px}
+input,select,textarea{width:100%;background:#0e1218;color:var(--text);border:1px solid var(--line);border-radius:9px;padding:9px 10px;outline:none}
+input:focus,select:focus,textarea:focus{border-color:var(--accent)}
+textarea{min-height:90px;resize:vertical}
+.formgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.formgrid .wide{grid-column:span 2}
+.formgrid .full{grid-column:span 4}
+@media(max-width:850px){.formgrid{grid-template-columns:repeat(2,1fr)}.formgrid .wide{grid-column:span 2}.formgrid .full{grid-column:span 2}}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.kpi{background:var(--panel2);border-radius:12px;padding:12px}
+.kpi b{font-size:22px;display:block;margin-top:3px}
+.kpi small{color:var(--muted)}
+@media(max-width:700px){.kpis{grid-template-columns:repeat(2,1fr)}}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{padding:9px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{color:#b8c5d3;font-weight:700;position:sticky;top:93px;background:var(--panel)}
+tr:hover td{background:#171c24}
+.tag{display:inline-block;padding:3px 7px;border-radius:999px;background:#243044;color:#cfe1ff;font-size:11px}
+.muted{color:var(--muted)}
+.row-actions{display:flex;gap:6px;flex-wrap:wrap}
+.row-actions button{padding:6px 8px;font-size:12px}
+.hidden{display:none!important}
+canvas{width:100%;height:240px;background:#0e1218;border-radius:10px;border:1px solid var(--line)}
+.compare-select{display:flex;gap:8px;flex-wrap:wrap;max-height:150px;overflow:auto}
+.check{display:flex;align-items:center;gap:6px;background:var(--panel2);padding:7px 9px;border-radius:9px;font-size:12px}
+.check input{width:auto}
+.notice{padding:10px 12px;border-radius:10px;background:#182131;color:#cfe1ff;font-size:13px}
+.good{color:var(--good)} .warn{color:var(--warn)} .bad{color:var(--bad)}
+hr{border:0;border-top:1px solid var(--line);margin:16px 0}
+footer{color:var(--muted);font-size:12px;text-align:center;padding:25px}
+
+.data-tools{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+@media(max-width:800px){.data-tools{grid-template-columns:1fr}}
+.manage-list{display:flex;flex-direction:column;gap:8px}
+.manage-item{display:flex;justify-content:space-between;gap:10px;align-items:center;background:var(--panel2);padding:10px;border-radius:10px}
+.manage-item .meta{min-width:0;font-size:13px}
+.manage-item .meta b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.change-list{margin:8px 0 0;padding-left:20px;font-size:13px}
+.change-list li{margin:5px 0}
+.stat5{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+@media(max-width:800px){.stat5{grid-template-columns:repeat(2,1fr)}}
+.pill{display:inline-block;padding:3px 7px;border-radius:999px;background:#243044;color:#cfe1ff;font-size:11px}
+
+.type-switch{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px}
+.type-card{background:#0e1218;border:1px solid var(--line);border-radius:10px;padding:10px}
+.nitro-note{margin-top:8px;font-size:12px;color:var(--muted)}
+details.advanced{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-top:14px;background:#10151c}
+details.advanced summary{cursor:pointer;font-weight:700;color:#dce7f6}
+.wearbox{padding:8px 10px;border-radius:9px;background:#182131;font-size:12px;color:#cfe1ff}
+@media(max-width:850px){.type-switch{grid-template-columns:repeat(2,1fr)}}
+
+.mode-gate{position:fixed;inset:0;z-index:9999;background:rgba(7,10,14,.98);display:flex;align-items:center;justify-content:center;padding:22px}
+.mode-panel{width:min(760px,100%);background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:24px}
+.mode-panel h2{font-size:24px;margin-bottom:6px}.mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px}
+.mode-card{background:var(--panel2);border:1px solid var(--line);border-radius:15px;padding:20px;text-align:left;min-height:150px}
+.mode-card:hover{border-color:var(--accent)}.mode-card b{display:block;font-size:20px;margin-bottom:8px}.mode-card span{color:var(--muted);font-weight:400;line-height:1.5}
+.mode-chip{display:inline-flex;align-items:center;gap:8px;background:#182131;border:1px solid var(--line);padding:7px 10px;border-radius:999px;font-size:12px}
+.optional-note{font-size:12px;color:var(--muted);margin-top:8px}
+@media(max-width:650px){.mode-grid{grid-template-columns:1fr}.mode-card{min-height:120px}}
+
+/* V4 compact trackside layout */
+.compact-version{margin-top:2px;line-height:1}.compact-version .tag{font-size:10px;padding:2px 6px}
+@media(max-width:700px){
+  header{position:relative;top:auto;backdrop-filter:none}
+  header .wrap{padding:10px 12px 8px}
+  h1{font-size:21px;margin:0;line-height:1.15}
+  .compact-version{position:absolute;right:12px;top:12px;margin:0}
+  nav{margin-top:8px;display:flex;flex-wrap:nowrap;overflow-x:auto;gap:6px;padding-bottom:3px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  nav::-webkit-scrollbar,.authbar::-webkit-scrollbar,.garagebar::-webkit-scrollbar{display:none}
+  nav>button,nav>.btn{flex:0 0 auto;min-height:36px!important;padding:7px 10px;font-size:13px;white-space:nowrap;border-radius:9px}
+  .mode-chip{order:-1;flex:0 0 auto;min-height:36px;padding:4px 5px 4px 9px;gap:5px;font-size:12px;white-space:nowrap}
+  .mode-chip .mini{min-height:28px!important;padding:4px 7px;font-size:11px;border-radius:7px}
+  .authbar{margin-top:5px;display:flex;flex-wrap:nowrap;overflow-x:auto;gap:7px;align-items:center;white-space:nowrap;-webkit-overflow-scrolling:touch}
+  .authbar button{flex:0 0 auto;min-height:34px!important;padding:6px 9px;font-size:12px}
+  .authstatus{font-size:11px}
+  .garagebar{margin-top:5px;display:flex;flex-wrap:nowrap;overflow-x:auto;gap:6px;align-items:center;white-space:nowrap;padding-bottom:2px;-webkit-overflow-scrolling:touch}
+  .garagebar>span:first-child{display:none}
+  .garagebar select{flex:0 0 145px;min-width:145px;width:145px;padding:6px 8px;font-size:13px!important;height:34px}
+  .garagebar .mini{flex:0 0 auto;min-height:34px!important;padding:5px 8px;font-size:12px}
+  #garageStatus{flex:0 0 auto;max-width:150px;overflow:hidden;text-overflow:ellipsis}
+  main.wrap{padding:8px 10px 36px}
+  #editor>.grid{gap:8px}
+  #editor>.grid>.card{padding:12px}
+  #editor>.grid>.card:first-child{min-height:58vh;max-height:68vh;overflow-y:auto;-webkit-overflow-scrolling:touch;scrollbar-gutter:stable}
+  #editor>.grid>.card:first-child h2{position:sticky;top:-12px;z-index:2;background:var(--panel);padding:4px 0 8px;margin:0 0 8px}
+  #editor .setupbar{margin-bottom:8px;gap:6px}
+  #editor .setupbar button{min-height:38px!important;padding:7px 10px}
+  #editor .notice{padding:7px 9px;font-size:11px;line-height:1.35}
+  #editor br{line-height:4px}
+  #editor h3{margin:12px 0 7px}
+  #editor .formgrid{gap:7px}
+  #editor label{margin-bottom:3px;font-size:11px}
+  #editor input,#editor select,#editor textarea{padding:7px 8px}
+  #editor .optional-note{font-size:11px;margin-top:5px}
+}
+</style>
+<meta name="theme-color" content="#0b0d10">
+
+<style>
+.authbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px}
+.authstatus{font-size:12px;color:var(--muted)}
+.cloudok{color:var(--good)}
+.cloudoff{color:var(--warn)}
+.garagebar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px}
+.garagebar select{width:auto;min-width:170px;padding:8px 10px}
+.mini{padding:7px 10px;font-size:12px}
+.creator{white-space:nowrap}
+.setupbar{display:grid;grid-template-columns:minmax(180px,1fr) auto;gap:8px;align-items:end;margin:0 0 14px}
+@media(max-width:700px){.setupbar{grid-template-columns:1fr}.garagebar select{width:100%}}
+@media(max-width:700px){
+  input,select,textarea{font-size:16px}
+  button,.btn{min-height:44px}
+}
+.auth-help{position:fixed;inset:0;z-index:10050;background:rgba(0,0,0,.78);display:flex;align-items:center;justify-content:center;padding:20px}
+.auth-help-card{width:min(520px,100%);background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px}
+.auth-help-card h3{font-size:20px;margin:0 0 8px}.auth-help-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.auth-help-actions button{flex:1;min-width:120px}
+</style>
+
+
+<style>
+/* V15 Track Hub / public timing board */
+.track-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.track-card{border:1px solid var(--line);background:#0e1218;border-radius:12px;padding:12px;min-width:0}
+.track-card.active{border-color:var(--accent);background:#152035}
+.track-card button{width:100%;text-align:left;background:transparent;border:0;padding:0;min-height:auto}
+.track-card b{display:block;font-size:15px;margin-bottom:4px}
+.track-card small{display:block;color:var(--muted);line-height:1.45}
+.track-meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.track-board-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap}
+.track-board-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:end}
+.track-board-actions select{width:auto;min-width:150px}
+.track-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:12px}
+.track-publish{display:grid;grid-template-columns:minmax(180px,1fr) auto;gap:8px;align-items:end;margin-top:12px}
+.track-status{margin-top:8px;font-size:12px;color:var(--muted)}
+.track-rank{font-size:18px;font-weight:800}
+.track-best{font-weight:800;color:var(--good);font-variant-numeric:tabular-nums}
+.track-time{font-variant-numeric:tabular-nums}
+.track-laps{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.track-lap{padding:5px 7px;background:#0e1218;border:1px solid var(--line);border-radius:8px;font-size:12px;font-variant-numeric:tabular-nums}
+.track-detail{margin-top:10px;padding:12px;background:#10151c;border:1px solid var(--line);border-radius:10px}
+.track-unsupported{opacity:.62}
+@media(max-width:850px){
+  .track-grid{grid-template-columns:1fr 1fr}
+  .track-kpis{grid-template-columns:1fr 1fr}
+}
+@media(max-width:600px){
+  .track-grid{grid-template-columns:1fr}
+  .track-publish{grid-template-columns:1fr !important}
+  .track-board-actions{width:100%}
+  .track-board-actions>div{flex:1;min-width:145px}
+  .track-board-actions select{width:100%;min-width:0}
+}
+</style>
+
+
+<style>
+/* V15 mobile/readability pass */
+
+/* First screen: literally only two choices */
+.mode-panel-simple{
+  width:min(620px,100%);
+  background:transparent;
+  border:0;
+  padding:0;
+}
+.mode-grid-simple{
+  margin:0;
+  gap:14px;
+}
+.mode-card-simple{
+  min-height:150px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:22px;
+  background:var(--panel);
+  border:1px solid var(--line);
+}
+.mode-card-simple b{
+  margin:0;
+  font-size:25px;
+  line-height:1.15;
+  white-space:nowrap;
+}
+
+/* General anti-crush/readability */
+.card,.grid>*{min-width:0}
+.notice,.muted,.track-status{line-height:1.5}
+input,select,textarea,button,.btn{max-width:100%}
+.table-scroll{
+  width:100%;
+  max-width:100%;
+  overflow-x:auto;
+  overflow-y:visible;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:thin;
+}
+.data-table,.track-table{
+  width:100%;
+}
+.track-table th,.track-table td,
+.data-table th,.data-table td{
+  word-break:keep-all;
+  overflow-wrap:normal;
+}
+
+/* Track page */
+.track-table{min-width:820px}
+.track-table th,.track-table td{white-space:nowrap}
+.track-table td:nth-child(2),
+.track-table td:nth-child(4){white-space:normal;min-width:90px}
+.track-table th{position:static}
+.track-board-actions{min-width:0}
+.track-board-actions>div{min-width:0}
+.track-board-actions input,
+.track-board-actions select{min-width:0}
+.track-detail .formgrid>div{min-width:0}
+.track-detail .formgrid>div>div{overflow-wrap:anywhere}
+
+@media(max-width:700px){
+  body{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+  main.wrap{overflow-x:hidden}
+
+  /* Mode gate */
+  .mode-gate{padding:18px}
+  .mode-grid-simple{grid-template-columns:1fr;gap:12px}
+  .mode-card-simple{min-height:132px;border-radius:18px}
+  .mode-card-simple b{font-size:24px}
+
+  /* General cards */
+  .card{padding:13px;border-radius:13px}
+  h2{font-size:19px;line-height:1.25}
+  h3{font-size:16px;line-height:1.3}
+  .notice{font-size:13px}
+
+  /* No table text gets crushed into one-character columns */
+  .data-table{min-width:800px}
+  .compare-table{min-width:680px}
+  .data-table th,.data-table td,
+  .compare-table th,.compare-table td{
+    white-space:nowrap;
+    word-break:keep-all;
+  }
+  th{position:static;top:auto}
+
+  /* Track selector becomes compact horizontal cards instead of 5 tall cards */
+  .track-grid{
+    display:flex;
+    grid-template-columns:none;
+    overflow-x:auto;
+    gap:9px;
+    padding-bottom:4px;
+    scroll-snap-type:x proximity;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+  }
+  .track-grid::-webkit-scrollbar{display:none}
+  .track-card{
+    flex:0 0 min(72vw,250px);
+    padding:11px;
+    scroll-snap-align:start;
+  }
+  .track-card b{font-size:14px}
+  .track-card small{font-size:11px}
+
+  /* Filters: consistent two-column mobile grid */
+  .track-board-actions{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    width:100%;
+    gap:8px;
+    align-items:end;
+  }
+  .track-board-actions>div{min-width:0}
+  .track-board-actions>label.check{
+    min-height:44px;
+    margin:0!important;
+  }
+  .track-board-actions>#trackMapLink{
+    min-height:44px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .track-board-actions input,
+  .track-board-actions select{width:100%;min-width:0}
+
+  /* KPIs stay readable */
+  .track-kpis{grid-template-columns:1fr 1fr;gap:7px}
+  .track-kpis .kpi{padding:10px}
+  .track-kpis .kpi b{font-size:21px}
+
+  /* Publishing area */
+  .track-publish{grid-template-columns:1fr!important;gap:9px}
+  #trackPublishArea .check{width:100%;justify-content:flex-start}
+  #trackPublishArea button.primary{width:100%}
+
+  /* Public ranking tables scroll horizontally; never squeeze text */
+  .track-table-scroll{
+    margin-left:-2px;
+    padding-bottom:3px;
+  }
+  .track-table{min-width:780px;font-size:13px}
+  .track-table th,.track-table td{padding:10px 9px}
+  .track-table td:nth-child(2),
+  .track-table td:nth-child(4){white-space:nowrap;min-width:auto}
+
+  /* Shared setup detail becomes two columns, then one on narrow phones */
+  .track-detail .formgrid{grid-template-columns:1fr 1fr}
+  .track-detail .formgrid>div{grid-column:auto}
+}
+@media(max-width:390px){
+  .track-board-actions{grid-template-columns:1fr}
+  .track-detail .formgrid{grid-template-columns:1fr}
+}
+</style>
+
+
+<link rel="manifest" href="manifest_v15.webmanifest">
+<meta name="theme-color" content="#0b0d10">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="RC Garage">
+<link rel="apple-touch-icon" href="rc-garage-180.png">
+
+
+<style>
+/* V15 Add to Home Screen */
+.a2hs-backdrop{
+  position:fixed;
+  inset:0;
+  z-index:10000;
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+  padding:18px;
+  background:rgba(0,0,0,.62);
+  backdrop-filter:blur(8px);
+}
+.a2hs-backdrop.hidden{display:none}
+.a2hs-card{
+  width:min(560px,100%);
+  background:#11151b;
+  border:1px solid #303844;
+  border-radius:24px;
+  padding:20px;
+  box-shadow:0 24px 70px rgba(0,0,0,.45);
+}
+.a2hs-head{
+  display:flex;
+  gap:14px;
+  align-items:center;
+}
+.a2hs-head h2{
+  margin:0 0 4px;
+  font-size:25px;
+}
+.a2hs-icon{
+  width:66px;
+  height:66px;
+  flex:0 0 66px;
+  border-radius:18px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#1b2028;
+  border:1px solid #343d49;
+  font-weight:900;
+  font-size:21px;
+  letter-spacing:-1px;
+}
+.a2hs-steps{
+  margin-top:18px;
+  border-top:1px solid var(--line);
+}
+.a2hs-step{
+  display:grid;
+  grid-template-columns:42px minmax(0,1fr);
+  gap:12px;
+  align-items:start;
+  padding:16px 0;
+  border-bottom:1px solid var(--line);
+}
+.a2hs-step:last-child{border-bottom:0}
+.a2hs-num{
+  width:36px;
+  height:36px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border:1px solid var(--accent);
+  color:var(--accent);
+  font-weight:800;
+}
+.a2hs-step-text{
+  font-size:16px;
+  line-height:1.55;
+}
+.a2hs-step-text b{color:#fff}
+.a2hs-actions{
+  display:grid;
+  grid-template-columns:minmax(110px,.7fr) minmax(160px,1.5fr);
+  gap:10px;
+  margin-top:18px;
+}
+.a2hs-actions button{
+  min-height:50px;
+  font-size:16px;
+}
+#a2hsPrimaryBtn.primary{
+  color:#07111f;
+}
+@media(min-width:700px){
+  .a2hs-backdrop{align-items:center}
+}
+@media(max-width:430px){
+  .a2hs-card{border-radius:20px;padding:17px}
+  .a2hs-head h2{font-size:23px}
+  .a2hs-icon{width:58px;height:58px;flex-basis:58px}
+  .a2hs-step-text{font-size:15px}
+}
+</style>
+
+
+<style>
+/* V15: unified private/public Session flow */
+.standalone-net-hint{
+  margin-top:7px;
+  padding:7px 9px;
+  border:1px solid #705d24;
+  background:#211d10;
+  color:#ffda72;
+  border-radius:9px;
+  font-size:12px;
+  line-height:1.4;
+}
+.public-sync-box{
+  margin-top:14px;
+  padding:12px;
+  border:1px solid var(--line);
+  background:#101620;
+  border-radius:12px;
+  display:grid;
+  gap:9px;
+}
+.public-sync-box .check{
+  margin:0;
+  min-height:42px;
+  justify-content:flex-start;
+}
+.public-sync-main span{
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+}
+.public-sync-main small{
+  color:var(--muted);
+  font-weight:400;
+  line-height:1.35;
+}
+@media(max-width:700px){
+  .standalone-net-hint{font-size:11px}
+  .public-sync-box{padding:10px}
+}
+</style>
+
+
+<style>
+/* V15 lap-entry modes */
+.lap-mode-tabs{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:6px;
+  margin:10px 0 14px;
+}
+.lap-mode-tabs button{
+  min-width:0;
+  padding:10px 6px;
+  font-size:13px;
+  white-space:nowrap;
+}
+.lap-mode-tabs button.active{
+  background:var(--accent);
+  border-color:var(--accent);
+  color:#07111f;
+}
+.lap-mode-panel{
+  display:grid;
+  gap:9px;
+}
+.lap-mode-panel.hidden{display:none}
+.lap-actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+.best-lap-entry{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:8px;
+}
+.best-lap-entry input{
+  font-size:22px;
+  font-variant-numeric:tabular-nums;
+  text-align:center;
+}
+.timer-import-status{
+  padding:9px 10px;
+  border:1px solid var(--line);
+  border-radius:9px;
+  background:#0e131a;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.45;
+}
+.timer-import-status.good{
+  border-color:#315f40;
+  color:var(--good);
+}
+.timer-import-status.bad{
+  border-color:#6a2c2c;
+  color:var(--bad);
+}
+.source-pill{
+  display:inline-flex;
+  align-items:center;
+  border:1px solid var(--line);
+  border-radius:999px;
+  padding:3px 7px;
+  font-size:11px;
+  white-space:nowrap;
+}
+@media(max-width:390px){
+  .lap-mode-tabs{gap:4px}
+  .lap-mode-tabs button{font-size:12px;padding:9px 3px}
+  .best-lap-entry{grid-template-columns:1fr}
+}
+</style>
+
+
+<style>
+.car-picker-button{width:100%;min-height:52px;display:flex;align-items:center;justify-content:space-between;gap:12px;text-align:left;padding:9px 12px}
+.car-picker-copy{display:flex;min-width:0;flex-direction:column;gap:2px}.car-picker-copy small{color:var(--muted);font-weight:600}.car-picker-copy b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.car-picker-arrow{font-size:24px;color:var(--muted);line-height:1}
+.car-picker-overlay{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.68);display:flex;justify-content:center;align-items:flex-end;padding:14px}
+.car-picker-sheet{width:min(620px,100%);height:min(86vh,760px);background:var(--panel);border:1px solid var(--line);border-radius:18px 18px 12px 12px;box-shadow:0 24px 80px rgba(0,0,0,.45);display:grid;grid-template-rows:auto auto 1fr;overflow:hidden}
+.car-picker-header{display:grid;grid-template-columns:92px 1fr 44px;align-items:center;gap:8px;padding:12px;border-bottom:1px solid var(--line)}.car-picker-header>div{text-align:center;min-width:0}.car-picker-header b{display:block}.car-picker-header small{display:block;color:var(--muted);margin-top:2px}.car-picker-nav,.car-picker-close{padding:8px 9px}.car-picker-close{font-size:18px}
+.car-picker-search-wrap{padding:10px 12px;border-bottom:1px solid var(--line)}.car-picker-search-wrap input{margin:0}.car-picker-body{overflow:auto;padding:10px 12px 18px;-webkit-overflow-scrolling:touch}
+.car-picker-section-title{color:var(--muted);font-size:11px;font-weight:800;letter-spacing:.08em;margin:13px 4px 6px}.car-picker-list{display:grid;gap:7px}.car-picker-item{width:100%;min-height:48px;display:flex;align-items:center;justify-content:space-between;gap:10px;text-align:left;background:#111720}.car-picker-item small{color:var(--muted);display:block;font-weight:500;margin-top:2px}.car-picker-item .right{color:var(--muted);font-size:18px}.car-picker-item.recent{border-color:#35557e}.car-picker-item.other{border-style:dashed}
+.car-picker-custom{display:grid;gap:10px;padding:4px 2px}.car-picker-custom-actions{display:flex;gap:8px}.car-picker-custom-actions button{flex:1}.car-model-cell b{display:block;font-size:12px}.car-model-cell small{display:block;color:var(--muted);margin-top:1px}
+@media(min-width:700px){.car-picker-overlay{align-items:center}.car-picker-sheet{border-radius:18px}}
+@media(max-width:420px){.car-picker-overlay{padding:0;align-items:flex-end}.car-picker-sheet{width:100%;height:90vh;border-radius:18px 18px 0 0;border-left:0;border-right:0;border-bottom:0}.car-picker-header{grid-template-columns:82px 1fr 42px}.car-picker-header,.car-picker-search-wrap,.car-picker-body{padding-left:10px;padding-right:10px}}
+</style>
+
+</head>
+<body>
+
+<div id="a2hsModal" class="a2hs-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="a2hsTitle">
+  <div class="a2hs-card">
+    <div class="a2hs-head">
+      <div class="a2hs-icon">RC</div>
+      <div>
+        <h2 id="a2hsTitle">加到主畫面</h2>
+        <div class="muted" id="a2hsSubtitle">之後從主畫面就能直接開啟 RC Garage；若 Wi‑Fi 登入異常可先改用行動數據</div>
+      </div>
+    </div>
+
+    <div id="a2hsSteps" class="a2hs-steps"></div>
+
+    <div class="a2hs-actions">
+      <button type="button" id="a2hsLaterBtn">稍後再說</button>
+      <button type="button" class="primary" id="a2hsPrimaryBtn">我知道了</button>
+    </div>
+  </div>
+</div>
+
+<div id="modeGate" class="mode-gate">
+  <div class="mode-panel mode-panel-simple">
+    <div class="mode-grid mode-grid-simple">
+      <button class="mode-card mode-card-simple" onclick="chooseSiteMode('touring')"><b>1/10 電房</b></button>
+      <button class="mode-card mode-card-simple" onclick="chooseSiteMode('nitro8')"><b>1/8 油平跑</b></button>
+    </div>
+  </div>
+</div>
+<div id="authHelp" class="auth-help hidden">
+  <div class="auth-help-card">
+    <h3>Google 登入沒有完成</h3>
+    <div class="muted" id="authHelpText">請確認瀏覽器允許彈出式視窗，然後再按一次 Google 登入。</div>
+    <div class="notice" style="margin-top:12px">
+      若你是從 iPhone「主畫面」開啟，而且在 Wi‑Fi 下無法連線或登入，請先關閉 Wi‑Fi、改用行動數據後再試。
+      登入成功後可以再切回 Wi‑Fi；若仍失敗，請改用 Safari 開啟正式網站。
+    </div>
+    <div class="auth-help-actions">
+      <button class="primary" onclick="copyCurrentUrl()">複製網站網址</button>
+      <button onclick="closeAuthHelp()">關閉</button>
+    </div>
+  </div>
+</div>
+<header>
+  <div class="wrap">
+    <h1>RC On-road 設定・圈速紀錄</h1>
+    <div class="sub compact-version"><span class="tag">V15</span></div>
+    <nav>
+      <button onclick="showView('dashboard')">總覽</button>
+      <button onclick="newSession()" class="primary">＋ 新增</button>
+      <button onclick="showView('compare')">比較</button>
+      <button onclick="showView('tracks')">賽道榜</button>
+      <button onclick="showView('manage')">資料管理</button>
+      <button onclick="exportJSON()">匯出</button>
+      <label class="btn">匯入<input id="jsonImport" type="file" accept=".json" class="hidden"></label>
+      <span class="mode-chip"><b id="modeLabel">尚未選擇</b><button class="mini" onclick="openModeGate()">切換</button></span>
+    </nav>
+    <div class="authbar">
+      <button id="authBtn" onclick="toggleGoogleAuth()">使用 Google 登入</button>
+      <span id="authStatus" class="authstatus">目前：僅本機模式</span>
+      <span id="syncStatus" class="authstatus cloudoff">雲端：未連線</span>
+    </div>
+    <div id="standaloneNetworkHint" class="standalone-net-hint hidden">
+      主畫面版若在 Wi‑Fi 無法登入，請暫時切換成行動數據再試。
+    </div>
+    <div class="garagebar" id="garageBar">
+      <span class="authstatus">Garage</span>
+      <select id="garageSelect" onchange="switchGarage(this.value)" disabled><option>請先登入</option></select>
+      <button class="mini" onclick="createGarage()">＋ 建立</button>
+      <button class="mini" onclick="joinGarage()">加入</button>
+      <button class="mini" onclick="copyGarageCode()">分享代碼</button>
+      <span id="garageStatus" class="authstatus"></span>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+<section id="dashboard">
+  <div class="grid">
+    <div class="card span-12">
+      <div class="kpis">
+        <div class="kpi"><small>總場次</small><b id="kSessions">0</b></div>
+        <div class="kpi"><small>總圈數</small><b id="kLaps">0</b></div>
+        <div class="kpi"><small>歷史最佳圈</small><b id="kBest">—</b></div>
+        <div class="kpi"><small>最近一次平均</small><b id="kAvg">—</b></div>
+      </div>
+    </div>
+    <div class="card span-12">
+      <h2 id="sessionListTitle">練車紀錄</h2>
+      <div class="table-scroll">
+        <table class="data-table">
+          <thead><tr><th>日期</th><th>車手</th><th>場地</th><th>車型</th><th>動力 / 傳動</th><th>輪胎</th><th>最佳圈</th><th>平均圈</th><th>圈數</th><th></th></tr></thead>
+          <tbody id="sessionRows"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="editor" class="hidden">
+  <div class="grid">
+    <div class="card span-8">
+      <h2 id="editorTitle">新增練車紀錄</h2>
+      <div class="setupbar">
+        <div>
+          <label>設定來源（只顯示「我自己」同車種／同車型的紀錄）</label>
+          <select id="setupSource"></select>
+        </div>
+        <button onclick="applySelectedSetup()">套用設定</button>
+      </div>
+      <div class="notice">新增紀錄只會自動沿用你自己的同車種／同車型設定。1/10 Touring 與 1/8 油平跑互不混用；朋友的設定也不會自動帶入。</div>
+      <br>
+      <div class="formgrid">
+        <div><label>日期</label><input id="date" type="date"></div>
+        <div>
+          <label>場地</label>
+          <select id="track" onchange="syncPublicOptionsUI()">
+            <option value="">請選擇場地</option>
+            <option value="柑園硬地">柑園硬地</option>
+            <option value="二重">二重</option>
+            <option value="萬板">萬板</option>
+            <option value="道南">道南</option>
+            <option value="台南 GTR">台南 GTR</option>
+          </select>
+        </div>
+        <input id="carType" type="hidden" value="touring">
+        <div class="wide">
+          <label>車型</label>
+          <div id="touringCarPickerWrap">
+            <button id="carPickerButton" type="button" class="car-picker-button" onclick="openCarPicker()">
+              <span class="car-picker-copy"><small id="carPickerBrand">選擇品牌</small><b id="carPickerModel">選擇車型</b></span>
+              <span class="car-picker-arrow">›</span>
+            </button>
+            <input id="carBrand" type="hidden">
+            <input id="carModel" type="hidden">
+          </div>
+          <input id="car" class="hidden" placeholder="例如：Mugen MRX7 / XRAY RX8" oninput="onCarModelChange()">
+        </div>
+        <div id="classField">
+          <label>組別</label>
+          <select id="className" onchange="syncPublicOptionsUI()">
+            <option value="Modified">Modified</option>
+            <option value="13.5 Stock">13.5 Stock</option>
+            <option value="13.5 Open" selected>13.5 Open</option>
+            <option value="17.5 Stock">17.5 Stock</option>
+            <option value="17.5 Open">17.5 Open</option>
+          </select>
+        </div>
+      </div>
+      <div class="optional-note">除登入與選擇 Garage 外，其餘設定資料都可以留白後直接儲存；1/8 油平跑不顯示組別／規則。</div>
+
+      <div id="touringFields">
+        <h3>電裝 / 傳動</h3>
+        <div class="formgrid">
+          <div class="wide"><label>馬達</label><input id="motor" list="motorHistory" placeholder="例如：Justock 13.5T"><datalist id="motorHistory"></datalist></div>
+          <div class="wide"><label>ESC</label><input id="esc" list="escHistory" placeholder="例如：XeRun 120A V3"><datalist id="escHistory"></datalist></div>
+          <div><label>Pinion</label><input id="pinion" type="number" step="1"></div>
+          <div><label>Spur</label><input id="spur" type="number" step="1"></div>
+          <div><label>內齒比</label><input id="internalRatio" type="number" step="0.01" value="1.90"></div>
+          <div><label>FDR</label><input id="fdr" type="number" step="0.01"></div>
+        </div>
+
+        <h3>輪胎 / 暖胎</h3>
+        <div class="formgrid">
+          <div><label>輪胎</label><input id="tires" placeholder="RUSH 36X / 40X"></div>
+          <div><label>胎膠</label><input id="additive" placeholder="品牌 / 時間"></div>
+          <div><label>暖胎溫度 °C</label><input id="warmerTemp" type="number" placeholder="70"></div>
+          <div><label>暖胎時間 min</label><input id="warmerMin" type="number" step="0.5" placeholder="5"></div>
+        </div>
+
+        <h3>底盤設定</h3>
+        <div class="formgrid">
+          <div><label>車高 前 mm</label><input id="rideF" type="number" step="0.1"></div>
+          <div><label>車高 後 mm</label><input id="rideR" type="number" step="0.1"></div>
+          <div><label>Downstop 前</label><input id="downF" type="number" step="0.1"></div>
+          <div><label>Downstop 後</label><input id="downR" type="number" step="0.1"></div>
+          <div><label>前束 °</label><input id="toeF" type="number" step="0.1" placeholder="-1 = out 1°"></div>
+          <div><label>後束 °</label><input id="toeR" type="number" step="0.1" placeholder="3 = in 3°"></div>
+          <div><label>外傾 前 °</label><input id="camberF" type="number" step="0.1"></div>
+          <div><label>外傾 後 °</label><input id="camberR" type="number" step="0.1"></div>
+          <div><label>避震油 前 cSt</label><input id="shockF" type="number"></div>
+          <div><label>避震油 後 cSt</label><input id="shockR" type="number"></div>
+          <div><label>差速油 cSt</label><input id="diffOil" type="number"></div>
+          <div><label>防傾桿</label><input id="arb" placeholder="前/後線徑或備註"></div>
+        </div>
+      </div>
+
+      <div id="nitroFields" class="hidden">
+        <details class="advanced">
+          <summary>遙控 / Servo（選填）</summary>
+          <div class="formgrid" style="margin-top:12px">
+            <div><label>Transmitter</label><input id="nTransmitter" placeholder="Sanwa / Futaba / ..."></div>
+            <div><label>Receiver</label><input id="nReceiver" placeholder="型號"></div>
+            <div><label>Steering Servo</label><input id="nSteeringServo" placeholder="型號"></div>
+            <div><label>Steering Expo %</label><input id="nSteeringExpo" type="number" step="1"></div>
+            <div><label>Steering Speed %</label><input id="nSteeringSpeed" type="number" step="1"></div>
+            <div><label>Throttle Servo</label><input id="nThrottleServo" placeholder="型號"></div>
+            <div><label>Throttle Expo %</label><input id="nThrottleExpo" type="number" step="1"></div>
+            <div><label>Throttle Speed %</label><input id="nThrottleSpeed" type="number" step="1"></div>
+          </div>
+        </details>
+
+        <h3>引擎 / 排氣 / 燃油</h3>
+        <div class="formgrid">
+          <div class="wide"><label>引擎</label><input id="nEngine" placeholder="例如：O.S. R2105 / Novarossi"></div>
+          <div><label>排氣管 Pipe</label><input id="nPipe" placeholder="型號"></div>
+          <div><label>歧管 Manifold</label><input id="nManifold" placeholder="型號 / 長度"></div>
+          <div><label>火星塞 Glow Plug</label><input id="nGlowPlug" placeholder="例如：P3 / RP6"></div>
+          <div class="wide"><label>燃油</label><input id="nFuel" placeholder="品牌 / 配方"></div>
+          <div><label>Nitro %</label><input id="nNitroPct" type="number" step="1" placeholder="16"></div>
+          <div><label>化油器口徑 mm</label><input id="nCarbDia" type="number" step="0.1" placeholder="選填"></div>
+          <div><label>Head Clearance mm</label><input id="nHeadClearance" type="number" step="0.01" placeholder="選填"></div>
+          <div><label>環境溫度 °C</label><input id="nAirTemp" type="number" step="1"></div>
+          <div><label>路面溫度 °C</label><input id="nTrackTemp" type="number" step="1"></div>
+          <div><label>抓地</label><input id="nTraction" placeholder="低 / 中 / 高"></div>
+          <div><label>賽道特性</label><input id="nLayout" placeholder="技術 / 混合 / 高速"></div>
+          <div><label>路面狀況</label><input id="nTrackCondition" placeholder="平整 / 顛簸 / ..."></div>
+          <div class="wide"><label>成績 / 測試條件</label><input id="nResult" placeholder="Practice / Qualify / Final"></div>
+        </div>
+
+        <h3>離合器 / 二速</h3>
+        <div class="formgrid">
+          <div><label>離合器 Type</label><input id="nClutchType" placeholder="品牌 / 型式"></div>
+          <div><label>Clutch Shoe</label><input id="nClutchShoe" placeholder="材質 / 型號"></div>
+          <div><label>Clutch Spring</label><input id="nClutchSpring" placeholder="型號 / 硬度"></div>
+          <div><label>Spring Preload</label><input id="nClutchPreload" placeholder="mm / 圈數"></div>
+          <div><label>Clutch Gap mm</label><input id="nClutchGap" type="number" step="0.01"></div>
+          <div><label>Bell End Play mm</label><input id="nClutchEndplay" type="number" step="0.01"></div>
+          <div><label>煞車碟 / Brake Disc</label><input id="nBrakeDisc" placeholder="型式 / 材質"></div>
+          <div><label>煞車皮 / Brake Pad</label><input id="nBrakePad" placeholder="型式 / 材質"></div>
+          <div><label>1st Pinion</label><input id="nGear1Pinion" type="number" step="1"></div>
+          <div><label>1st Spur</label><input id="nGear1Spur" type="number" step="1"></div>
+          <div><label>2nd Pinion</label><input id="nGear2Pinion" type="number" step="1"></div>
+          <div><label>2nd Spur</label><input id="nGear2Spur" type="number" step="1"></div>
+          <div class="wide"><label>二速切換設定</label><input id="nShift" placeholder="預壓 / 切換時機備註"></div>
+        </div>
+
+        <h3>泡棉胎</h3>
+        <div class="notice">常用起始預設：前 69 mm／後 76 mm。沒有量胎徑可直接保留；若有量跑完胎徑，會自動計算磨耗。</div>
+        <br>
+        <div class="formgrid">
+          <div><label>前胎品牌</label><input id="nTireBrandF" placeholder="Matrix / Hot Race / Contact"></div>
+          <div><label>後胎品牌</label><input id="nTireBrandR" placeholder="Matrix / Hot Race / Contact"></div>
+          <div><label>前胎 Shore</label><input id="nShoreF" type="number" step="1" placeholder="例如 32"></div>
+          <div><label>後胎 Shore</label><input id="nShoreR" type="number" step="1" placeholder="例如 35"></div>
+          <div><label>前胎起始直徑 mm</label><input id="nTireDiaFStart" type="number" step="0.1" value="69"></div>
+          <div><label>後胎起始直徑 mm</label><input id="nTireDiaRStart" type="number" step="0.1" value="76"></div>
+          <div><label>前胎結束直徑 mm</label><input id="nTireDiaFEnd" type="number" step="0.1"></div>
+          <div><label>後胎結束直徑 mm</label><input id="nTireDiaREnd" type="number" step="0.1"></div>
+          <div><label>前胎 Additive</label><input id="nAdditiveF" placeholder="品牌 / 時間"></div>
+          <div><label>後胎 Additive</label><input id="nAdditiveR" placeholder="品牌 / 時間"></div>
+          <div class="wide"><label>輪胎磨耗</label><div id="nitroWear" class="wearbox">前 — / 後 —</div></div>
+        </div>
+
+        <h3>常用底盤設定</h3>
+        <div class="formgrid">
+          <div><label>車高 前 mm</label><input id="nRideF" type="number" step="0.1"></div>
+          <div><label>車高 後 mm</label><input id="nRideR" type="number" step="0.1"></div>
+          <div><label>Downstop 前</label><input id="nDownF" type="number" step="0.1"></div>
+          <div><label>Downstop 後</label><input id="nDownR" type="number" step="0.1"></div>
+          <div><label>Toe 前 °</label><input id="nToeF" type="number" step="0.1"></div>
+          <div><label>Toe 後 °</label><input id="nToeR" type="number" step="0.1"></div>
+          <div><label>Camber 前 °</label><input id="nCamberF" type="number" step="0.1"></div>
+          <div><label>Camber 後 °</label><input id="nCamberR" type="number" step="0.1"></div>
+          <div><label>前防傾桿 mm</label><input id="nArbF" type="number" step="0.1"></div>
+          <div><label>後防傾桿 mm</label><input id="nArbR" type="number" step="0.1"></div>
+          <div><label>前彈簧</label><input id="nSpringF" placeholder="型號 / 硬度"></div>
+          <div><label>後彈簧</label><input id="nSpringR" placeholder="型號 / 硬度"></div>
+          <div><label>前避震油 cSt</label><input id="nShockOilF" type="number"></div>
+          <div><label>後避震油 cSt</label><input id="nShockOilR" type="number"></div>
+          <div><label>前活塞</label><input id="nPistonF" placeholder="孔數 × 孔徑"></div>
+          <div><label>後活塞</label><input id="nPistonR" placeholder="孔數 × 孔徑"></div>
+          <div><label>前 Rebound %</label><input id="nReboundF" type="number" step="1"></div>
+          <div><label>後 Rebound %</label><input id="nReboundR" type="number" step="1"></div>
+          <div><label>前避震安裝位置</label><input id="nShockPosF" placeholder="孔位 / Shim"></div>
+          <div><label>後避震安裝位置</label><input id="nShockPosR" placeholder="孔位 / Shim"></div>
+        </div>
+
+        <details class="advanced">
+          <summary>進階底盤 / 幾何設定</summary>
+          <div class="formgrid" style="margin-top:12px">
+            <div><label>Caster 前（° / Shim mm）</label><input id="nCaster" placeholder="角度或 caster shim"></div>
+            <div><label>前車寬 mm</label><input id="nWidthF" type="number" step="0.1"></div>
+            <div><label>後車寬 mm</label><input id="nWidthR" type="number" step="0.1"></div>
+            <div><label>Wheelbase</label><input id="nWheelbase" placeholder="Long / Short / Shim"></div>
+            <div><label>Ackermann</label><input id="nAckermann" placeholder="Insert / Position"></div>
+            <div><label>Bump Steer</label><input id="nBumpSteer" placeholder="Shim / mm"></div>
+            <div><label>前 Upper Arm / Shim</label><input id="nUpperArmF" placeholder="位置 / Shim"></div>
+            <div><label>後 Upper Arm / Shim</label><input id="nUpperArmR" placeholder="位置 / Shim"></div>
+            <div><label>前 Roll Center / Link</label><input id="nRollCenterF" placeholder="位置 / Shim"></div>
+            <div><label>後 Roll Center / Link</label><input id="nRollCenterR" placeholder="位置 / Shim"></div>
+            <div><label>前 Upright Insert</label><input id="nUprightF" placeholder="Centric / Eccentric / Position"></div>
+            <div><label>後 Upright Insert</label><input id="nUprightR" placeholder="Position"></div>
+            <div><label>Front Axle</label><input id="nFrontAxle" placeholder="Solid / Split / One-way"></div>
+            <div><label>Flex</label><input id="nFlex" placeholder="Flex screw / brace"></div>
+          </div>
+        </details>
+
+        <details class="advanced">
+          <summary>車殼 / 配重</summary>
+          <div class="formgrid" style="margin-top:12px">
+            <div class="wide"><label>Body</label><input id="nBody" placeholder="車殼型號"></div>
+            <div><label>Body Position</label><input id="nBodyPos" placeholder="前後位置 / 柱位"></div>
+            <div><label>距離保桿 mm</label><input id="nBumperDist" type="number" step="0.5"></div>
+            <div><label>Wing Position</label><input id="nWingPos" placeholder="位置"></div>
+            <div><label>Wing Height mm</label><input id="nWingHeight" type="number" step="0.5"></div>
+            <div class="wide"><label>配重 / 電池板</label><input id="nWeight" placeholder="位置 / 克數 / 材質"></div>
+          </div>
+        </details>
+      </div>
+
+      <h3>備註</h3>
+      <textarea id="notes" placeholder="記錄車感、調整方向、引擎狀況、輪胎磨耗或其他注意事項…"></textarea>
+    </div>
+
+    <div class="card span-4">
+      <h2>圈速</h2>
+
+      <div class="lap-mode-tabs" role="tablist" aria-label="圈速輸入方式">
+        <button type="button" id="lapModeBtnFull" class="active" onclick="setLapInputMode('full')">完整圈速</button>
+        <button type="button" id="lapModeBtnBest" onclick="setLapInputMode('best')">最快圈</button>
+        <button type="button" id="lapModeBtnTimer" onclick="setLapInputMode('timer')">從計時器匯入</button>
+      </div>
+
+      <div id="lapModeFull" class="lap-mode-panel">
+        <div class="notice">貼上完整逐圈資料，每行一圈即可。支援 12.345、0:12.345、Lap 1,12.345 等格式。</div>
+        <label>完整圈速</label>
+        <textarea id="lapText" placeholder="12.842&#10;12.515&#10;12.301&#10;12.404"></textarea>
+        <div class="lap-actions">
+          <button type="button" onclick="parseLapText()">解析圈速</button>
+        </div>
+      </div>
+
+      <div id="lapModeBest" class="lap-mode-panel hidden">
+        <div class="notice">只有最快圈也可以建立紀錄與上公開榜；Best 3、平均圈與一致性會保留為「—」。</div>
+        <label>最快圈</label>
+        <div class="best-lap-entry">
+          <input id="bestLapOnly" inputmode="decimal" placeholder="例如 20.510">
+          <button type="button" onclick="applyBestLapOnly()">套用</button>
+        </div>
+      </div>
+
+      <div id="lapModeTimer" class="lap-mode-panel hidden">
+        <div class="notice">
+          支援 CSV、TXT、JSON，也可以把 LapMonitor、SkyRC LapWiz 或手機照片「原況文字」複製出的內容整段貼進來。
+        </div>
+        <label>計時器來源</label>
+        <select id="timerSource">
+          <option value="Auto">自動判斷</option>
+          <option value="LapMonitor">LapMonitor</option>
+          <option value="SkyRC LapWiz">SkyRC LapWiz</option>
+          <option value="其他計時器">其他計時器</option>
+        </select>
+
+        <div class="lap-actions">
+          <label class="btn">選擇計時器檔案
+            <input id="timerImportFile" type="file" accept=".csv,.txt,.json,text/csv,text/plain,application/json" class="hidden">
+          </label>
+        </div>
+
+        <label>或貼上計時器文字</label>
+        <textarea id="timerImportText" placeholder="Lap 1  20.842&#10;Lap 2  20.515&#10;Lap 3  20.301"></textarea>
+        <div class="lap-actions">
+          <button type="button" onclick="parseTimerImport()">解析匯入</button>
+        </div>
+        <div id="timerImportStatus" class="timer-import-status">尚未匯入資料</div>
+      </div>
+
+      <hr>
+      <div class="stat5">
+        <div class="kpi"><small>有效圈</small><b id="lapCount">0</b></div>
+        <div class="kpi"><small>最佳圈</small><b id="lapBest">—</b></div>
+        <div class="kpi"><small>Best 3 Avg</small><b id="lapBest3">—</b></div>
+        <div class="kpi"><small>Best 5 Avg</small><b id="lapBest5">—</b></div>
+        <div class="kpi"><small>一致性 σ</small><b id="lapStd">—</b></div>
+      </div>
+      <div class="muted" style="font-size:12px;margin:8px 0">全段平均：<span id="lapAvg">—</span></div>
+      <canvas id="lapChart" width="500" height="240"></canvas>
+      <div class="public-sync-box">
+        <label class="check public-sync-main">
+          <input id="publishPublic" type="checkbox" onchange="syncPublicOptionsUI()">
+          <span><b>同步到公開賽道榜</b><small>公開場地固定使用上方選擇的場地，不會在賽道榜再次選場。</small></span>
+        </label>
+        <label class="check">
+          <input id="shareSetupPublic" type="checkbox">
+          同時分享這筆 Setup
+        </label>
+        <div id="publicSyncHint" class="muted" style="font-size:12px"></div>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:12px">
+        <button class="primary" onclick="saveSession()">儲存紀錄</button>
+        <button onclick="showView('dashboard')">取消</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="detail" class="hidden">
+  <div class="grid">
+    <div class="card span-12">
+      <div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap">
+        <h2 id="detailTitle">Session</h2>
+        <div class="row-actions">
+          <button onclick="editCurrent()">編輯</button>
+          <button class="danger" onclick="deleteCurrent()">刪除</button>
+          <button onclick="showView('dashboard')">返回</button>
+        </div>
+      </div>
+      <div id="detailBody"></div>
+    </div>
+  </div>
+</section>
+
+<section id="compare" class="hidden">
+  <div class="grid">
+    <div class="card span-12">
+      <h2>選擇要比較的場次</h2>
+      <div id="compareSelect" class="compare-select"></div>
+      <div style="margin-top:10px"><button class="primary" onclick="renderComparison()">更新比較</button></div>
+    </div>
+    <div class="card span-12">
+      <h2>圈速比較</h2>
+      <canvas id="compareChart" width="1000" height="260"></canvas>
+      <div id="compareSummary" style="margin-top:12px"></div>
+    </div>
+    <div class="card span-12">
+      <h2>設定差異</h2>
+      <div class="table-scroll"><table id="compareTable" class="data-table compare-table"></table></div>
+    </div>
+  </div>
+</section>
+
+<section id="manage" class="hidden">
+  <div class="grid">
+    <div class="card span-12">
+      <h2>資料管理</h2><div style="margin-bottom:12px"><button type="button" onclick="openA2HSGuide(true)">加入主畫面</button></div>
+      <div class="notice">只管理你自己的資料。共享 Garage 中朋友的 Session 與設定不會出現在這裡，也不會被你刪除。</div>
+    </div>
+    <div class="card span-6">
+      <h2>最近刪除的 Session</h2>
+      <div class="muted" style="font-size:12px;margin-bottom:10px">保留 30 天，可還原；超過 30 天的本人 Session 會在載入時清理。</div>
+      <div id="trashList" class="manage-list"></div>
+    </div>
+    <div class="card span-6">
+      <h2>我的設定歷史</h2>
+      <div class="muted" style="font-size:12px;margin-bottom:10px">這裡只管理「自動帶入／設定來源」的個人 Setup 快照，不等於刪除 Session。要讓一筆紀錄從總覽、比較與所有統計消失，請進入該 Session 按「刪除」。</div>
+      <div id="setupManageList" class="manage-list"></div>
+    </div>
+    <div class="card span-6" id="motorHistoryCard">
+      <h2>馬達歷史建議</h2>
+      <div id="motorManageList" class="manage-list"></div>
+    </div>
+    <div class="card span-6" id="escHistoryCard">
+      <h2>ESC 歷史建議</h2>
+      <div id="escManageList" class="manage-list"></div>
+    </div>
+  </div>
+</section>
+
+<section id="tracks" class="hidden">
+  <div class="grid">
+    <div class="card span-12">
+      <div class="track-board-head">
+        <div>
+          <h2>台灣 RC 賽道・公開圈速板</h2>
+          <div class="muted" style="font-size:13px;line-height:1.55">
+            依賽道分開顯示「最近上車」與排行榜。V15 的榜單資料來自車手主動發布的 Session，
+            屬於自報圈速；未接入場地官方計時器前，不標示為官方紀錄。
+          </div>
+        </div>
+        <span class="pill">Public Timing Board</span>
+      </div>
+      <div id="trackCards" class="track-grid" style="margin-top:12px"></div>
+    </div>
+
+    <div class="card span-12">
+      <div class="track-board-head">
+        <div>
+          <h2 id="trackBoardTitle">賽道排行榜</h2>
+          <div id="trackBoardMeta" class="muted" style="font-size:12px"></div>
+        </div>
+        <div class="track-board-actions">
+          <div>
+            <label>組別</label>
+            <select id="trackClassFilter" onchange="onTrackClassFilterChange()">
+              <option value="">全部組別</option>
+              <option value="Modified">Modified</option>
+              <option value="13.5 Stock">13.5 Stock</option>
+              <option value="13.5 Open">13.5 Open</option>
+              <option value="17.5 Stock">17.5 Stock</option>
+              <option value="17.5 Open">17.5 Open</option>
+              <option value="1/8 油平跑">1/8 油平跑</option>
+            </select>
+          </div>
+          <div>
+            <label>品牌</label>
+            <select id="trackBrandFilter" onchange="onTrackBrandFilterChange()"><option value="">全部品牌</option></select>
+          </div>
+          <div>
+            <label>車型</label>
+            <select id="trackModelFilter" onchange="renderTrackBoard()"><option value="">全部車型</option></select>
+          </div>
+          <div>
+            <label>排序</label>
+            <select id="trackSortMode" onchange="renderTrackBoard()">
+              <option value="best">最佳圈</option>
+              <option value="best3">Best 3 Avg</option>
+              <option value="recent">最近上車</option>
+            </select>
+          </div>
+          <label class="check" style="align-self:end;margin:0">
+            <input id="trackSharedSetupOnly" type="checkbox" onchange="renderTrackBoard()">
+            只看有分享設定
+          </label>
+          <a id="trackMapLink" class="btn" target="_blank" rel="noopener">地圖</a>
+        </div>
+      </div>
+
+      <div class="track-kpis">
+        <div class="kpi"><small>排行榜最佳圈</small><b id="trackKBest">—</b></div>
+        <div class="kpi"><small>車手數</small><b id="trackKDrivers">0</b></div>
+        <div class="kpi"><small>公開 Session</small><b id="trackKSessions">0</b></div>
+        <div class="kpi"><small>總公開圈數</small><b id="trackKLaps">0</b></div>
+      </div>
+
+      <div class="notice" style="margin-top:12px">
+        公開成績由「新增／編輯 Session」時同步。賽道榜本身只負責查詢、比較與查看分享設定。
+      </div>
+
+      <hr>
+      <h3>排行榜</h3>
+      <div class="table-scroll track-table-scroll">
+        <table class="track-table">
+          <thead>
+            <tr><th>#</th><th>車手</th><th>組別</th><th>車型</th><th>最佳圈</th><th>Best 3</th><th>資料</th><th>設定</th><th>日期</th><th>操作</th></tr>
+          </thead>
+          <tbody id="trackLeaderboardRows"></tbody>
+        </table>
+      </div>
+
+      <h3>最近上車</h3>
+      <div class="muted" style="font-size:12px;margin-bottom:8px">
+        這裡保留每次公開 Session；排行榜則只取每位車手在目前組別中的最佳成績。
+      </div>
+      <div class="table-scroll track-table-scroll">
+        <table class="track-table">
+          <thead>
+            <tr><th>時間</th><th>車手</th><th>組別</th><th>車型</th><th>最佳圈</th><th>平均</th><th>圈數</th><th>資料</th><th>設定</th><th>操作</th></tr>
+          </thead>
+          <tbody id="trackRecentRows"></tbody>
+        </table>
+      </div>
+      <div id="trackEntryDetail" class="track-detail hidden"></div>
+      <div id="trackLoadStatus" class="track-status">選擇賽道後載入公開圈速。</div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>Garage V15｜個人練車紀錄・設定比較・台灣 RC 賽道公開圈速板</footer>
+
+
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+
+<script>
+const LEGACY_KEY='touring_sessions_v1';
+const CACHE_PREFIX='rc_onroad_garage_v4_';
+let sessions=[];
+let currentId=null;
+let currentLaps=[];
+let lapInputMode='full'; // full | best | timer
+let lapTimerSource='manual';
+let currentGarageId=null;
+let currentGarage=null;
+let userGarages=[];
+let personalSetups=[];
+let hiddenMotorHistory=[];
+let hiddenEscHistory=[];
+
+// V15 public track timing board
+let currentTrackId='ganyuan';
+let trackEntries=[];
+let trackUnsub=null;
+
+// Firebase / Firestore
+const firebaseConfig = {
+  apiKey: "AIzaSyC_AMULpvU_KFLrRKE5fIa1EsIkIPMjB3U",
+  authDomain: "rc-touring-car-laptime.firebaseapp.com",
+  projectId: "rc-touring-car-laptime",
+  storageBucket: "rc-touring-car-laptime.firebasestorage.app",
+  messagingSenderId: "679068305899",
+  appId: "1:679068305899:web:727545dfd816ca60f0b1ae",
+  measurementId: "G-N7Z6Q5Z79M"
+};
+
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+const googleProvider = new firebase.auth.GoogleAuthProvider();
+googleProvider.setCustomParameters({prompt:'select_account'});
+let currentUser = null;
+let cloudLoaded = false;
+let authPersistenceReady = auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(err=>{
+  console.warn('Auth LOCAL persistence unavailable', err);
+});
+
+function isInAppBrowser(){
+  const ua=navigator.userAgent||'';
+  return /FBAN|FBAV|Instagram|Line\/|MicroMessenger|; wv\)|\bwv\b|WebView/i.test(ua);
+}
+
+// 某些行動瀏覽器從歷史紀錄 / BFCache 還原頁面時會連舊的 Auth 暫存狀態一起恢復。
+// 重新載入一次，讓 Firebase Auth 從 LOCAL persistence 重新初始化。
+window.addEventListener('pageshow',event=>{
+  if(event.persisted){
+    location.reload();
+  }
+});
+
+
+function setSyncStatus(text, ok=false){
+  const el=document.getElementById('syncStatus');
+  if(!el)return;
+  el.textContent=text;
+  el.className='authstatus '+(ok?'cloudok':'cloudoff');
+}
+function cacheKey(){ return CACHE_PREFIX+(currentGarageId||'local'); }
+function cacheSessions(){ if(currentGarageId) localStorage.setItem(cacheKey(),JSON.stringify(sessions)); }
+function loadCache(){
+  try{return JSON.parse(localStorage.getItem(cacheKey())||'[]')}catch{return []}
+}
+function sortSessions(){
+  sessions.sort((a,b)=>((b.date||'').localeCompare(a.date||'')) || ((b.updatedAt||b.createdAt||'').localeCompare(a.updatedAt||a.createdAt||'')));
+}
+function garageRef(id=currentGarageId){ if(!id) throw new Error('尚未選擇 Garage'); return db.collection('garages').doc(id); }
+function garageSessionsRef(){ return garageRef().collection('sessions'); }
+function userGarageRef(id){ if(!currentUser) throw new Error('尚未登入'); return db.collection('users').doc(currentUser.uid).collection('garages').doc(id); }
+function displayName(){ return currentUser?.displayName || currentUser?.email || '未命名車手'; }
+function activeSessions(){ return sessions.filter(s=>!s.deletedAt); }
+function mySessions(){ return currentUser ? activeSessions().filter(s=>s.ownerUid===currentUser.uid) : []; }
+function myTrash(){ return currentUser ? sessions.filter(s=>s.ownerUid===currentUser.uid && s.deletedAt) : []; }
+function personalSetupsRef(){ if(!currentUser) throw new Error('尚未登入'); return db.collection('users').doc(currentUser.uid).collection('setups'); }
+function uiPrefsRef(){ if(!currentUser) throw new Error('尚未登入'); return db.collection('users').doc(currentUser.uid).collection('preferences').doc('ui'); }
+function setupSnapshot(obj){
+  const out={id:String(obj.id),garageId:currentGarageId||obj.garageId||'',date:obj.date||'',track:obj.track||'',ownerUid:currentUser?.uid||obj.ownerUid||'',ownerName:displayName(),updatedAt:obj.updatedAt||new Date().toISOString()};
+  carryFields.forEach(f=>out[f]=obj[f]??'');
+  return out;
+}
+async function loadPersonalSetups(){
+  if(!currentUser){personalSetups=[];refreshPersonalSuggestions();return;}
+  const snap=await personalSetupsRef().get();
+  personalSetups=snap.docs.map(d=>({id:d.id,...d.data()}));
+  personalSetups.sort((a,b)=>((b.date||'').localeCompare(a.date||''))||((b.updatedAt||'').localeCompare(a.updatedAt||'')));
+  refreshPersonalSuggestions();
+}
+async function loadUiPrefs(){
+  if(!currentUser){hiddenMotorHistory=[];hiddenEscHistory=[];return;}
+  const d=await uiPrefsRef().get();
+  const x=d.exists?d.data():{};
+  hiddenMotorHistory=Array.isArray(x.hiddenMotorHistory)?x.hiddenMotorHistory:[];
+  hiddenEscHistory=Array.isArray(x.hiddenEscHistory)?x.hiddenEscHistory:[];
+}
+async function saveUiPrefs(){
+  if(!currentUser)return;
+  await uiPrefsRef().set({hiddenMotorHistory,hiddenEscHistory,updatedAt:new Date().toISOString()},{merge:true});
+}
+
+function upsertPersonalSetupLocal(obj){
+  if(!currentUser)return;
+  const snap=setupSnapshot(obj);
+  const i=personalSetups.findIndex(x=>String(x.id)===String(snap.id));
+  if(i>=0)personalSetups[i]=snap;else personalSetups.push(snap);
+  personalSetups.sort((a,b)=>((b.date||'').localeCompare(a.date||''))||((b.updatedAt||'').localeCompare(a.updatedAt||'')));
+}
+
+async function ensureUserProfile(){
+  if(!currentUser)return;
+  await db.collection('users').doc(currentUser.uid).set({
+    displayName:displayName(), email:currentUser.email||'', lastSeenAt:new Date().toISOString()
+  },{merge:true});
+}
+
+async function listMyGarages(){
+  if(!currentUser)return [];
+  const snap=await db.collection('users').doc(currentUser.uid).collection('garages').get();
+  userGarages=snap.docs.map(d=>({id:d.id,...d.data()}));
+  userGarages.sort((a,b)=>(a.name||'').localeCompare(b.name||''));
+  const sel=document.getElementById('garageSelect');
+  sel.innerHTML=userGarages.map(g=>`<option value="${escHtml(g.id)}">${escHtml(g.name||g.id)}</option>`).join('');
+  sel.disabled=!userGarages.length;
+  if(currentGarageId && userGarages.some(g=>g.id===currentGarageId)) sel.value=currentGarageId;
+  document.getElementById('garageStatus').textContent=currentGarageId?`代碼：${currentGarageId}`:'';
+  return userGarages;
+}
+
+async function createGarage(autoName){
+  if(!currentUser){alert('請先使用 Google 登入。');return null;}
+  const name=autoName || prompt('Garage 名稱，例如：柑園 Touring');
+  if(!name)return null;
+  setSyncStatus('雲端：建立 Garage…');
+  const ref=db.collection('garages').doc();
+  const now=new Date().toISOString();
+  await ref.set({name:name.trim(),ownerUid:currentUser.uid,createdAt:now});
+  await ref.collection('members').doc(currentUser.uid).set({uid:currentUser.uid,displayName:displayName(),role:'owner',joinedAt:now});
+  await userGarageRef(ref.id).set({name:name.trim(),role:'owner',joinedAt:now});
+  await db.collection('users').doc(currentUser.uid).set({currentGarageId:ref.id},{merge:true});
+  await listMyGarages();
+  await switchGarage(ref.id,true);
+  setSyncStatus('雲端：已同步',true);
+  return ref.id;
+}
+
+async function joinGarage(){
+  if(!currentUser){alert('請先使用 Google 登入。');return;}
+  const id=(prompt('貼上朋友分享給你的 Garage 代碼')||'').trim();
+  if(!id)return;
+  setSyncStatus('雲端：加入 Garage…');
+  const g=await db.collection('garages').doc(id).get();
+  if(!g.exists){alert('找不到這個 Garage，請確認代碼。');setSyncStatus('雲端：已同步',true);return;}
+  const data=g.data(); const now=new Date().toISOString();
+  // 持有 Garage 代碼即視為受邀，可建立自己的 member 文件。
+  await g.ref.collection('members').doc(currentUser.uid).set({uid:currentUser.uid,displayName:displayName(),role:'member',joinedAt:now});
+  await userGarageRef(id).set({name:data.name||id,role:'member',joinedAt:now});
+  await db.collection('users').doc(currentUser.uid).set({currentGarageId:id},{merge:true});
+  await listMyGarages();
+  await switchGarage(id,true);
+}
+
+async function copyGarageCode(){
+  if(!currentGarageId){alert('目前沒有 Garage。');return;}
+  try{await navigator.clipboard.writeText(currentGarageId);alert('Garage 代碼已複製：\n'+currentGarageId)}
+  catch{prompt('複製這個 Garage 代碼分享給朋友：',currentGarageId)}
+}
+
+async function switchGarage(id,skipProfile=false){
+  if(!currentUser||!id)return;
+  currentGarageId=id;
+  const item=userGarages.find(g=>g.id===id);
+  currentGarage=item||{id,name:id};
+  document.getElementById('garageSelect').value=id;
+  document.getElementById('garageStatus').textContent=`代碼：${id}`;
+  if(!skipProfile) await db.collection('users').doc(currentUser.uid).set({currentGarageId:id},{merge:true});
+  sessions=loadCache(); sortSessions(); renderDashboard();
+  await loadGarageSessions();
+}
+
+async function uploadSessionToCloud(obj){
+  if(!currentUser||!currentGarageId) return;
+  setSyncStatus('雲端：同步中…');
+  await garageSessionsRef().doc(String(obj.id)).set(obj);
+  await personalSetupsRef().doc(String(obj.id)).set(setupSnapshot(obj));
+  upsertPersonalSetupLocal(obj);
+  setSyncStatus('雲端：已同步',true);
+}
+async function softDeleteSessionFromCloud(id){
+  if(!currentUser||!currentGarageId)return;
+  setSyncStatus('雲端：移到最近刪除…');
+  await garageSessionsRef().doc(String(id)).set({deletedAt:new Date().toISOString(),updatedAt:new Date().toISOString()},{merge:true});
+  setSyncStatus('雲端：已同步',true);
+}
+async function restoreSessionFromCloud(id){
+  await garageSessionsRef().doc(String(id)).update({deletedAt:firebase.firestore.FieldValue.delete(),updatedAt:new Date().toISOString()});
+}
+async function purgeSessionFromCloud(id){
+  await garageSessionsRef().doc(String(id)).delete();
+}
+async function softDeletePersonalSetupMirror(id, deletedAt){
+  if(!currentUser)return;
+  await personalSetupsRef().doc(String(id)).set({deletedAt,updatedAt:deletedAt},{merge:true});
+  const p=personalSetups.find(x=>String(x.id)===String(id));
+  if(p){p.deletedAt=deletedAt;p.updatedAt=deletedAt;}
+}
+async function restorePersonalSetupMirror(id){
+  if(!currentUser)return;
+  const ref=personalSetupsRef().doc(String(id));
+  const snap=await ref.get();
+  if(snap.exists){
+    await ref.update({deletedAt:firebase.firestore.FieldValue.delete(),updatedAt:new Date().toISOString()});
+    const p=personalSetups.find(x=>String(x.id)===String(id));
+    if(p){delete p.deletedAt;p.updatedAt=new Date().toISOString();}
+  }
+}
+async function purgePersonalSetupMirror(id){
+  if(!currentUser)return;
+  await personalSetupsRef().doc(String(id)).delete().catch(()=>{});
+  personalSetups=personalSetups.filter(x=>String(x.id)!==String(id));
+}
+async function loadGarageSessions(){
+  if(!currentUser||!currentGarageId)return;
+  setSyncStatus('雲端：讀取 Garage…');
+  const snap=await garageSessionsRef().get();
+  sessions=snap.docs.map(d=>({id:d.id,...d.data()}));
+  await purgeExpiredTrash();
+  sortSessions(); cacheSessions(); cloudLoaded=true;
+  setSyncStatus('雲端：已同步',true);
+  renderDashboard(); refreshPersonalSuggestions();
+}
+
+async function migrateLegacyPrivateSessions(){
+  if(!currentUser||!currentGarageId)return;
+  const legacyLocal=(()=>{try{return JSON.parse(localStorage.getItem(LEGACY_KEY)||'[]')}catch{return []}})();
+  let legacyCloud=[];
+  try{
+    const snap=await db.collection('users').doc(currentUser.uid).collection('sessions').get();
+    legacyCloud=snap.docs.map(d=>({id:d.id,...d.data()}));
+  }catch(e){console.warn('legacy cloud read skipped',e)}
+  const merged=new Map();
+  [...legacyLocal,...legacyCloud].forEach(s=>s&&s.id!=null&&merged.set(String(s.id),s));
+  const list=[...merged.values()];
+  if(!list.length)return;
+  const now=new Date().toISOString();
+  const migrated=list.map(s=>({ ...s,id:String(s.id),ownerUid:currentUser.uid,ownerName:displayName(),updatedAt:s.updatedAt||s.createdAt||now }));
+  await Promise.all(migrated.map(s=>garageSessionsRef().doc(String(s.id)).set(s,{merge:true})));
+  await Promise.all(migrated.map(s=>personalSetupsRef().doc(String(s.id)).set(setupSnapshot(s),{merge:true})));
+  personalSetups=migrated.map(setupSnapshot);
+  localStorage.removeItem(LEGACY_KEY);
+}
+
+async function bootstrapGarage(){
+  await ensureUserProfile();
+  await loadPersonalSetups();
+  await loadUiPrefs();
+  const profile=await db.collection('users').doc(currentUser.uid).get();
+  await listMyGarages();
+  let preferred=profile.exists?profile.data().currentGarageId:null;
+  if(preferred && userGarages.some(g=>g.id===preferred)){
+    await switchGarage(preferred,true); return;
+  }
+  if(userGarages.length){ await switchGarage(userGarages[0].id,true); return; }
+  const id=await createGarage('我的 Garage');
+  if(id){ await migrateLegacyPrivateSessions(); await loadGarageSessions(); }
+}
+
+function openAuthHelp(message){
+  const box=document.getElementById('authHelp');
+  const text=document.getElementById('authHelpText');
+  if(message&&text) text.textContent=message;
+  box?.classList.remove('hidden');
+}
+function closeAuthHelp(){ document.getElementById('authHelp')?.classList.add('hidden'); }
+async function copyCurrentUrl(){
+  const url=location.href;
+  try{
+    await navigator.clipboard.writeText(url);
+    alert('網站網址已複製。請貼到 Chrome 或 Safari 開啟。');
+  }catch{
+    prompt('複製這個網址，改用 Chrome 或 Safari 開啟：',url);
+  }
+}
+function toggleGoogleAuth(){
+  if(currentUser){
+    auth.signOut().catch(err=>{
+      console.error('Google sign-out',err);
+      alert('登出失敗：'+(err.message||err.code||err));
+    });
+    return;
+  }
+
+  // V15 Auth Fix：
+  // Google popup 必須直接由使用者點擊觸發。
+  // 不在這裡 await setPersistence，避免 Safari / iOS 把它視為非使用者觸發彈窗而封鎖。
+  // LOCAL persistence 已在 Firebase 初始化後背景設定。
+  auth.signInWithPopup(googleProvider).catch(err=>{
+    console.error('Google sign-in',err);
+
+    const browserIssue=[
+      'auth/popup-blocked',
+      'auth/cancelled-popup-request',
+      'auth/operation-not-supported-in-this-environment',
+      'auth/web-storage-unsupported'
+    ].includes(err.code);
+
+    if(browserIssue){
+      const standalone=(typeof isStandaloneMode==='function' && isStandaloneMode());
+      const msg=isInAppBrowser()
+        ? '目前可能是在 App 內建瀏覽器中，Google 登入可能受到限制。請改用 Safari 或 Chrome 開啟。'
+        : standalone
+          ? '主畫面版沒有完成 Google 登入。請先關閉 Wi‑Fi、改用行動數據後再按一次；若仍失敗，請用 Safari 開啟正式網站。'
+          : 'Google 登入視窗沒有成功開啟。請確認瀏覽器沒有封鎖彈出式視窗，然後再按一次「使用 Google 登入」。';
+      openAuthHelp(msg);
+    }else{
+      openAuthHelp('Google 登入失敗：'+(err.message||err.code||err));
+    }
+  });
+}
+auth.onAuthStateChanged(async user=>{
+  currentUser=user||null;
+  const btn=document.getElementById('authBtn');
+  const st=document.getElementById('authStatus');
+  if(user){
+    btn.textContent='登出 Google';
+    st.textContent=`已登入：${displayName()}`;
+    try{await bootstrapGarage();}
+    catch(err){console.error(err);setSyncStatus('雲端：連線失敗');alert('已登入 Google，但 Garage 初始化失敗。若 Garage 初始化失敗，請先確認 Firestore Rules 與登入權限。');}
+  }else{
+    btn.textContent='使用 Google 登入'; st.textContent='目前：僅本機模式';
+    currentGarageId=null;currentGarage=null;userGarages=[];personalSetups=[];hiddenMotorHistory=[];hiddenEscHistory=[];sessions=[];cloudLoaded=false;
+    const sel=document.getElementById('garageSelect');sel.innerHTML='<option>請先登入</option>';sel.disabled=true;
+    document.getElementById('garageStatus').textContent='';
+    setSyncStatus('雲端：未連線');renderDashboard();refreshPersonalSuggestions();
+  }
+});
+
+
+const TOURING_CAR_CATALOG={
+'ARC':['R11','R11 2017','R11 2018','R11 2019','R11 MID','R12','R12.1','A10','A10-23','A10-25','A11'],
+'Awesomatix':['A800','A800X','A800XEvo','A800MMX','A800R','A800RR'],
+'Axon':['TC10','TC10/2','TC10/3','TC10/4'],
+'Infinity':['IF14','IF14-2','IF14-2 Team Edition','IF14-2 MID','IF14 Speciale'],
+'Mugen Seiki':['MTC1','MTC2','MTC2R','MTC3'],
+'RC Maker':['SP1','SP2'],
+'Schumacher':['Mi6','Mi6evo','Mi7','Mi8','Mi9','Mi10'],
+'Serpent':['Project 4X','Project 4X EVO','Medius X20',"Medius X20 '21","Medius X20 '23","Medius X20 '24",'Medius X25'],
+'SNRC':['R2-G V2','MTS-T3M','R3-G','R3-C V2','R3-PRO V2','DK6'],
+'Tamiya':['TRF419X','TRF419XR','TRF420','TRF420X','TRF421','TRF421X','TT-02','TA08R'],
+'Team Associated':['TC7.1','TC7.2','TC8'],
+'Xpress':['Arrow AT1S','Arrow AT1','Execute XQ1','Execute XQ1S','Execute XQ2S','Execute XQ10','Execute XQ10R','Execute XQ3S','Execute XQ11','Execute XQ11R','Execute XQ11RR'],
+'XRAY':["T4'17","T4'18","T4'19","T4'20","T4'21","X4'22","X4'23","X4'24","X4'25","X4'26"],
+'Yokomo':['BD8','BD8 2018','BD9 2019','BD10','BD11','BD12','MS1.0','MS2.0','RS2.0']
+};
+const TOURING_BRAND_ORDER=Object.keys(TOURING_CAR_CATALOG);
+const TOURING_BRAND_ALIASES={'Mugen Seiki':['mugen','mugenseiki'],'Team Associated':['teamassociated','associated','rc10'],'RC Maker':['rcmaker'],'XRAY':['xray'],'Xpress':['xpress']};
+let carPickerLayer='brands',carPickerSelectedBrand='',carPickerCustomMode='';
+
+function carKey(v){return String(v||'').toLowerCase().replace(/[^a-z0-9]/g,'')}
+function modelKeys(model){const out=new Set([carKey(model),carKey(String(model||'').replace(/^(Execute|Arrow)\s+/i,''))]);if(model==='TC8')out.add('rc10tc8');if(model==='TT-02')out.add('tt02');return [...out].filter(Boolean)}
+function isCatalogBrand(b){return Object.prototype.hasOwnProperty.call(TOURING_CAR_CATALOG,b)}
+function isCatalogModel(b,m){return isCatalogBrand(b)&&TOURING_CAR_CATALOG[b].includes(m)}
+function formatCarName(b,m){return [String(b||'').trim(),String(m||'').trim()].filter(Boolean).join(' ')}
+function inferCarIdentity(source){
+  if(!source)return {brand:'',model:'',listed:false};
+  if(typeof source==='object'){const b=String(source.carBrand||'').trim(),m=String(source.carModel||'').trim();if(b&&m)return {brand:b,model:m,listed:isCatalogModel(b,m)}}
+  const raw=typeof source==='string'?source:String(source.car||''),rk=carKey(raw);if(!rk)return {brand:'',model:'',listed:false};
+  for(const brand of TOURING_BRAND_ORDER){
+    const brandSeen=[carKey(brand),...(TOURING_BRAND_ALIASES[brand]||[])].some(k=>k&&rk.includes(k));
+    if(!brandSeen)continue;
+    for(const model of [...TOURING_CAR_CATALOG[brand]].sort((a,b)=>carKey(b).length-carKey(a).length)){
+      if(modelKeys(model).some(k=>k&&rk.includes(k)))return {brand,model,listed:true};
+    }
+  }
+  const matches=[];
+  for(const brand of TOURING_BRAND_ORDER)for(const model of TOURING_CAR_CATALOG[brand])if(modelKeys(model).some(k=>k&&rk===k))matches.push({brand,model,listed:true});
+  return matches.length===1?matches[0]:{brand:'',model:'',listed:false};
+}
+function sessionCarIdentity(s){return typeOf(s)==='touring'?inferCarIdentity(s):{brand:'',model:String(s?.car||''),listed:false}}
+function currentCarIdentity(){if(currentType()==='nitro8')return {brand:'',model:(car?.value||'').trim(),listed:false};const b=(carBrand?.value||'').trim(),m=(carModel?.value||'').trim();return {brand:b,model:m,listed:isCatalogModel(b,m)}}
+function sessionMatchesCurrentCar(s){if(typeOf(s)!==currentType())return false;if(currentType()==='nitro8'){const m=(car?.value||'').trim();return !m||!s.car||String(s.car).trim()===m}const c=currentCarIdentity(),x=sessionCarIdentity(s);return !!c.brand&&!!c.model&&x.brand===c.brand&&x.model===c.model}
+function applyTouringIdentity(b,m,notify=true){b=String(b||'').trim();m=String(m||'').trim();carBrand.value=b;carModel.value=m;car.value=formatCarName(b,m);syncCarPickerDisplay();if(b&&m)rememberRecentTouringCar(b,m);if(notify)onCarModelChange()}
+function hydrateTouringIdentity(source,notify=false){const id=inferCarIdentity(source);if(id.brand&&id.model){applyTouringIdentity(id.brand,id.model,notify);return true}carBrand.value='';carModel.value='';if(source?.car!==undefined)car.value=source.car||'';syncCarPickerDisplay();return false}
+function syncCarPickerDisplay(){const b=(carBrand?.value||'').trim(),m=(carModel?.value||'').trim(),raw=(car?.value||'').trim();if(!carPickerBrand||!carPickerModel)return;if(b&&m){carPickerBrand.textContent=b;carPickerModel.textContent=m}else if(raw){carPickerBrand.textContent='未分類車型';carPickerModel.textContent=raw}else{carPickerBrand.textContent='選擇品牌';carPickerModel.textContent='選擇車型'}}
+function carCellHtml(s){if(typeOf(s)==='nitro8')return escHtml(s.car||'—');const id=sessionCarIdentity(s);return id.brand&&id.model?`<span class="car-model-cell"><small>${escHtml(id.brand)}</small><b>${escHtml(id.model)}</b></span>`:`<span class="car-model-cell"><small>未分類</small><b>${escHtml(s.car||'—')}</b></span>`}
+function recentTouringCars(){
+  const seen=new Set(),out=[];
+  try{for(const x of JSON.parse(localStorage.getItem('rc_recent_touring_cars_v15')||'[]')){const b=String(x?.brand||''),m=String(x?.model||''),k=b+'|'+m;if(b&&m&&!seen.has(k)){seen.add(k);out.push({brand:b,model:m})}}}catch(_){}
+  const pool=[...personalSetups,...sessions].filter(s=>!s.deletedAt&&typeOf(s)==='touring'&&(!currentUser||!s.ownerUid||s.ownerUid===currentUser.uid)).sort((a,b)=>(b.updatedAt||b.createdAt||b.date||'').localeCompare(a.updatedAt||a.createdAt||a.date||''));
+  for(const s of pool){const id=sessionCarIdentity(s),k=id.brand+'|'+id.model;if(id.brand&&id.model&&!seen.has(k)){seen.add(k);out.push({brand:id.brand,model:id.model})}if(out.length>=5)break}return out.slice(0,5)
+}
+function rememberRecentTouringCar(b,m){if(!b||!m)return;const arr=recentTouringCars().filter(x=>!(x.brand===b&&x.model===m));arr.unshift({brand:b,model:m});try{localStorage.setItem('rc_recent_touring_cars_v15',JSON.stringify(arr.slice(0,5)))}catch(_){}}
+function openCarPicker(){if(currentType()!=='touring')return;carPickerLayer='brands';carPickerSelectedBrand='';carPickerCustomMode='';carPickerSearch.value='';carPickerModal.classList.remove('hidden');renderCarPicker();setTimeout(()=>carPickerSearch?.focus(),50)}
+function closeCarPicker(){carPickerModal?.classList.add('hidden')}
+function carPickerBackdrop(e){if(e.target===carPickerModal)closeCarPicker()}
+function carPickerBack(){if(carPickerLayer==='custom'&&carPickerSelectedBrand&&isCatalogBrand(carPickerSelectedBrand))carPickerLayer='models';else{carPickerLayer='brands';carPickerSelectedBrand=''}carPickerCustomMode='';carPickerSearch.value='';renderCarPicker()}
+function openCarBrand(b){carPickerSelectedBrand=b;carPickerLayer='models';carPickerCustomMode='';carPickerSearch.value='';renderCarPicker()}
+function openCustomCar(b=''){carPickerSelectedBrand=b;carPickerLayer='custom';carPickerCustomMode=b?'model':'brand';carPickerSearch.value='';renderCarPicker()}
+function chooseCatalogCar(b,m){applyTouringIdentity(b,m,true);closeCarPicker()}
+function chooseRecentCar(b,m){applyTouringIdentity(b,m,true);closeCarPicker()}
+function saveCustomCar(){const b=carPickerCustomMode==='model'?carPickerSelectedBrand:(customCarBrand?.value||'').trim(),m=(customCarModel?.value||'').trim();if(!b||!m){alert('請輸入品牌與車型。');return}applyTouringIdentity(b,m,true);closeCarPicker()}
+function renderCarPicker(){
+  const q=(carPickerSearch?.value||'').trim().toLowerCase();carPickerBack.classList.toggle('hidden',carPickerLayer==='brands');
+  if(carPickerLayer==='custom'){carPickerTitle.textContent=carPickerSelectedBrand||'其他品牌';carPickerSubtitle.textContent='其他／未列出車型';carPickerBody.innerHTML=`<div class="car-picker-custom">${carPickerCustomMode==='brand'?'<div><label>品牌</label><input id="customCarBrand" placeholder="例如 HPI"></div>':''}<div><label>車型</label><input id="customCarModel" placeholder="輸入未列出的車型"></div><div class="notice">其他車型可以正常儲存與上公開榜；公開榜保留實際名稱，分類時歸在「其他／未列出」。</div><div class="car-picker-custom-actions"><button type="button" onclick="carPickerBack()">返回</button><button type="button" class="primary" onclick="saveCustomCar()">使用這個車型</button></div></div>`;return}
+  if(carPickerLayer==='models'){const b=carPickerSelectedBrand,models=(TOURING_CAR_CATALOG[b]||[]).filter(m=>!q||m.toLowerCase().includes(q));carPickerTitle.textContent=b;carPickerSubtitle.textContent='選擇車型';carPickerBody.innerHTML=`<div class="car-picker-list">${models.map(m=>`<button type="button" class="car-picker-item" onclick='chooseCatalogCar(${JSON.stringify(b)},${JSON.stringify(m)})'><span><b>${escHtml(m)}</b></span><span class="right">›</span></button>`).join('')}<button type="button" class="car-picker-item other" onclick='openCustomCar(${JSON.stringify(b)})'><span><b>其他／未列出車型</b><small>${escHtml(b)} 的新車或未收錄型號</small></span><span class="right">›</span></button></div>`;return}
+  carPickerTitle.textContent='選擇品牌';carPickerSubtitle.textContent='1/10 電房';
+  if(q){const hits=[];for(const b of TOURING_BRAND_ORDER){if(b.toLowerCase().includes(q))hits.push({brand:b,model:''});for(const m of TOURING_CAR_CATALOG[b])if(m.toLowerCase().includes(q)||`${b} ${m}`.toLowerCase().includes(q))hits.push({brand:b,model:m})}carPickerBody.innerHTML=hits.length?`<div class="car-picker-list">${hits.slice(0,80).map(x=>x.model?`<button type="button" class="car-picker-item" onclick='chooseCatalogCar(${JSON.stringify(x.brand)},${JSON.stringify(x.model)})'><span><b>${escHtml(x.model)}</b><small>${escHtml(x.brand)}</small></span><span class="right">›</span></button>`:`<button type="button" class="car-picker-item" onclick='openCarBrand(${JSON.stringify(x.brand)})'><span><b>${escHtml(x.brand)}</b><small>查看全部車型</small></span><span class="right">›</span></button>`).join('')}</div>`:`<div class="notice">找不到符合的品牌或車型。</div><div class="car-picker-list" style="margin-top:8px"><button type="button" class="car-picker-item other" onclick="openCustomCar('')"><span><b>其他品牌</b><small>自行輸入品牌與車型</small></span><span class="right">›</span></button></div>`;return}
+  const groups={};for(const b of TOURING_BRAND_ORDER)(groups[b[0].toUpperCase()]||(groups[b[0].toUpperCase()]=[])).push(b);
+  const recent=recentTouringCars();let html=recent.length?`<div class="car-picker-section-title">最近使用</div><div class="car-picker-list">${recent.map(x=>`<button type="button" class="car-picker-item recent" onclick='chooseRecentCar(${JSON.stringify(x.brand)},${JSON.stringify(x.model)})'><span><b>${escHtml(x.model)}</b><small>${escHtml(x.brand)}</small></span><span class="right">›</span></button>`).join('')}</div>`:'';
+  for(const letter of Object.keys(groups).sort())html+=`<div class="car-picker-section-title">${letter}</div><div class="car-picker-list">${groups[letter].map(b=>`<button type="button" class="car-picker-item" onclick='openCarBrand(${JSON.stringify(b)})'><span><b>${escHtml(b)}</b><small>${TOURING_CAR_CATALOG[b].length} 個車型</small></span><span class="right">›</span></button>`).join('')}</div>`;
+  html+=`<div class="car-picker-section-title">OTHER</div><div class="car-picker-list"><button type="button" class="car-picker-item other" onclick="openCustomCar('')"><span><b>其他品牌</b><small>自行輸入品牌與車型</small></span><span class="right">›</span></button></div>`;carPickerBody.innerHTML=html
+}
+
+const touringFields=['motor','esc','pinion','spur','internalRatio','fdr','tires','additive','warmerTemp','warmerMin','rideF','rideR','downF','downR','toeF','toeR','camberF','camberR','shockF','shockR','diffOil','arb'];
+const nitroFieldsList=['nEngine','nPipe','nManifold','nGlowPlug','nFuel','nNitroPct','nCarbDia','nHeadClearance','nAirTemp','nTrackTemp','nTraction','nLayout','nTrackCondition','nResult','nTransmitter','nReceiver','nSteeringServo','nSteeringExpo','nSteeringSpeed','nThrottleServo','nThrottleExpo','nThrottleSpeed','nClutchType','nClutchShoe','nClutchSpring','nClutchPreload','nClutchGap','nClutchEndplay','nBrakeDisc','nBrakePad','nGear1Pinion','nGear1Spur','nGear2Pinion','nGear2Spur','nShift','nTireBrandF','nTireBrandR','nShoreF','nShoreR','nTireDiaFStart','nTireDiaRStart','nTireDiaFEnd','nTireDiaREnd','nAdditiveF','nAdditiveR','nRideF','nRideR','nDownF','nDownR','nToeF','nToeR','nCamberF','nCamberR','nArbF','nArbR','nSpringF','nSpringR','nShockOilF','nShockOilR','nPistonF','nPistonR','nReboundF','nReboundR','nShockPosF','nShockPosR','nCaster','nWidthF','nWidthR','nWheelbase','nAckermann','nBumpSteer','nUpperArmF','nUpperArmR','nRollCenterF','nRollCenterR','nUprightF','nUprightR','nFrontAxle','nFlex','nBody','nBodyPos','nBumperDist','nWingPos','nWingHeight','nWeight'];
+const fields=['date','track','carType','car','carBrand','carModel','className',...touringFields,...nitroFieldsList,'notes'];
+const nitroCarryFields=nitroFieldsList.filter(f=>!['nAirTemp','nTrackTemp','nTraction','nLayout','nTrackCondition','nResult','nTireDiaFEnd','nTireDiaREnd'].includes(f));
+const carryFields=['track','carType','car','carBrand','carModel','className',...touringFields,...nitroCarryFields];
+let siteMode=null;
+function openModeGate(){ document.getElementById('modeGate')?.classList.remove('hidden'); }
+function chooseSiteMode(type){
+  if(!['touring','nitro8'].includes(type))return;
+  siteMode=type;
+  const ct=document.getElementById('carType'); if(ct)ct.value=type;
+  const ml=document.getElementById('modeLabel'); if(ml)ml.textContent=typeLabel(type);
+  const title=document.getElementById('sessionListTitle'); if(title)title.textContent=type==='nitro8'?'1/8 油平跑紀錄':'1/10 電房紀錄';
+  document.getElementById('modeGate')?.classList.add('hidden');
+  toggleTypeUI(); refreshPersonalSuggestions(); renderDashboard(); renderManage();
+  if(!document.getElementById('editor')?.classList.contains('hidden')) newSession();
+}
+function filteredActiveSessions(){ return activeSessions().filter(s=>!siteMode || typeOf(s)===siteMode); }
+function typeOf(s){return s?.carType||'touring'}
+function typeLabel(t){return t==='nitro8'?'1/8 油平跑':'1/10 電房'}
+function currentType(){return document.getElementById('carType')?.value||'touring'}
+function setNitroDefaults(force=false){
+  const f=document.getElementById('nTireDiaFStart'),r=document.getElementById('nTireDiaRStart');
+  if(f && (force||!f.value))f.value='69';
+  if(r && (force||!r.value))r.value='76';
+  updateNitroTireWear();
+}
+function toggleTypeUI(){
+  const nitro=currentType()==='nitro8';
+  document.getElementById('touringFields')?.classList.toggle('hidden',nitro);
+  document.getElementById('nitroFields')?.classList.toggle('hidden',!nitro);
+  document.getElementById('classField')?.classList.toggle('hidden',nitro);
+  document.getElementById('touringCarPickerWrap')?.classList.toggle('hidden',nitro);
+  const carEl=document.getElementById('car');if(carEl){carEl.classList.toggle('hidden',!nitro);carEl.placeholder='例如：Mugen MRX7 / XRAY RX8';}
+  if(nitro){const cf=document.getElementById('className');if(cf)cf.value='13.5 Open';setNitroDefaults(false);}else syncCarPickerDisplay();
+  syncPublicOptionsUI();
+}
+function refreshPersonalSuggestions(){
+  const type=currentType();
+  const mine=personalSetups.filter(s=>!s.deletedAt&&typeOf(s)===type&&sessionMatchesCurrentCar(s));
+  const allTouring=personalSetups.filter(s=>!s.deletedAt&&typeOf(s)==='touring');
+  const unique=(list,key)=>[...new Set(list.map(s=>(s[key]||'').trim()).filter(Boolean))];
+  const motors=unique(allTouring,'motor').filter(v=>!hiddenMotorHistory.includes(v)),escs=unique(allTouring,'esc').filter(v=>!hiddenEscHistory.includes(v));
+  const md=document.getElementById('motorHistory'),ed=document.getElementById('escHistory');
+  if(md)md.innerHTML=motors.map(v=>`<option value="${escHtml(v)}"></option>`).join('');
+  if(ed)ed.innerHTML=escs.map(v=>`<option value="${escHtml(v)}"></option>`).join('');
+  const ss=document.getElementById('setupSource');if(ss)ss.innerHTML='<option value="latest">上一次我的同車種／同車型設定（自動）</option><option value="blank">空白設定</option>'+mine.map(s=>`<option value="${escHtml(String(s.id))}">${escHtml(s.date||'無日期')}｜${escHtml(s.car||'未填車型')}｜${escHtml(s.track||'未填場地')}</option>`).join('');
+  renderManage();
+}
+function onCarModelChange(){
+  const type=currentType();refreshPersonalSuggestions();let latest=null;
+  if(type==='touring'){const c=currentCarIdentity();if(c.brand&&c.model)latest=personalSetups.find(s=>!s.deletedAt&&typeOf(s)==='touring'&&sessionMatchesCurrentCar(s));}
+  else{const model=(car?.value||'').trim();latest=personalSetups.find(s=>!s.deletedAt&&typeOf(s)===type&&model&&String(s.car||'').trim()===model);}
+  const ss=document.getElementById('setupSource');if(ss)ss.value=latest?'latest':'blank';
+  if(currentId)return;
+  if(type==='touring'){const c=currentCarIdentity();if(!c.brand||!c.model)return;clearTypeFields(type);applyTouringIdentity(c.brand,c.model,false);if(latest)copySetupFromSession(latest);else applyTouringIdentity(c.brand,c.model,false);}
+  else{const model=(car?.value||'').trim();if(!model)return;clearTypeFields(type);car.value=model;if(latest)copySetupFromSession(latest);else{car.value=model;setNitroDefaults(true);}}
+  if(ss)ss.value=latest?'latest':'blank';
+}
+function clearTypeFields(type){
+  const list=type==='nitro8'?nitroFieldsList:touringFields;
+  list.forEach(f=>{const el=document.getElementById(f);if(el)el.value='';});
+  if(type==='nitro8')setNitroDefaults(true);
+  if(type==='touring'){document.getElementById('internalRatio').value='1.90';}
+}
+function copySetupFromSession(s){
+  if(!s)return;
+  const type=typeOf(s);
+  const ct=document.getElementById('carType');if(ct)ct.value=type;
+  toggleTypeUI();
+  carryFields.forEach(f=>{const el=document.getElementById(f);if(el&&s[f]!==undefined)el.value=s[f]??''});
+  if(type==='touring')hydrateTouringIdentity(s,false);
+  if(type==='nitro8')setNitroDefaults(false);
+  updateNitroTireWear();refreshPersonalSuggestions();
+}
+function applySelectedSetup(){
+  if(!currentUser){alert('請先登入，才能讀取你自己的歷史設定。');return;}
+  const type=currentType(),val=setupSource.value;
+  if(val==='blank'){
+    if(type==='touring'){const c=currentCarIdentity();clearTypeFields(type);if(c.brand&&c.model)applyTouringIdentity(c.brand,c.model,false);}
+    else{const keep=(car?.value||'').trim();clearTypeFields(type);car.value=keep;}
+    return;
+  }
+  const mine=personalSetups.filter(s=>!s.deletedAt&&typeOf(s)===type&&sessionMatchesCurrentCar(s));
+  const chosen=val==='latest'?mine[0]:mine.find(x=>String(x.id)===String(val));
+  if(!chosen){alert('目前還沒有你自己的同車種／同車型歷史設定。');return;}copySetupFromSession(chosen);
+}
+function onCarTypeChange(autoApply=false){
+  const type=currentType();toggleTypeUI();refreshPersonalSuggestions();if(!autoApply||currentId)return;clearTypeFields(type);
+  if(type==='touring'){const latest=personalSetups.find(s=>!s.deletedAt&&typeOf(s)==='touring');if(latest)copySetupFromSession(latest);else applyTouringIdentity('Xpress','Execute XQ3S',false);}
+  else{car.value='';carBrand.value='';carModel.value='';const latest=personalSetups.find(s=>!s.deletedAt&&typeOf(s)==='nitro8');if(latest)copySetupFromSession(latest);else setNitroDefaults(true);}
+  const ss=document.getElementById('setupSource');if(ss)ss.value=personalSetups.some(s=>!s.deletedAt&&typeOf(s)===type&&sessionMatchesCurrentCar(s))?'latest':'blank';
+}
+function updateNitroTireWear(){
+  const out=document.getElementById('nitroWear');if(!out)return;
+  const wear=(a,b)=>{const x=num(document.getElementById(a)?.value),y=num(document.getElementById(b)?.value);return x!==null&&y!==null?(x-y).toFixed(1)+' mm':'—'};
+  out.textContent=`前 ${wear('nTireDiaFStart','nTireDiaFEnd')} / 後 ${wear('nTireDiaRStart','nTireDiaREnd')}`;
+}
+function showView(name){
+  ['dashboard','editor','detail','compare','tracks','manage'].forEach(id=>document.getElementById(id).classList.toggle('hidden',id!==name));
+  if(name==='dashboard') renderDashboard();
+  if(name==='compare') renderCompareSelector();
+  if(name==='tracks') renderTrackPage();
+  if(name==='manage') renderManage();
+}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
+function num(v){let n=parseFloat(v);return Number.isFinite(n)?n:null}
+function fmt(t){return Number.isFinite(t)?t.toFixed(3)+' s':'—'}
+function stats(laps){
+  if(!laps.length) return {best:null,avg:null,std:null,best3:null,best5:null};
+  const avg=laps.reduce((a,b)=>a+b,0)/laps.length;
+  const best=Math.min(...laps);
+  const std=Math.sqrt(laps.reduce((a,b)=>a+(b-avg)**2,0)/laps.length);
+  const sorted=[...laps].sort((a,b)=>a-b);
+  const topAvg=n=>sorted.length>=n?sorted.slice(0,n).reduce((a,b)=>a+b,0)/n:null;
+  return {best,avg,std,best3:topAvg(3),best5:topAvg(5)};
+}
+function parseTimeToken(s){
+  s=String(s??'').trim().replace(/,/g,'.');
+  if(!s)return null;
+
+  // Prefer m:ss.xxx when present.
+  let m=s.match(/(?:^|[^\d])(\d{1,2}):(\d{1,2}(?:\.\d{1,4})?)(?:$|[^\d])/);
+  if(m){
+    const t=parseInt(m[1],10)*60+parseFloat(m[2]);
+    return (t>0 && t<300)?t:null;
+  }
+
+  // Prefer a decimal number so "Lap 12 20.531" does not become lap #12.
+  let dec=null;
+  const re=/(?:^|[^\d])(\d{1,3}\.\d{2,4})(?=$|[^\d])/g;
+  let hit;
+  while((hit=re.exec(s))!==null){
+    const v=parseFloat(hit[1]);
+    if(v>0 && v<300)dec=v;
+  }
+  if(dec!==null)return dec;
+
+  // Plain numeric input is accepted for the dedicated fastest-lap box / JSON fields.
+  if(/^\d{1,3}(?:\.\d+)?$/.test(s)){
+    const v=parseFloat(s);
+    return (v>0 && v<300)?v:null;
+  }
+  return null;
+}
+
+function extractLapTimesFromText(raw){
+  const lines=String(raw||'').split(/\r?\n/);
+  const arr=[];
+  for(const original of lines){
+    const line=original.trim();
+    if(!line)continue;
+
+    // Summary rows often repeat the best/average/total and should not become extra laps.
+    if(/(?:best|fastest|average|\bavg\b|total|race\s*time|mean|最佳|最快|平均|總時間)/i.test(line)
+       && !/(?:lap|圈)\s*#?\s*\d+/i.test(line)){
+      continue;
+    }
+
+    // CSV / TSV / semicolon fields: use the last plausible time field.
+    const parts=line.split(/[,;\t]/).map(x=>x.trim()).filter(Boolean);
+    const candidates=parts.map(parseTimeToken).filter(v=>v!==null);
+    if(candidates.length){
+      arr.push(candidates[candidates.length-1]);
+      continue;
+    }
+
+    const t=parseTimeToken(line);
+    if(t!==null)arr.push(t);
+  }
+  return arr.slice(0,500);
+}
+
+function collectLapTimesFromJson(value,key='',out=[]){
+  if(out.length>=500)return out;
+  if(Array.isArray(value)){
+    value.forEach(v=>collectLapTimesFromJson(v,key,out));
+    return out;
+  }
+  if(value && typeof value==='object'){
+    Object.entries(value).forEach(([k,v])=>collectLapTimesFromJson(v,k,out));
+    return out;
+  }
+
+  const k=String(key||'').toLowerCase();
+  const likelyTimeKey=/(laptime|lap_time|lap-time|lap.*time|duration|seconds|lap_sec|lapsec|^time$|^laps?$)/i.test(k);
+  if(!likelyTimeKey)return out;
+
+  if(typeof value==='number'){
+    let v=value;
+    if(/(?:ms|millisecond)/i.test(k) && v>300)v/=1000;
+    if(v>0 && v<300)out.push(v);
+    return out;
+  }
+
+  const t=parseTimeToken(value);
+  if(t!==null)out.push(t);
+  return out;
+}
+
+function detectTimerSource(raw,selected='Auto'){
+  if(selected && selected!=='Auto')return selected;
+  const s=String(raw||'').toLowerCase();
+  if(s.includes('lapmonitor'))return 'LapMonitor';
+  if(s.includes('lapwiz')||s.includes('skyrc'))return 'SkyRC LapWiz';
+  return '其他計時器';
+}
+
+function parseTimerData(raw,fileName=''){
+  const txt=String(raw||'').trim();
+  if(!txt)return [];
+
+  if((fileName||'').toLowerCase().endsWith('.json') || /^[\[{]/.test(txt)){
+    try{
+      const obj=JSON.parse(txt);
+      const fromJson=collectLapTimesFromJson(obj);
+      if(fromJson.length)return fromJson.slice(0,500);
+    }catch(_){}
+  }
+  return extractLapTimesFromText(txt);
+}
+
+function setLapInputMode(mode,keepData=false){
+  if(!['full','best','timer'].includes(mode))mode='full';
+  lapInputMode=mode;
+
+  ['full','best','timer'].forEach(m=>{
+    const cap=m[0].toUpperCase()+m.slice(1);
+    document.getElementById('lapModeBtn'+cap)?.classList.toggle('active',m===mode);
+    document.getElementById('lapMode'+cap)?.classList.toggle('hidden',m!==mode);
+  });
+
+  if(!keepData){
+    currentLaps=[];
+    if(mode!=='full' && document.getElementById('lapText'))lapText.value='';
+    if(mode!=='best' && document.getElementById('bestLapOnly'))bestLapOnly.value='';
+    if(mode!=='timer'){
+      if(document.getElementById('timerImportText'))timerImportText.value='';
+      const status=document.getElementById('timerImportStatus');
+      if(status){status.textContent='尚未匯入資料';status.className='timer-import-status';}
+    }
+    updateLapStats();
+  }
+}
+
+function parseLapText(){
+  lapInputMode='full';
+  lapTimerSource='manual';
+  currentLaps=extractLapTimesFromText(document.getElementById('lapText').value);
+  updateLapStats();
+}
+
+function applyBestLapOnly(){
+  const t=parseTimeToken(document.getElementById('bestLapOnly')?.value||'');
+  if(t===null){
+    currentLaps=[];
+    updateLapStats();
+    alert('請輸入有效的最快圈，例如 20.510。');
+    return;
+  }
+  lapInputMode='best';
+  lapTimerSource='manual';
+  currentLaps=[t];
+  updateLapStats();
+}
+
+function parseTimerImport(fileName=''){
+  const raw=document.getElementById('timerImportText')?.value||'';
+  const arr=parseTimerData(raw,fileName);
+  const status=document.getElementById('timerImportStatus');
+
+  if(!arr.length){
+    currentLaps=[];
+    if(status){
+      status.textContent='沒有辨識到逐圈時間。可以改貼完整文字，或先用「最快圈」模式只輸入最佳圈。';
+      status.className='timer-import-status bad';
+    }
+    updateLapStats();
+    return;
+  }
+
+  lapInputMode='timer';
+  lapTimerSource=detectTimerSource(raw,document.getElementById('timerSource')?.value||'Auto');
+  currentLaps=arr;
+  updateLapStats();
+
+  const s=stats(arr);
+  if(status){
+    status.textContent=`已辨識 ${arr.length} 圈｜最佳 ${fmt(s.best)}｜來源：${lapTimerSource}`;
+    status.className='timer-import-status good';
+  }
+}
+
+function finiteMetric(v){
+  return v!==null && v!==undefined && v!=='' && Number.isFinite(Number(v));
+}
+
+function lapDataLabel(mode=lapInputMode,source=lapTimerSource){
+  if(mode==='best')return '最快圈';
+  if(mode==='timer')return source && source!=='manual' ? source : '計時器匯入';
+  return '完整圈速';
+}
+
+function updateLapStats(){
+  const s=stats(currentLaps);
+  const bestOnly=lapInputMode==='best';
+
+  lapCount.textContent=bestOnly?(currentLaps.length?'—':'0'):currentLaps.length;
+  lapBest.textContent=fmt(s.best);
+  lapBest3.textContent=bestOnly?'—':fmt(s.best3);
+  lapBest5.textContent=bestOnly?'—':fmt(s.best5);
+  lapAvg.textContent=bestOnly?'—':fmt(s.avg);
+  lapStd.textContent=bestOnly?'—':(s.std===null?'—':s.std.toFixed(3));
+
+  if(bestOnly){
+    const canvas=document.getElementById('lapChart');
+    const ctx=canvas?.getContext('2d');
+    if(ctx){
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      ctx.fillStyle='#7f8a98';
+      ctx.font='14px sans-serif';
+      ctx.fillText(currentLaps.length?'最快圈模式：沒有完整逐圈曲線':'尚無圈速資料',20,30);
+    }
+  }else{
+    drawLineChart('lapChart',currentLaps,'圈數','秒');
+  }
+}
+function newSession(){
+  currentId=null; currentLaps=[];
+  editorTitle.textContent='新增練車紀錄';
+  const pub=document.getElementById('publishPublic'), share=document.getElementById('shareSetupPublic');
+  if(pub)pub.checked=false;if(share){share.checked=false;share.disabled=true;}
+  fields.forEach(f=>{const el=document.getElementById(f);if(el)el.value='';});
+  const type=siteMode||'touring';
+  carType.value=type;car.value='';carBrand.value='';carModel.value='';
+  if(type==='touring')applyTouringIdentity('Xpress','Execute XQ3S',false);
+  internalRatio.value='1.90';
+  date.value=new Date().toISOString().slice(0,10);
+  setNitroDefaults(true); toggleTypeUI();
+  lapText.value='';
+  if(document.getElementById('bestLapOnly'))bestLapOnly.value='';
+  if(document.getElementById('timerImportText'))timerImportText.value='';
+  if(document.getElementById('timerSource'))timerSource.value='Auto';
+  lapTimerSource='manual';
+  setLapInputMode('full',true);
+  updateLapStats(); refreshPersonalSuggestions();
+  const latest=personalSetups.find(s=>!s.deletedAt && typeOf(s)===type && sessionMatchesCurrentCar(s));
+  if(latest) copySetupFromSession(latest);
+  else { carType.value=type; toggleTypeUI(); if(type==='nitro8')setNitroDefaults(true); }
+  document.getElementById('setupSource').value=latest?'latest':'blank';
+  syncPublicOptionsUI();
+  showView('editor');
+}
+function calcFDR(){
+  let p=num(pinion.value), s=num(spur.value), i=num(internalRatio.value);
+  if(p&&s&&i) fdr.value=(s/p*i).toFixed(2);
+}
+pinion.addEventListener('input',calcFDR); spur.addEventListener('input',calcFDR); internalRatio.addEventListener('input',calcFDR);
+
+async function saveSession(){
+  if(!currentUser||!currentGarageId){alert('請先登入並選擇 Garage。');return;}
+  const existing=currentId?sessions.find(x=>String(x.id)===String(currentId)):null;
+  if(existing && existing.ownerUid && existing.ownerUid!==currentUser.uid){alert('這筆紀錄是其他車手建立的。為避免互相覆蓋，目前只有建立者能編輯。');return;}
+
+  const publishPublic=!!document.getElementById('publishPublic')?.checked;
+  const shareSetupPublic=publishPublic && !!document.getElementById('shareSetupPublic')?.checked;
+  const selectedTrack=document.getElementById('track')?.value||'';
+  const selectedTrackId=trackIdFromLabel(selectedTrack);
+
+  if(publishPublic && !selectedTrackId){
+    alert('要同步到公開賽道榜，請先選擇場地。');
+    return;
+  }
+
+  const now=new Date().toISOString();
+  const obj={
+    id:currentId||uid(),
+    createdAt:existing?.createdAt||now,
+    updatedAt:now,
+    laps:[...currentLaps],
+    ownerUid:currentUser.uid,
+    ownerName:displayName(),
+    publishPublic,
+    shareSetupPublic,
+    trackId:selectedTrackId||'',
+    lapInputMode,
+    lapTimerSource:lapInputMode==='timer'?lapTimerSource:'manual'
+  };
+  fields.forEach(f=>{const el=document.getElementById(f);obj[f]=el?el.value:'';});
+  obj.carType=siteMode||obj.carType||'touring';
+  if(obj.carType==='touring'){
+    obj.carBrand=String(obj.carBrand||'').trim();obj.carModel=String(obj.carModel||'').trim();
+    if(!obj.carBrand||!obj.carModel){alert('請先選擇 1/10 電房的品牌與車型。');return;}
+    obj.car=formatCarName(obj.carBrand,obj.carModel);
+  }else{obj.carBrand='';obj.carModel='';obj.car=String(obj.car||'').trim();}
+  // 不同車種專用欄位不交叉寫入；1/8 公開組別固定由公開榜邏輯指定。
+  if(obj.carType==='nitro8'){ obj.className=''; touringFields.forEach(f=>obj[f]=''); }
+  else nitroFieldsList.forEach(f=>obj[f]='');
+
+  const idx=sessions.findIndex(x=>String(x.id)===String(obj.id));
+  if(idx>=0) sessions[idx]=obj; else sessions.push(obj);
+  sortSessions();cacheSessions();currentId=obj.id;refreshPersonalSuggestions();
+
+  let privateOk=true;
+  try{
+    await uploadSessionToCloud(obj);
+  }catch(err){
+    privateOk=false;
+    console.error(err);
+    setSyncStatus('雲端：同步失敗');
+    alert('紀錄已保存在這台裝置，但 Garage 雲端同步失敗。');
+  }
+
+  if(privateOk){
+    try{
+      const result=await syncSavedSessionToPublic(obj);
+      if(result.published){
+        alert(`紀錄已儲存，並同步到「${trackLabelFromId(result.trackId)}」公開賽道榜。`);
+      }
+    }catch(err){
+      console.error('public board sync',err);
+      alert('個人紀錄已儲存，但公開賽道榜同步失敗：'+(err.message||err));
+    }
+  }
+
+  showView('dashboard');
+}
+function powerSummary(s){
+  if(typeOf(s)==='nitro8'){
+    const gears=(s.nGear1Pinion||s.nGear1Spur||s.nGear2Pinion||s.nGear2Spur)?`1st ${s.nGear1Pinion||'—'}/${s.nGear1Spur||'—'} · 2nd ${s.nGear2Pinion||'—'}/${s.nGear2Spur||'—'}`:'二速 —';
+    return `${escHtml(s.nEngine||'—')}<br><span class="muted">${escHtml(gears)}</span>`;
+  }
+  return `${escHtml(s.motor||'—')}<br><span class="muted">FDR ${escHtml(s.fdr||'—')}</span>`;
+}
+function tireSummary(s){
+  if(typeOf(s)==='nitro8'){
+    const f=`F ${s.nTireBrandF||'—'} ${s.nShoreF? s.nShoreF+'sh':''} ${s.nTireDiaFStart||'69'}mm`;
+    const r=`R ${s.nTireBrandR||'—'} ${s.nShoreR? s.nShoreR+'sh':''} ${s.nTireDiaRStart||'76'}mm`;
+    return `${escHtml(f)}<br><span class="muted">${escHtml(r)}</span>`;
+  }
+  return escHtml(s.tires||'—');
+}
+function renderDashboard(){
+  const visible=filteredActiveSessions();
+  let totalLaps=visible.reduce((n,s)=>n+(s.laps?.length||0),0);
+  let all=visible.flatMap(s=>s.laps||[]);
+  let last=visible[0];
+  kSessions.textContent=visible.length;
+  kLaps.textContent=totalLaps;
+  kBest.textContent=fmt(all.length?Math.min(...all):null);
+  kAvg.textContent=fmt(last?stats(last.laps||[]).avg:null);
+  sessionRows.innerHTML=visible.length?visible.map(s=>{
+    const st=stats(s.laps||[]);
+    return `<tr>
+      <td>${escHtml(s.date||'—')}</td>
+      <td class="creator">${escHtml(s.ownerName||'舊資料')}</td>
+      <td>${escHtml(s.track||'—')}</td>
+      <td>${carCellHtml(s)}</td>
+      <td>${powerSummary(s)}</td>
+      <td>${tireSummary(s)}</td>
+      <td class="good">${fmt(st.best)}</td>
+      <td>${fmt(st.avg)}</td>
+      <td>${(s.laps||[]).length}</td>
+      <td><div class="row-actions"><button onclick="openDetail('${s.id}')">查看</button><button onclick="duplicateSession('${s.id}')">複製</button>${s.ownerUid===currentUser?.uid?`<button onclick="editSession('${s.id}')">編輯</button>`:''}</div></td>
+    </tr>`;
+  }).join(''):`<tr><td colspan="10" class="muted">還沒有紀錄。先新增第一個練車 Session。</td></tr>`;
+}
+function nitroWearValue(s,axis){
+  const a=num(s[axis==='F'?'nTireDiaFStart':'nTireDiaRStart']),b=num(s[axis==='F'?'nTireDiaFEnd':'nTireDiaREnd']);
+  return a!==null&&b!==null?(a-b).toFixed(1)+' mm':'—';
+}
+function openDetail(id){
+  const s=sessions.find(x=>String(x.id)===String(id) && !x.deletedAt); if(!s){showView('dashboard');return;}
+  currentId=id; const st=stats(s.laps||[]);
+  detailTitle.textContent=`${s.date||''} ${s.track||''} — ${s.car||''}`;
+  const own=s.ownerUid===currentUser?.uid;
+  const detailButtons=document.querySelector('#detail .row-actions');
+  if(detailButtons) detailButtons.innerHTML=`<button onclick="duplicateSession('${s.id}')">複製成我的新紀錄</button>${own?`<button onclick="editCurrent()">編輯</button><button class="danger" onclick="deleteCurrent()">刪除</button>`:''}<button onclick="showView(\'dashboard\')">返回</button>`;
+  let pairs;
+  if(typeOf(s)==='nitro8'){
+    pairs=[
+      ['車手',s.ownerName||'舊資料'],['車種',typeLabel(typeOf(s))],['引擎',s.nEngine],['Pipe',s.nPipe],['Manifold',s.nManifold],['Glow Plug',s.nGlowPlug],['燃油',`${s.nFuel||'—'}${s.nNitroPct?` / ${s.nNitroPct}% Nitro`:''}`],['Carb / Head',`${s.nCarbDia||'—'} mm / ${s.nHeadClearance||'—'} mm`],
+      ['環境 / 路面',`${s.nAirTemp||'—'}°C / ${s.nTrackTemp||'—'}°C`],['抓地 / 賽道',`${s.nTraction||'—'} / ${s.nLayout||'—'} / ${s.nTrackCondition||'—'}`],['離合器',`${s.nClutchType||'—'} / Shoe ${s.nClutchShoe||'—'} / Spring ${s.nClutchSpring||'—'}`],['Clutch Preload / Gap',`${s.nClutchPreload||'—'} / ${s.nClutchGap||'—'} mm`],['Bell End Play',s.nClutchEndplay?`${s.nClutchEndplay} mm`:'—'],['煞車',`${s.nBrakeDisc||'—'} / ${s.nBrakePad||'—'}`],
+      ['1st Gear',`${s.nGear1Pinion||'—'} / ${s.nGear1Spur||'—'}`],['2nd Gear',`${s.nGear2Pinion||'—'} / ${s.nGear2Spur||'—'}`],['二速切換',s.nShift],
+      ['前胎',`${s.nTireBrandF||'—'} / ${s.nShoreF||'—'} Shore / ${s.nTireDiaFStart||'69'} → ${s.nTireDiaFEnd||'—'} mm`],['後胎',`${s.nTireBrandR||'—'} / ${s.nShoreR||'—'} Shore / ${s.nTireDiaRStart||'76'} → ${s.nTireDiaREnd||'—'} mm`],['磨耗',`F ${nitroWearValue(s,'F')} / R ${nitroWearValue(s,'R')}`],['Additive',`F ${s.nAdditiveF||'—'} / R ${s.nAdditiveR||'—'}`],
+      ['車高',`F ${s.nRideF||'—'} / R ${s.nRideR||'—'} mm`],['Downstop',`F ${s.nDownF||'—'} / R ${s.nDownR||'—'}`],['Toe',`F ${s.nToeF||'—'}° / R ${s.nToeR||'—'}°`],['Camber',`F ${s.nCamberF||'—'}° / R ${s.nCamberR||'—'}°`],['ARB',`F ${s.nArbF||'—'} / R ${s.nArbR||'—'} mm`],['Spring',`F ${s.nSpringF||'—'} / R ${s.nSpringR||'—'}`],['Shock Oil',`F ${s.nShockOilF||'—'} / R ${s.nShockOilR||'—'} cSt`],['Piston',`F ${s.nPistonF||'—'} / R ${s.nPistonR||'—'}`],['Rebound',`F ${s.nReboundF||'—'}% / R ${s.nReboundR||'—'}%`],['Shock Position',`F ${s.nShockPosF||'—'} / R ${s.nShockPosR||'—'}`],
+      ['Caster',s.nCaster?`${s.nCaster}°`:'—'],['車寬',`F ${s.nWidthF||'—'} / R ${s.nWidthR||'—'} mm`],['Wheelbase',s.nWheelbase],['Ackermann',s.nAckermann],['Bump Steer',s.nBumpSteer],['Upper Arm',`F ${s.nUpperArmF||'—'} / R ${s.nUpperArmR||'—'}`],['Roll Center / Link',`F ${s.nRollCenterF||'—'} / R ${s.nRollCenterR||'—'}`],['Upright',`F ${s.nUprightF||'—'} / R ${s.nUprightR||'—'}`],['Front Axle',s.nFrontAxle],['Flex',s.nFlex],['Body',s.nBody],['Body Position',s.nBodyPos],['Bumper Distance',s.nBumperDist?`${s.nBumperDist} mm`:'—'],['Wing',`${s.nWingPos||'—'} / ${s.nWingHeight||'—'} mm`],['配重',s.nWeight],['成績 / 條件',s.nResult]
+    ];
+  }else{
+    pairs=[
+      ['車手',s.ownerName||'舊資料'],['車種',typeLabel(typeOf(s))],['組別',s.className],['馬達',s.motor],['ESC',s.esc],['FDR',s.fdr],
+      ['輪胎',s.tires],['胎膠',s.additive],['暖胎',`${s.warmerTemp||'—'}°C / ${s.warmerMin||'—'} min`],
+      ['車高',`F ${s.rideF||'—'} / R ${s.rideR||'—'}`],['Downstop',`F ${s.downF||'—'} / R ${s.downR||'—'}`],
+      ['Toe',`F ${s.toeF||'—'}° / R ${s.toeR||'—'}°`],['Camber',`F ${s.camberF||'—'}° / R ${s.camberR||'—'}°`],
+      ['避震油',`F ${s.shockF||'—'} / R ${s.shockR||'—'} cSt`],['差速油',s.diffOil?`${s.diffOil} cSt`:'—'],['防傾桿',s.arb],
+    ];
+  }
+  detailBody.innerHTML=`
+    <div style="margin:10px 0"><span class="source-pill">${escHtml(lapDataLabel(s.lapInputMode||'full',s.lapTimerSource||'manual'))}</span></div>
+    <div class="stat5" style="margin:12px 0 16px">
+      <div class="kpi"><small>最佳圈</small><b class="good">${fmt(st.best)}</b></div>
+      <div class="kpi"><small>Best 3 Avg</small><b>${fmt(st.best3)}</b></div>
+      <div class="kpi"><small>Best 5 Avg</small><b>${fmt(st.best5)}</b></div>
+      <div class="kpi"><small>平均圈</small><b>${fmt(st.avg)}</b></div>
+      <div class="kpi"><small>一致性 σ</small><b>${st.std===null?'—':st.std.toFixed(3)}</b></div>
+    </div>
+    ${renderSetupChanges(s)}
+    <div class="formgrid">${pairs.map(([a,b])=>`<div><label>${a}</label><div>${escHtml(b||'—')}</div></div>`).join('')}
+      <div class="full"><label>備註</label><div style="white-space:pre-wrap">${escHtml(s.notes||'—')}</div></div>
+    </div>
+    <hr><h3>圈速</h3><canvas id="detailChart" width="1000" height="240"></canvas>`;
+  showView('detail');
+  setTimeout(()=>drawLineChart('detailChart',s.laps||[],'圈數','秒'),0);
+}
+function editCurrent(){editSession(currentId)}
+function editSession(id){
+  const s=sessions.find(x=>String(x.id)===String(id)); if(!s)return;
+  if(s.ownerUid && s.ownerUid!==currentUser?.uid){alert('只能編輯你自己建立的紀錄。');return;}
+  currentId=id;
+  editorTitle.textContent='編輯練車紀錄';
+  fields.forEach(f=>{const el=document.getElementById(f);if(el)el.value=s[f]??'';});
+  carType.value=typeOf(s);if(typeOf(s)==='touring')hydrateTouringIdentity(s,false);toggleTypeUI();refreshPersonalSuggestions();updateNitroTireWear();
+  const pub=document.getElementById('publishPublic'),share=document.getElementById('shareSetupPublic');
+  if(pub)pub.checked=s.publishPublic===true;
+  if(share){share.checked=s.publishPublic===true && s.shareSetupPublic===true;share.disabled=!pub?.checked;}
+  syncPublicOptionsUI();
+  currentLaps=[...(s.laps||[])];
+  lapInputMode=['full','best','timer'].includes(s.lapInputMode)?s.lapInputMode:'full';
+  lapTimerSource=s.lapTimerSource||'manual';
+  setLapInputMode(lapInputMode,true);
+  lapText.value=lapInputMode==='full'?currentLaps.map(x=>x.toFixed(3)).join('\n'):'';
+  if(document.getElementById('bestLapOnly'))bestLapOnly.value=lapInputMode==='best'&&currentLaps[0]?currentLaps[0].toFixed(3):'';
+  if(document.getElementById('timerImportText'))timerImportText.value='';
+  if(document.getElementById('timerSource')){
+    const known=['LapMonitor','SkyRC LapWiz','其他計時器'];
+    timerSource.value=known.includes(lapTimerSource)?lapTimerSource:'Auto';
+  }
+  if(lapInputMode==='timer' && document.getElementById('timerImportStatus')){
+    timerImportStatus.textContent=`已儲存 ${currentLaps.length} 圈｜來源：${lapTimerSource}`;
+    timerImportStatus.className='timer-import-status good';
+  }
+  updateLapStats();
+  showView('editor');
+}
+async function deleteCurrent(){
+  const id=String(currentId);
+  const target=sessions.find(x=>String(x.id)===id);
+  if(!target)return;
+  if(target.ownerUid && target.ownerUid!==currentUser?.uid){alert('只能刪除你自己建立的紀錄。');return;}
+  if(!confirm('把這筆紀錄移到「最近刪除」？刪除後會立即從總覽、比較、設定來源與歷史建議中隱藏；30 天內可以還原。')) return;
+  const now=new Date().toISOString();
+  target.deletedAt=now; target.updatedAt=now;
+  const mirror=personalSetups.find(x=>String(x.id)===id);
+  if(mirror){mirror.deletedAt=now;mirror.updatedAt=now;}
+  cacheSessions();
+  currentId=null;
+  refreshPersonalSuggestions();renderDashboard();renderCompareSelector();renderManage();showView('dashboard');
+  try{
+    await Promise.all([
+      softDeleteSessionFromCloud(id),
+      softDeletePersonalSetupMirror(id,now),
+      removePublishedSession(id)
+    ]);
+    setSyncStatus('雲端：已同步',true);
+  }catch(err){
+    console.error(err);setSyncStatus('雲端：刪除同步失敗');
+    delete target.deletedAt;if(mirror)delete mirror.deletedAt;
+    cacheSessions();refreshPersonalSuggestions();renderDashboard();renderCompareSelector();renderManage();
+    alert('移到最近刪除失敗，已恢復原資料，請稍後重試。');
+  }
+}
+function duplicateSession(id){
+  if(!currentUser){alert('請先登入。');return;}
+  const src=sessions.find(s=>String(s.id)===String(id) && !s.deletedAt); if(!src){alert('這筆紀錄已刪除或不存在。');return;}
+  currentId=null; currentLaps=[];
+  fields.forEach(f=>{const el=document.getElementById(f);if(el)el.value='';});
+  const pub=document.getElementById('publishPublic'),share=document.getElementById('shareSetupPublic');
+  if(pub)pub.checked=false;if(share){share.checked=false;share.disabled=true;}
+  copySetupFromSession(src);
+  date.value=new Date().toISOString().slice(0,10);
+  if(typeOf(src)==='nitro8'){nTireDiaFEnd.value='';nTireDiaREnd.value='';nAirTemp.value='';nTrackTemp.value='';nTraction.value='';nLayout.value='';nTrackCondition.value='';nResult.value='';updateNitroTireWear();}
+  notes.value='';lapText.value='';
+  if(document.getElementById('bestLapOnly'))bestLapOnly.value='';
+  if(document.getElementById('timerImportText'))timerImportText.value='';
+  if(document.getElementById('timerSource'))timerSource.value='Auto';
+  lapTimerSource='manual';setLapInputMode('full',true);updateLapStats();
+  editorTitle.textContent=`複製設定 → 我的新紀錄（來源：${src.ownerName||'車手'}）`;
+  showView('editor');
+}
+const touringSetupCompareFields=[
+  ['馬達','motor'],['ESC','esc'],['Pinion','pinion'],['Spur','spur'],['FDR','fdr'],['輪胎','tires'],['胎膠','additive'],
+  ['暖胎溫度','warmerTemp'],['暖胎時間','warmerMin'],['車高 F','rideF'],['車高 R','rideR'],['Downstop F','downF'],['Downstop R','downR'],
+  ['Toe F','toeF'],['Toe R','toeR'],['Camber F','camberF'],['Camber R','camberR'],['避震油 F','shockF'],['避震油 R','shockR'],['差速油','diffOil'],['防傾桿','arb']
+];
+const nitroSetupCompareFields=[
+  ['Transmitter','nTransmitter'],['Receiver','nReceiver'],['Steering Servo','nSteeringServo'],['Steering Expo','nSteeringExpo'],['Steering Speed','nSteeringSpeed'],['Throttle Servo','nThrottleServo'],['Throttle Expo','nThrottleExpo'],['Throttle Speed','nThrottleSpeed'],['引擎','nEngine'],['Pipe','nPipe'],['Manifold','nManifold'],['Glow Plug','nGlowPlug'],['燃油','nFuel'],['Nitro %','nNitroPct'],['Carb Dia','nCarbDia'],['Head Clearance','nHeadClearance'],['路面溫度','nTrackTemp'],['賽道特性','nLayout'],['路面狀況','nTrackCondition'],
+  ['Clutch Type','nClutchType'],['Clutch Shoe','nClutchShoe'],['Clutch Spring','nClutchSpring'],['Clutch Preload','nClutchPreload'],['Clutch Gap','nClutchGap'],['Bell End Play','nClutchEndplay'],['Brake Disc','nBrakeDisc'],['Brake Pad','nBrakePad'],
+  ['1st Pinion','nGear1Pinion'],['1st Spur','nGear1Spur'],['2nd Pinion','nGear2Pinion'],['2nd Spur','nGear2Spur'],['二速切換','nShift'],
+  ['前胎品牌','nTireBrandF'],['後胎品牌','nTireBrandR'],['前 Shore','nShoreF'],['後 Shore','nShoreR'],['前胎起始直徑','nTireDiaFStart'],['後胎起始直徑','nTireDiaRStart'],['前 Additive','nAdditiveF'],['後 Additive','nAdditiveR'],
+  ['車高 F','nRideF'],['車高 R','nRideR'],['Downstop F','nDownF'],['Downstop R','nDownR'],['Toe F','nToeF'],['Toe R','nToeR'],['Camber F','nCamberF'],['Camber R','nCamberR'],['ARB F','nArbF'],['ARB R','nArbR'],
+  ['Spring F','nSpringF'],['Spring R','nSpringR'],['Shock Oil F','nShockOilF'],['Shock Oil R','nShockOilR'],['Piston F','nPistonF'],['Piston R','nPistonR'],['Rebound F','nReboundF'],['Rebound R','nReboundR'],['Shock Position F','nShockPosF'],['Shock Position R','nShockPosR'],['Caster','nCaster'],['Width F','nWidthF'],['Width R','nWidthR'],['Wheelbase','nWheelbase'],['Ackermann','nAckermann'],['Bump Steer','nBumpSteer'],['Upper Arm F','nUpperArmF'],['Upper Arm R','nUpperArmR'],['Roll Center F','nRollCenterF'],['Roll Center R','nRollCenterR'],['Front Axle','nFrontAxle'],['Flex','nFlex'],['Body','nBody'],['Body Position','nBodyPos'],['Wing','nWingPos'],['Wing Height','nWingHeight'],['配重','nWeight']
+];
+function previousOwnSession(s){
+  if(!s?.ownerUid)return null;
+  const t=typeOf(s);
+  const mine=activeSessions().filter(x=>x.ownerUid===s.ownerUid && String(x.id)!==String(s.id) && typeOf(x)===t && (!s.car || x.car===s.car));
+  const curKey=(s.date||'')+'|'+(s.createdAt||'');
+  return mine.filter(x=>((x.date||'')+'|'+(x.createdAt||''))<curKey).sort((a,b)=>(((b.date||'')+'|'+(b.createdAt||'')).localeCompare((a.date||'')+'|'+(a.createdAt||''))))[0]||null;
+}
+function renderSetupChanges(s){
+  const prev=previousOwnSession(s);
+  if(!prev)return '<div class="notice">這是此車手目前可比對到的第一筆同車種、同車型紀錄。</div>';
+  const rows=typeOf(s)==='nitro8'?nitroSetupCompareFields:touringSetupCompareFields;
+  const changes=rows.filter(([n,k])=>String(prev[k]??'')!==String(s[k]??''));
+  if(!changes.length)return `<div class="notice">相較上一筆同車種、同車型紀錄（${escHtml(prev.date||'無日期')}）：設定沒有變更。</div>`;
+  return `<div class="notice"><b>相較上一筆同車種、同車型紀錄（${escHtml(prev.date||'無日期')}）</b><ul class="change-list">${changes.map(([n,k])=>`<li>${escHtml(n)}：${escHtml(prev[k]||'—')} → <b>${escHtml(s[k]||'—')}</b></li>`).join('')}</ul></div>`;
+}
+async function restoreTrash(id){
+  const s=sessions.find(x=>String(x.id)===String(id)); if(!s||s.ownerUid!==currentUser?.uid)return;
+  try{
+    await Promise.all([restoreSessionFromCloud(id),restorePersonalSetupMirror(id)]);
+    delete s.deletedAt;s.updatedAt=new Date().toISOString();
+    cacheSessions();refreshPersonalSuggestions();renderDashboard();renderCompareSelector();renderManage();
+  }catch(e){console.error(e);alert('還原失敗：'+(e.message||e));}
+}
+async function purgeTrash(id){
+  const s=sessions.find(x=>String(x.id)===String(id)); if(!s||s.ownerUid!==currentUser?.uid)return;
+  if(!confirm('永久刪除這筆 Session？Session 與對應的個人設定歷史都會永久移除，無法還原。'))return;
+  try{
+    await Promise.all([purgeSessionFromCloud(id),purgePersonalSetupMirror(id)]);
+    sessions=sessions.filter(x=>String(x.id)!==String(id));
+    cacheSessions();refreshPersonalSuggestions();renderManage();renderDashboard();renderCompareSelector();
+  }catch(e){console.error(e);alert('永久刪除失敗：'+(e.message||e));}
+}
+async function purgeExpiredTrash(){
+  if(!currentUser||!currentGarageId)return;
+  const cutoff=Date.now()-30*24*60*60*1000;
+  const expired=sessions.filter(s=>s.ownerUid===currentUser.uid && s.deletedAt && new Date(s.deletedAt).getTime()<cutoff);
+  if(!expired.length)return;
+  await Promise.all(expired.map(s=>Promise.all([
+    purgeSessionFromCloud(s.id).catch(()=>{}),
+    purgePersonalSetupMirror(s.id).catch(()=>{})
+  ])));
+  const ids=new Set(expired.map(s=>String(s.id)));sessions=sessions.filter(s=>!ids.has(String(s.id)));
+  refreshPersonalSuggestions();
+}
+async function deletePersonalSetup(id){
+  const s=personalSetups.find(x=>String(x.id)===String(id)); if(!s)return;
+  if(!confirm('從「我的設定歷史」移除這筆 Setup？原本的 Session 不會被刪除。'))return;
+  const t=new Date().toISOString();
+  try{await personalSetupsRef().doc(String(id)).set({deletedAt:t,updatedAt:t},{merge:true});s.deletedAt=t;refreshPersonalSuggestions();}
+  catch(e){console.error(e);alert('設定歷史刪除失敗：'+(e.message||e));}
+}
+async function restorePersonalSetup(id){
+  const s=personalSetups.find(x=>String(x.id)===String(id)); if(!s)return;
+  try{await personalSetupsRef().doc(String(id)).update({deletedAt:firebase.firestore.FieldValue.delete(),updatedAt:new Date().toISOString()});delete s.deletedAt;refreshPersonalSuggestions();}
+  catch(e){console.error(e);alert('還原失敗：'+(e.message||e));}
+}
+async function hideHistory(type,value){
+  if(type==='motor'&&!hiddenMotorHistory.includes(value))hiddenMotorHistory.push(value);
+  if(type==='esc'&&!hiddenEscHistory.includes(value))hiddenEscHistory.push(value);
+  try{await saveUiPrefs();refreshPersonalSuggestions();}catch(e){console.error(e);alert('歷史項目整理失敗。');}
+}
+async function unhideHistory(type,value){
+  if(type==='motor')hiddenMotorHistory=hiddenMotorHistory.filter(x=>x!==value);
+  if(type==='esc')hiddenEscHistory=hiddenEscHistory.filter(x=>x!==value);
+  try{await saveUiPrefs();refreshPersonalSuggestions();}catch(e){console.error(e);}
+}
+function renderManage(){
+  const trash=document.getElementById('trashList'); if(!trash)return;
+  const t=myTrash().filter(s=>!siteMode||typeOf(s)===siteMode).sort((a,b)=>(b.deletedAt||'').localeCompare(a.deletedAt||''));
+  trash.innerHTML=t.length?t.map(s=>`<div class="manage-item"><div class="meta"><b>${escHtml(s.date||'無日期')}｜${escHtml(s.car||'未填車型')}</b><span class="muted">${escHtml(s.track||'')}｜刪除於 ${escHtml((s.deletedAt||'').slice(0,10))}</span></div><div class="row-actions"><button onclick="restoreTrash('${s.id}')">還原</button><button class="danger" onclick="purgeTrash('${s.id}')">永久刪除</button></div></div>`).join(''):'<span class="muted">最近刪除是空的。</span>';
+  const activeSetups=personalSetups.filter(s=>!s.deletedAt && (!siteMode||typeOf(s)===siteMode)), deletedSetups=personalSetups.filter(s=>s.deletedAt && (!siteMode||typeOf(s)===siteMode));
+  setupManageList.innerHTML=(activeSetups.map(s=>`<div class="manage-item"><div class="meta"><b>${escHtml(s.date||'無日期')}｜${escHtml(typeLabel(typeOf(s)))}｜${escHtml(s.car||'未填車型')}</b><span class="muted">${escHtml(s.track||'')}｜${escHtml(typeOf(s)==='nitro8'?(s.nEngine||''):(s.motor||''))}</span></div><button class="danger" onclick="deletePersonalSetup('${s.id}')">從設定來源隱藏</button></div>`).join('')||'<span class="muted">沒有設定歷史。</span>')+(deletedSetups.length?`<hr><div class="muted" style="font-size:12px">已移除</div>${deletedSetups.map(s=>`<div class="manage-item"><div class="meta"><b>${escHtml(s.date||'無日期')}｜${escHtml(typeLabel(typeOf(s)))}｜${escHtml(s.car||'未填車型')}</b></div><button onclick="restorePersonalSetup('${s.id}')">還原</button></div>`).join('')}`:'');
+  document.getElementById('motorHistoryCard')?.classList.toggle('hidden',siteMode==='nitro8');
+  document.getElementById('escHistoryCard')?.classList.toggle('hidden',siteMode==='nitro8');
+  const uniq=k=>[...new Set(activeSetups.filter(s=>typeOf(s)==='touring').map(s=>(s[k]||'').trim()).filter(Boolean))];
+  const motors=uniq('motor'), escs=uniq('esc');
+  motorManageList.innerHTML=(motors.map(v=>`<div class="manage-item"><div class="meta"><b>${escHtml(v)}</b></div>${hiddenMotorHistory.includes(v)?`<button onclick='unhideHistory("motor",${JSON.stringify(v)})'>恢復建議</button>`:`<button class="danger" onclick='hideHistory("motor",${JSON.stringify(v)})'>從建議移除</button>`}</div>`).join('')||'<span class="muted">尚無馬達歷史。</span>');
+  escManageList.innerHTML=(escs.map(v=>`<div class="manage-item"><div class="meta"><b>${escHtml(v)}</b></div>${hiddenEscHistory.includes(v)?`<button onclick='unhideHistory("esc",${JSON.stringify(v)})'>恢復建議</button>`:`<button class="danger" onclick='hideHistory("esc",${JSON.stringify(v)})'>從建議移除</button>`}</div>`).join('')||'<span class="muted">尚無 ESC 歷史。</span>');
+}
+
+// ---------------- V15 Track Hub / Public Timing Board ----------------
+const TRACK_CATALOG=[
+  {
+    id:'ganyuan',
+    name:'柑園硬地遙控賽車場',
+    short:'柑園硬地',
+    region:'新北市樹林區',
+    surface:'硬地 On-road',
+    enabled:true,
+    map:'https://www.google.com/maps/search/?api=1&query=%E6%9F%91%E5%9C%92%E7%A1%AC%E5%9C%B0%E9%81%99%E6%8E%A7%E8%B3%BD%E8%BB%8A%E5%A0%B4'
+  },
+  {
+    id:'erchong',
+    name:'二重遙控賽車場',
+    short:'二重',
+    region:'新北市三重區',
+    surface:'硬地 On-road',
+    enabled:true,
+    map:'https://www.google.com/maps/search/?api=1&query=%E4%BA%8C%E9%87%8D%E9%81%99%E6%8E%A7%E8%B3%BD%E8%BB%8A%E5%A0%B4'
+  },
+  {
+    id:'wanban',
+    name:'萬板遙控賽車場',
+    short:'萬板',
+    region:'新北市板橋區',
+    surface:'硬地 On-road',
+    enabled:true,
+    map:'https://www.google.com/maps/search/?api=1&query=%E8%90%AC%E6%9D%BF%E9%81%99%E6%8E%A7%E8%B3%BD%E8%BB%8A%E5%A0%B4'
+  },
+  {
+    id:'daonan',
+    name:'道南河濱公園遙控車賽車場',
+    short:'道南',
+    region:'台北市文山區',
+    surface:'硬地 On-road',
+    enabled:true,
+    map:'https://www.google.com/maps/search/?api=1&query=%E9%81%93%E5%8D%97%E6%B2%B3%E6%BF%B1%E5%85%AC%E5%9C%92%20%E9%81%99%E6%8E%A7%E8%BB%8A%E8%B3%BD%E8%BB%8A%E5%A0%B4'
+  },
+  {
+    id:'tainan_gtr',
+    name:'台南 GTR 車場',
+    short:'台南 GTR',
+    region:'台南市',
+    surface:'硬地 On-road',
+    enabled:true,
+    map:'https://www.google.com/maps/search/?api=1&query=%E5%8F%B0%E5%8D%97%20GTR%20RC%20%E8%BB%8A%E5%A0%B4'
+  }
+];
+
+function trackById(id){return TRACK_CATALOG.find(t=>t.id===id)||TRACK_CATALOG[0]}
+function publicEntryId(sessionId){return `${currentUser?.uid||'anon'}_${String(sessionId)}`}
+
+function trackIdFromLabel(label){
+  const v=String(label||'').trim();
+  const aliases={
+    '柑園硬地':'ganyuan',
+    '二重':'erchong',
+    '萬板':'wanban',
+    '道南':'daonan',
+    '台南 GTR':'tainan_gtr'
+  };
+  return aliases[v]||null;
+}
+function trackLabelFromId(id){
+  const t=TRACK_CATALOG.find(x=>x.id===id);
+  return t?.short||'';
+}
+function syncPublicOptionsUI(){
+  const pub=document.getElementById('publishPublic');
+  const setup=document.getElementById('shareSetupPublic');
+  const hint=document.getElementById('publicSyncHint');
+  if(!pub||!setup||!hint)return;
+  setup.disabled=!pub.checked;
+  if(!pub.checked)setup.checked=false;
+  const trackLabel=document.getElementById('track')?.value||'';
+  const type=currentType();
+  const cls=type==='nitro8'?'1/8 油平跑':(document.getElementById('className')?.value||'');
+  hint.textContent=pub.checked
+    ? (trackLabel?`將同步到：${trackLabel}｜${cls}`:'請先選擇場地；沒有場地不會發布公開榜。')
+    : '這筆紀錄只會保存在你的 Garage。';
+}
+
+async function removePublishedSession(sessionId){
+  if(!currentUser)return;
+  const id=publicEntryId(sessionId);
+  // 先讀再刪，避免對不存在的文件觸發 delete rule denied。
+  for(const t of TRACK_CATALOG.filter(x=>x.enabled)){
+    try{
+      const ref=db.collection('trackBoards').doc(t.id).collection('entries').doc(id);
+      const snap=await ref.get();
+      if(snap.exists && snap.data()?.ownerUid===currentUser.uid){
+        await ref.delete();
+      }
+    }catch(err){
+      console.warn('public cleanup skipped',t.id,err);
+    }
+  }
+}
+
+async function syncSavedSessionToPublic(s){
+  if(!currentUser||!s)return {published:false};
+  // 每次先清除同一 Session 之前可能存在的公開副本，杜絕換場後留在舊賽道造成圈速／場地錯亂。
+  await removePublishedSession(s.id);
+
+  if(!s.publishPublic)return {published:false};
+
+  const trackId=s.trackId||trackIdFromLabel(s.track);
+  if(!trackId)throw new Error('請先選擇五個支援場地之一。');
+
+  const st=stats(s.laps||[]);
+  if(!Number.isFinite(st.best))throw new Error('沒有有效圈速，無法同步到公開賽道榜。');
+
+  const className=typeOf(s)==='nitro8'?'1/8 油平跑':normalizedPublicClass(s);
+  if(!PUBLIC_CLASSES.includes(className))throw new Error('組別不在公開榜支援清單。');
+
+  const now=new Date().toISOString();
+  const entry={
+    ownerUid:currentUser.uid,
+    driverName:displayName(),
+    sourceSessionId:String(s.id),
+    trackId,
+    className,
+    carType:typeOf(s),
+    car:s.car||'',
+    carBrand:typeOf(s)==='touring'?(sessionCarIdentity(s).brand||''):'',
+    carModel:typeOf(s)==='touring'?(sessionCarIdentity(s).model||''):'',
+    date:s.date||'',
+    bestLap:st.best,
+    best3:s.lapInputMode==='best'?null:st.best3,
+    best5:s.lapInputMode==='best'?null:st.best5,
+    avgLap:s.lapInputMode==='best'?null:st.avg,
+    lapCount:(s.laps||[]).length,
+    laps:[...(s.laps||[])],
+    lapDataMode:['full','best','timer'].includes(s.lapInputMode)?s.lapInputMode:'full',
+    timingSource:s.lapInputMode==='timer'?(s.lapTimerSource||'其他計時器'):'manual',
+    shareSetup:s.shareSetupPublic===true,
+    setup:s.shareSetupPublic===true?publicSetupSnapshot(s):{},
+    createdAt:s.createdAt||now,
+    updatedAt:now,
+    verification:'self-reported'
+  };
+
+  await db.collection('trackBoards').doc(trackId).collection('entries')
+    .doc(publicEntryId(s.id)).set(entry);
+  return {published:true,trackId};
+}
+
+const PUBLIC_CLASSES=['Modified','13.5 Stock','13.5 Open','17.5 Stock','17.5 Open','1/8 油平跑'];
+
+const PUBLIC_SETUP_FIELDS_TOURING=[
+  ['馬達','motor'],['ESC','esc'],['Pinion','pinion'],['Spur','spur'],['內齒比','internalRatio'],['FDR','fdr'],
+  ['輪胎','tires'],['胎膠','additive'],['暖胎溫度','warmerTemp'],['暖胎時間','warmerMin'],
+  ['車高 F','rideF'],['車高 R','rideR'],['Downstop F','downF'],['Downstop R','downR'],
+  ['Toe F','toeF'],['Toe R','toeR'],['Camber F','camberF'],['Camber R','camberR'],
+  ['避震油 F','shockF'],['避震油 R','shockR'],['差速油','diffOil'],['防傾桿','arb']
+];
+
+const PUBLIC_SETUP_FIELDS_NITRO=[
+  ['引擎','nEngine'],['排氣管','nPipe'],['歧管','nManifold'],['火星塞','nGlowPlug'],['燃油','nFuel'],['Nitro %','nNitroPct'],
+  ['離合器','nClutchType'],['離合器蹄片','nClutchShoe'],['離合器彈簧','nClutchSpring'],['Clutch Gap','nClutchGap'],
+  ['1st Pinion','nGear1Pinion'],['1st Spur','nGear1Spur'],['2nd Pinion','nGear2Pinion'],['2nd Spur','nGear2Spur'],
+  ['前胎品牌','nTireBrandF'],['後胎品牌','nTireBrandR'],['前胎 Shore','nShoreF'],['後胎 Shore','nShoreR'],
+  ['前胎起始直徑','nTireDiaFStart'],['後胎起始直徑','nTireDiaRStart'],
+  ['車高 F','nRideF'],['車高 R','nRideR'],['Downstop F','nDownF'],['Downstop R','nDownR'],
+  ['Toe F','nToeF'],['Toe R','nToeR'],['Camber F','nCamberF'],['Camber R','nCamberR'],
+  ['前防傾桿','nArbF'],['後防傾桿','nArbR'],['前彈簧','nSpringF'],['後彈簧','nSpringR'],
+  ['前避震油','nShockOilF'],['後避震油','nShockOilR'],['Body','nBody']
+];
+
+function publicSetupFieldsForType(carType){
+  return carType==='nitro8'?PUBLIC_SETUP_FIELDS_NITRO:PUBLIC_SETUP_FIELDS_TOURING;
+}
+
+function normalizedPublicClass(s){
+  if(typeOf(s)==='nitro8') return '1/8 油平跑';
+  const low=(s?.className||'').trim().toLowerCase();
+  if(/\bmod\b|modified/.test(low)) return 'Modified';
+  if(/13\.5/.test(low) && /stock/.test(low)) return '13.5 Stock';
+  if(/13\.5/.test(low) && /open/.test(low)) return '13.5 Open';
+  if(/17\.5/.test(low) && /stock/.test(low)) return '17.5 Stock';
+  if(/17\.5/.test(low) && /open/.test(low)) return '17.5 Open';
+  return '13.5 Open';
+}
+
+function publicSetupSnapshot(s){
+  const out={};
+  publicSetupFieldsForType(typeOf(s)).forEach(([,key])=>out[key]=s?.[key]??'');
+  return out;
+}
+
+function renderTrackCatalog(){
+  const box=document.getElementById('trackCards'); if(!box)return;
+  box.innerHTML=TRACK_CATALOG.map(t=>`
+    <div class="track-card ${t.id===currentTrackId?'active':''} ${t.enabled?'':'track-unsupported'}">
+      <button onclick="${t.enabled?`selectTrack('${t.id}')`:`alert('這個場地先收錄資訊；目前 Garage V15 的公開圈速榜先支援 On-road Session。')`}">
+        <b>${escHtml(t.name)}</b>
+        <small>${escHtml(t.region)}｜${escHtml(t.surface)}</small>
+        <div class="track-meta">
+          <span class="pill">${t.enabled?'排行榜開放':'場地資訊'}</span>
+          ${t.id==='ganyuan'?'<span class="pill">目前主要測試場</span>':''}
+        </div>
+      </button>
+    </div>
+  `).join('');
+}
+
+function renderTrackPage(){
+  rebuildTrackCarFilters();
+  renderTrackCatalog();
+  if(!trackUnsub) selectTrack(currentTrackId);
+  else {
+    const t=trackById(currentTrackId);
+    document.getElementById('trackBoardTitle').textContent=t.name;
+    document.getElementById('trackBoardMeta').textContent=`${t.region}｜${t.surface}`;
+    document.getElementById('trackMapLink').href=t.map;
+    renderTrackBoard();
+  }
+}
+
+function selectTrack(id){
+  const t=trackById(id);
+  if(!t.enabled){return;}
+  currentTrackId=id;
+  trackEntries=[];
+  renderTrackCatalog();
+
+  document.getElementById('trackBoardTitle').textContent=t.name;
+  document.getElementById('trackBoardMeta').textContent=`${t.region}｜${t.surface}｜公開圈速為車手自報`;
+  document.getElementById('trackMapLink').href=t.map;
+  document.getElementById('trackLoadStatus').textContent='即時載入公開圈速…';
+  document.getElementById('trackEntryDetail').classList.add('hidden');
+
+  if(trackUnsub){trackUnsub();trackUnsub=null;}
+
+  trackUnsub=db.collection('trackBoards').doc(id).collection('entries')
+    .orderBy('createdAt','desc').limit(300)
+    .onSnapshot(snap=>{
+      trackEntries=snap.docs.map(d=>({id:d.id,...d.data()}));
+      document.getElementById('trackLoadStatus').textContent=`已同步｜${trackEntries.length} 筆公開 Session`;
+      rebuildTrackClassFilter();
+      renderTrackBoard();
+    },err=>{
+      console.error('track board load',err);
+      document.getElementById('trackLoadStatus').textContent='排行榜讀取失敗。若這是第一次使用 V15，請先更新 Firestore Rules。';
+      trackEntries=[];
+      renderTrackBoard();
+    });
+}
+
+function rebuildTrackClassFilter(){
+  // V15 組別固定為 PUBLIC_CLASSES；不再依已上傳資料動態增加其他組別。
+}
+
+function publicCarIdentity(e){return e?.carType==='nitro8'?{brand:'',model:String(e?.car||''),listed:false}:inferCarIdentity(e)}
+function rebuildTrackCarFilters(){
+  const b=document.getElementById('trackBrandFilter'),m=document.getElementById('trackModelFilter');if(!b||!m)return;const keep=b.value;
+  b.innerHTML='<option value="">全部品牌</option>'+TOURING_BRAND_ORDER.map(x=>`<option value="${escHtml(x)}">${escHtml(x)}</option>`).join('')+'<option value="__other__">其他品牌</option>';
+  if([...b.options].some(o=>o.value===keep))b.value=keep;rebuildTrackModelFilter();
+}
+function rebuildTrackModelFilter(){
+  const b=document.getElementById('trackBrandFilter'),m=document.getElementById('trackModelFilter');if(!b||!m)return;const brand=b.value,keep=m.value;let html='<option value="">全部車型</option>';
+  if(brand&&brand!=='__other__')html+=(TOURING_CAR_CATALOG[brand]||[]).map(x=>`<option value="${escHtml(x)}">${escHtml(x)}</option>`).join('')+'<option value="__other__">其他／未列出車型</option>';
+  else if(brand==='__other__')html+='<option value="__other__">其他／未列出車型</option>';
+  m.innerHTML=html;if([...m.options].some(o=>o.value===keep))m.value=keep;
+}
+function onTrackBrandFilterChange(){rebuildTrackModelFilter();renderTrackBoard()}
+function onTrackClassFilterChange(){const nitro=trackClassFilter?.value==='1/8 油平跑';if(trackBrandFilter){trackBrandFilter.disabled=nitro;if(nitro)trackBrandFilter.value='';}if(trackModelFilter){trackModelFilter.disabled=nitro;if(nitro)trackModelFilter.value='';}if(!nitro)rebuildTrackModelFilter();renderTrackBoard()}
+function filteredTrackEntries(){
+  const f=trackClassFilter?.value||'',bf=trackBrandFilter?.value||'',mf=trackModelFilter?.value||'',shared=!!trackSharedSetupOnly?.checked;
+  return trackEntries.filter(e=>{
+    if(!PUBLIC_CLASSES.includes(e.className)||f&&e.className!==f||shared&&e.shareSetup!==true)return false;
+    if((bf||mf)&&e.carType==='nitro8')return false;
+    if(bf||mf){const id=publicCarIdentity(e),known=isCatalogBrand(id.brand);if(bf==='__other__'){if(known)return false}else if(bf&&id.brand!==bf)return false;if(mf){if(mf==='__other__'){if(id.brand&&isCatalogModel(id.brand,id.model))return false}else if(id.model!==mf)return false}}
+    return true;
+  });
+}
+
+function leaderboardEntries(entries){
+  const bestByDriver=new Map();
+  for(const e of entries){
+    const key=(e.ownerUid||e.driverName||'unknown')+'|'+(e.className||'');
+    const cur=bestByDriver.get(key);
+    const eb=Number(e.bestLap);
+    const cb=cur?Number(cur.bestLap):Infinity;
+    if(Number.isFinite(eb) && (!cur || eb<cb)) bestByDriver.set(key,e);
+    else if(!cur) bestByDriver.set(key,e);
+  }
+  return [...bestByDriver.values()];
+}
+
+function renderTrackBoard(){
+  const entries=filteredTrackEntries();
+  const sortMode=document.getElementById('trackSortMode')?.value||'best';
+
+  let leaders=leaderboardEntries(entries);
+  const metric=e=>{
+    const v=sortMode==='best3'?e.best3:e.bestLap;
+    return finiteMetric(v)?Number(v):Infinity;
+  };
+  if(sortMode==='recent') leaders.sort((a,b)=>(b.createdAt||'').localeCompare(a.createdAt||''));
+  else leaders.sort((a,b)=>{
+    const av=metric(a),bv=metric(b);
+    if(Number.isFinite(av)&&Number.isFinite(bv))return av-bv;
+    if(Number.isFinite(av))return -1;
+    if(Number.isFinite(bv))return 1;
+    return 0;
+  });
+
+  const allBest=entries.map(e=>Number(e.bestLap)).filter(Number.isFinite);
+  const drivers=new Set(entries.map(e=>e.ownerUid||e.driverName).filter(Boolean));
+  const lapTotal=entries.reduce((n,e)=>n+(Array.isArray(e.laps)?e.laps.length:Number(e.lapCount)||0),0);
+  document.getElementById('trackKBest').textContent=allBest.length?Math.min(...allBest).toFixed(3)+' s':'—';
+  document.getElementById('trackKDrivers').textContent=drivers.size;
+  document.getElementById('trackKSessions').textContent=entries.length;
+  document.getElementById('trackKLaps').textContent=lapTotal;
+
+  const lr=document.getElementById('trackLeaderboardRows');
+  lr.innerHTML=leaders.length?leaders.map((e,i)=>`
+    <tr>
+      <td class="track-rank">${i+1}</td>
+      <td>${escHtml(e.driverName||'車手')}</td>
+      <td>${escHtml(e.className||'未分類')}</td>
+      <td>${carCellHtml(e)}</td>
+      <td class="track-best">${finiteMetric(e.bestLap)?Number(e.bestLap).toFixed(3)+' s':'—'}</td>
+      <td class="track-time">${finiteMetric(e.best3)?Number(e.best3).toFixed(3)+' s':'—'}</td>
+      <td><span class="source-pill">${escHtml(lapDataLabel(e.lapDataMode||'full',e.timingSource||'manual'))}</span></td>
+      <td>${e.shareSetup===true?'<span class="pill">已分享</span>':'—'}</td>
+      <td>${escHtml(e.date||'—')}</td>
+      <td><button onclick="showTrackEntry('${e.id}')">查看</button></td>
+    </tr>`).join('')
+    : '<tr><td colspan="10" class="muted">目前篩選條件下沒有公開成績。</td></tr>';
+
+  const recent=[...entries].sort((a,b)=>(b.createdAt||'').localeCompare(a.createdAt||'')).slice(0,40);
+  const rr=document.getElementById('trackRecentRows');
+  rr.innerHTML=recent.length?recent.map(e=>`
+    <tr>
+      <td>${escHtml((e.createdAt||e.date||'').slice(0,16).replace('T',' '))}</td>
+      <td>${escHtml(e.driverName||'車手')}</td>
+      <td>${escHtml(e.className||'未分類')}</td>
+      <td>${carCellHtml(e)}</td>
+      <td class="track-best">${finiteMetric(e.bestLap)?Number(e.bestLap).toFixed(3)+' s':'—'}</td>
+      <td class="track-time">${finiteMetric(e.avgLap)?Number(e.avgLap).toFixed(3)+' s':'—'}</td>
+      <td>${e.lapDataMode==='best'?'—':(Array.isArray(e.laps)?e.laps.length:(e.lapCount||0))}</td>
+      <td><span class="source-pill">${escHtml(lapDataLabel(e.lapDataMode||'full',e.timingSource||'manual'))}</span></td>
+      <td>${e.shareSetup===true?'<span class="pill">已分享</span>':'—'}</td>
+      <td><div class="row-actions"><button onclick="showTrackEntry('${e.id}')">查看</button>${e.ownerUid===currentUser?.uid?`<button class="danger" onclick="deleteTrackEntry('${e.id}')">撤下</button>`:''}</div></td>
+    </tr>`).join('')
+    : '<tr><td colspan="10" class="muted">目前篩選條件下沒有公開 Session。</td></tr>';
+}
+
+function showTrackEntry(id){
+  const e=trackEntries.find(x=>String(x.id)===String(id)); if(!e)return;
+  const box=document.getElementById('trackEntryDetail');
+  const laps=Array.isArray(e.laps)?e.laps.map(Number).filter(Number.isFinite):[];
+  box.innerHTML=`
+    <b>${escHtml(e.driverName||'車手')}｜${escHtml(e.className||'未分類')}｜${escHtml(e.car||'—')}</b>
+    <div class="muted" style="font-size:12px;margin-top:4px">${escHtml(e.date||'—')}｜${escHtml(trackById(currentTrackId).name)}｜自報圈速</div>
+    <div style="margin-top:8px"><span class="source-pill">${escHtml(lapDataLabel(e.lapDataMode||'full',e.timingSource||'manual'))}</span></div>
+    <div class="track-laps">${laps.length?laps.map((v,i)=>`<span class="track-lap">L${i+1} ${v.toFixed(3)}</span>`).join(''):'<span class="muted">沒有逐圈資料</span>'}</div>
+    ${e.shareSetup===true && e.setup ? `
+      <hr>
+      <h3>車手分享的 Setup</h3>
+      <div class="formgrid">
+        ${publicSetupFieldsForType(e.carType).map(([label,key])=>`<div><label>${escHtml(label)}</label><div>${escHtml(e.setup?.[key]||'—')}</div></div>`).join('')}
+      </div>
+    ` : '<div class="muted" style="margin-top:12px">這位車手沒有公開這筆 Session 的 Setup。</div>'}`;
+  box.classList.remove('hidden');
+  box.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+async function deleteTrackEntry(id){
+  const e=trackEntries.find(x=>String(x.id)===String(id));
+  if(!e||e.ownerUid!==currentUser?.uid)return;
+  if(!confirm('把這筆公開成績從賽道榜撤下？個人 Garage Session 會保留。'))return;
+  try{
+    await db.collection('trackBoards').doc(currentTrackId).collection('entries').doc(String(id)).delete();
+    const s=sessions.find(x=>String(x.id)===String(e.sourceSessionId) && x.ownerUid===currentUser.uid);
+    if(s){
+      s.publishPublic=false;
+      s.shareSetupPublic=false;
+      s.trackId=trackIdFromLabel(s.track)||s.trackId||'';
+      s.updatedAt=new Date().toISOString();
+      cacheSessions();
+      await garageSessionsRef().doc(String(s.id)).set({
+        publishPublic:false,
+        shareSetupPublic:false,
+        updatedAt:s.updatedAt
+      },{merge:true});
+    }
+    document.getElementById('trackEntryDetail').classList.add('hidden');
+  }catch(err){console.error(err);alert('撤下失敗：'+(err.message||err));}
+}
+
+
+
+function renderCompareSelector(){
+  compareSelect.innerHTML=filteredActiveSessions().map(s=>`<label class="check"><input type="checkbox" value="${s.id}"> ${escHtml(s.date||'')}｜${escHtml(s.ownerName||'舊資料')}｜${escHtml(s.track||'')}｜${escHtml(s.car||'')}</label>`).join('');
+  drawLineChart('compareChart',[],'','');
+  compareTable.innerHTML='';
+  compareSummary.innerHTML='<span class="muted">選 2～5 筆目前車種的紀錄比較。</span>';
+}
+function renderComparison(){
+  const ids=[...compareSelect.querySelectorAll('input:checked')].map(x=>x.value).slice(0,5);
+  const sel=ids.map(id=>sessions.find(s=>String(s.id)===String(id) && !s.deletedAt)).filter(Boolean);
+  if(sel.length<2){compareSummary.innerHTML='<span class="warn">至少選兩筆。</span>';return;}
+  const types=[...new Set(sel.map(typeOf))];
+  if(types.length!==1){compareSummary.innerHTML='<span class="warn">請只選相同車種比較：Touring 與 1/8 油平跑的設定欄位不同。</span>';compareTable.innerHTML='';drawLineChart('compareChart',[]);return;}
+  drawMultiChart('compareChart',sel);
+  const rows=types[0]==='nitro8'?
+    [['車手','ownerName'],['日期','date'],['場地','track'],['車型','car'],...nitroSetupCompareFields]:
+    [['車手','ownerName'],['日期','date'],['場地','track'],['車型','car'],...touringSetupCompareFields];
+  compareTable.innerHTML='<thead><tr><th>項目</th>'+sel.map((s,i)=>`<th>#${i+1} ${escHtml(s.date||'')}</th>`).join('')+'</tr></thead><tbody>'+rows.map(([name,key])=>`<tr><td>${escHtml(name)}</td>${sel.map(s=>`<td>${escHtml(s[key]||'—')}</td>`).join('')}</tr>`).join('')+'</tbody>';
+  const bests=sel.map(s=>stats(s.laps||[]).best);
+  const avgs=sel.map(s=>stats(s.laps||[]).avg);
+  const valid=bests.map((v,i)=>[v,i]).filter(x=>Number.isFinite(x[0])).sort((a,b)=>a[0]-b[0]);
+  let html='<div class="kpis">'+sel.map((s,i)=>`<div class="kpi"><small>#${i+1} ${escHtml(s.date||'')}</small><b>${fmt(bests[i])}</b><small>Best3 ${fmt(stats(sel[i].laps||[]).best3)}｜Best5 ${fmt(stats(sel[i].laps||[]).best5)}｜平均 ${fmt(avgs[i])}</small></div>`).join('')+'</div>';
+  if(valid.length>=2){const d=valid[1][0]-valid[0][0];html+=`<p>最快的是 <b class="good">#${valid[0][1]+1}</b>，比第二快快 <b>${d.toFixed(3)} s</b>。</p>`;}
+  compareSummary.innerHTML=html;
+}
+function drawLineChart(id,data){
+  const c=document.getElementById(id); if(!c)return; const ctx=c.getContext('2d');
+  const w=c.width,h=c.height; ctx.clearRect(0,0,w,h); ctx.fillStyle='#0e1218';ctx.fillRect(0,0,w,h);
+  if(!data.length){ctx.fillStyle='#7f8a98';ctx.font='14px sans-serif';ctx.fillText('尚無圈速資料',20,30);return;}
+  const pad=38,min=Math.min(...data),max=Math.max(...data),range=Math.max(.2,max-min);
+  ctx.strokeStyle='#2b3340';ctx.lineWidth=1;
+  for(let i=0;i<5;i++){let y=pad+(h-2*pad)*i/4;ctx.beginPath();ctx.moveTo(pad,y);ctx.lineTo(w-pad,y);ctx.stroke();}
+  ctx.strokeStyle='#6aa9ff';ctx.lineWidth=2;ctx.beginPath();
+  data.forEach((v,i)=>{let x=pad+(w-2*pad)*(data.length===1?.5:i/(data.length-1));let y=h-pad-(v-min)/range*(h-2*pad);if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y)});ctx.stroke();
+  ctx.fillStyle='#9aa6b2';ctx.font='12px sans-serif';ctx.fillText(max.toFixed(3)+'s',4,pad+4);ctx.fillText(min.toFixed(3)+'s',4,h-pad+4);
+}
+function drawMultiChart(id,sel){
+  const c=document.getElementById(id),ctx=c.getContext('2d'),w=c.width,h=c.height;ctx.clearRect(0,0,w,h);ctx.fillStyle='#0e1218';ctx.fillRect(0,0,w,h);
+  const all=sel.flatMap(s=>s.laps||[]); if(!all.length)return;
+  const pad=42,min=Math.min(...all),max=Math.max(...all),range=Math.max(.2,max-min),n=Math.max(...sel.map(s=>(s.laps||[]).length));
+  const colors=['#6aa9ff','#71d38a','#ffcf66','#ff7a7a','#c79cff'];
+  for(let j=0;j<sel.length;j++){
+    const data=sel[j].laps||[]; ctx.strokeStyle=colors[j];ctx.lineWidth=2;ctx.beginPath();
+    data.forEach((v,i)=>{let x=pad+(w-2*pad)*(n===1?.5:i/(n-1));let y=h-pad-(v-min)/range*(h-2*pad);if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y)});ctx.stroke();
+    ctx.fillStyle=colors[j];ctx.fillRect(pad+120*j,10,10,10);ctx.fillStyle='#dce7f6';ctx.fillText('#'+(j+1),pad+14+120*j,19);
+  }
+  ctx.fillStyle='#9aa6b2';ctx.fillText(max.toFixed(3)+'s',4,pad);ctx.fillText(min.toFixed(3)+'s',4,h-pad);
+}
+function exportJSON(){
+  const mine=mySessions();
+  const blob=new Blob([JSON.stringify({version:4,garageId:currentGarageId,exportedAt:new Date().toISOString(),ownerUid:currentUser?.uid||null,sessions:mine},null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='my-rc-onroad-sessions-v4.json';a.click();URL.revokeObjectURL(a.href);
+}
+jsonImport.addEventListener('change',async e=>{
+  const f=e.target.files[0]; if(!f)return;
+  try{
+    if(!currentUser||!currentGarageId) throw new Error('請先登入並選擇 Garage');
+    const o=JSON.parse(await f.text()); const arr=Array.isArray(o)?o:o.sessions;
+    if(!Array.isArray(arr))throw new Error('格式錯誤');
+    if(!confirm(`匯入 ${arr.length} 筆「我的」紀錄到目前 Garage？不會刪除或覆蓋朋友的資料。`)){e.target.value='';return;}
+    const now=new Date().toISOString();
+    const normalized=arr.map(s=>({...s,id:String(s.id||uid()),ownerUid:currentUser.uid,ownerName:displayName(),updatedAt:now}));
+    const byId=new Map(sessions.map(s=>[String(s.id),s]));
+    normalized.forEach(s=>{
+      // 若備份 ID 剛好撞到朋友的紀錄，改發新 ID，絕不覆蓋別人。
+      const existing=byId.get(String(s.id));
+      if(existing && existing.ownerUid && existing.ownerUid!==currentUser.uid) s.id=uid();
+      byId.set(String(s.id),s);
+    });
+    sessions=[...byId.values()];sortSessions();cacheSessions();refreshPersonalSuggestions();renderDashboard();
+    setSyncStatus('雲端：匯入同步中…');
+    await Promise.all(normalized.map(s=>garageSessionsRef().doc(String(s.id)).set(s)));
+    await Promise.all(normalized.map(s=>personalSetupsRef().doc(String(s.id)).set(setupSnapshot(s))));
+    normalized.forEach(upsertPersonalSetupLocal); refreshPersonalSuggestions();
+    setSyncStatus('雲端：已同步',true);
+  }catch(err){console.error(err);alert('無法匯入：'+(err.message||'JSON 備份格式錯誤'));}
+  e.target.value='';
+});
+['nTireDiaFStart','nTireDiaRStart','nTireDiaFEnd','nTireDiaREnd'].forEach(id=>document.getElementById(id)?.addEventListener('input',updateNitroTireWear));
+document.getElementById('car')?.addEventListener('change',onCarModelChange);
+toggleTypeUI();setNitroDefaults(false);
+document.getElementById('timerImportFile')?.addEventListener('change',async e=>{
+  const f=e.target.files[0];
+  if(!f)return;
+  try{
+    setLapInputMode('timer',true);
+    const raw=await f.text();
+    timerImportText.value=raw;
+    parseTimerImport(f.name);
+  }catch(err){
+    console.error(err);
+    timerImportStatus.textContent='無法讀取這個檔案：'+(err.message||err);
+    timerImportStatus.className='timer-import-status bad';
+  }
+  e.target.value='';
+});
+function escHtml(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+refreshPersonalSuggestions();
+renderDashboard();
+</script>
+<script>
+
+// ---------------- V15 Add to Home Screen ----------------
+let deferredInstallPrompt=null;
+
+function isStandaloneMode(){
+  return window.matchMedia?.('(display-mode: standalone)').matches || window.navigator.standalone===true;
+}
+function isIOSDevice(){
+  return /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+    (navigator.platform==='MacIntel' && navigator.maxTouchPoints>1);
+}
+function isAndroidDevice(){
+  return /Android/i.test(navigator.userAgent);
+}
+function a2hsStepsForBrowser(){
+  if(isIOSDevice()){
+    return [
+      ['點 Safari 下方的「分享」按鈕','分享圖示是方框上方有一個向上的箭頭。'],
+      ['在選單中往下滑','找到「加入主畫面」。'],
+      ['按「加入主畫面」，再按右上角「加入」','之後就能像 App 一樣從主畫面直接開啟。']
+    ];
+  }
+  if(isAndroidDevice()){
+    return [
+      ['點瀏覽器右上角的選單','通常是 ⋮ 圖示。'],
+      ['選「加到主畫面」或「安裝應用程式」','不同瀏覽器顯示名稱可能稍有不同。'],
+      ['確認加入','之後就能從主畫面直接開啟。']
+    ];
+  }
+  return [
+    ['開啟瀏覽器選單','尋找「安裝應用程式」或「加到主畫面」。'],
+    ['確認安裝','網站會以獨立視窗或捷徑開啟。']
+  ];
+}
+
+function renderA2HSSteps(){
+  const box=document.getElementById('a2hsSteps');
+  if(!box)return;
+  box.innerHTML=a2hsStepsForBrowser().map((s,i)=>`
+    <div class="a2hs-step">
+      <div class="a2hs-num">${i+1}</div>
+      <div class="a2hs-step-text"><b>${escHtml(s[0])}</b><br><span class="muted">${escHtml(s[1])}</span></div>
+    </div>
+  `).join('');
+}
+
+function openA2HSGuide(force=false){
+  if(isStandaloneMode() && !force)return;
+  const modal=document.getElementById('a2hsModal');
+  if(!modal)return;
+  renderA2HSSteps();
+
+  const primary=document.getElementById('a2hsPrimaryBtn');
+  if(deferredInstallPrompt && !isIOSDevice()){
+    primary.textContent='加到主畫面';
+  }else{
+    primary.textContent='我知道了';
+  }
+  modal.classList.remove('hidden');
+}
+
+function closeA2HSGuide(mode='done'){
+  const modal=document.getElementById('a2hsModal');
+  if(modal)modal.classList.add('hidden');
+
+  try{
+    if(mode==='later'){
+      localStorage.setItem('garageA2HSLaterUntil',String(Date.now()+24*60*60*1000));
+    }else{
+      localStorage.setItem('garageA2HSDone','1');
+    }
+  }catch(_){}
+}
+
+window.addEventListener('beforeinstallprompt',e=>{
+  e.preventDefault();
+  deferredInstallPrompt=e;
+  const primary=document.getElementById('a2hsPrimaryBtn');
+  if(primary && !document.getElementById('a2hsModal')?.classList.contains('hidden') && !isIOSDevice()){
+    primary.textContent='加到主畫面';
+  }
+});
+
+window.addEventListener('appinstalled',()=>{
+  deferredInstallPrompt=null;
+  closeA2HSGuide('done');
+});
+
+(function initA2HSGuide(){
+  if(isStandaloneMode()){
+    document.getElementById('standaloneNetworkHint')?.classList.remove('hidden');
+    return;
+  }
+
+  let done=false,laterUntil=0;
+  try{
+    done=localStorage.getItem('garageA2HSDone')==='1';
+    laterUntil=Number(localStorage.getItem('garageA2HSLaterUntil')||0);
+  }catch(_){}
+
+  const laterBtn=document.getElementById('a2hsLaterBtn');
+  const primaryBtn=document.getElementById('a2hsPrimaryBtn');
+
+  laterBtn?.addEventListener('click',()=>closeA2HSGuide('later'));
+  primaryBtn?.addEventListener('click',async()=>{
+    if(deferredInstallPrompt && !isIOSDevice()){
+      const promptEvent=deferredInstallPrompt;
+      deferredInstallPrompt=null;
+      try{
+        await promptEvent.prompt();
+        const choice=await promptEvent.userChoice;
+        if(choice?.outcome==='accepted'){
+          closeA2HSGuide('done');
+          return;
+        }
+      }catch(err){
+        console.warn('Install prompt failed',err);
+      }
+      // If native prompt was dismissed, keep the guide visible.
+      renderA2HSSteps();
+      primaryBtn.textContent='我知道了';
+      return;
+    }
+    closeA2HSGuide('done');
+  });
+
+  if(!done && Date.now()>=laterUntil){
+    // Delay a little so the first paint remains clean.
+    setTimeout(()=>openA2HSGuide(false),650);
+  }
+})();
+
+// Register a very small service worker for Chromium installability.
+// It deliberately does not cache app HTML, so version testing will not be trapped on an old copy.
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('./sw_v15.js').catch(err=>console.warn('SW register failed',err));
+  });
+}
+
+</script>
+
+<div id="carPickerModal" class="car-picker-overlay hidden" onclick="carPickerBackdrop(event)">
+  <div class="car-picker-sheet" role="dialog" aria-modal="true" aria-labelledby="carPickerTitle">
+    <div class="car-picker-header">
+      <button id="carPickerBack" type="button" class="car-picker-nav hidden" onclick="carPickerBack()">‹ 品牌</button>
+      <div><b id="carPickerTitle">選擇品牌</b><small id="carPickerSubtitle">1/10 電房</small></div>
+      <button type="button" class="car-picker-close" onclick="closeCarPicker()" aria-label="關閉">✕</button>
+    </div>
+    <div class="car-picker-search-wrap"><input id="carPickerSearch" type="search" placeholder="搜尋品牌或車型" oninput="renderCarPicker()"></div>
+    <div id="carPickerBody" class="car-picker-body"></div>
+  </div>
+</div>
+
+</body>
+</html>
