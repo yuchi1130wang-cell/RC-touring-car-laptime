@@ -1,0 +1,6 @@
+self.addEventListener('install',e=>self.skipWaiting());
+self.addEventListener('activate',e=>e.waitUntil(self.clients.claim()));
+self.addEventListener('fetch',e=>{
+  const u=new URL(e.request.url);
+  if(e.request.method==='GET'&&u.origin===self.location.origin)e.respondWith(fetch(e.request));
+});
