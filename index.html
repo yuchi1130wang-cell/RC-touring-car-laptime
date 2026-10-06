@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>RC On-road 設定・圈速紀錄 V14</title>
+<title>RC On-road 設定・圈速紀錄 V16</title>
 <style>
 :root{
   --bg:#0b0d10;--panel:#141820;--panel2:#1b202a;--text:#eef2f7;--muted:#9aa6b2;
@@ -148,7 +148,7 @@ details.advanced summary{cursor:pointer;font-weight:700;color:#dce7f6}
 
 
 <style>
-/* V14 Track Hub / public timing board */
+/* V16 Track Hub / public timing board */
 .track-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
 .track-card{border:1px solid var(--line);background:#0e1218;border-radius:12px;padding:12px;min-width:0}
 .track-card.active{border-color:var(--accent);background:#152035}
@@ -184,7 +184,7 @@ details.advanced summary{cursor:pointer;font-weight:700;color:#dce7f6}
 
 
 <style>
-/* V14 mobile/readability pass */
+/* V16 mobile/readability pass */
 
 /* First screen: literally only two choices */
 .mode-panel-simple{
@@ -347,7 +347,7 @@ input,select,textarea,button,.btn{max-width:100%}
 </style>
 
 
-<link rel="manifest" href="manifest_v14.webmanifest">
+<link rel="manifest" href="manifest_v16.webmanifest">
 <meta name="theme-color" content="#0b0d10">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -356,7 +356,7 @@ input,select,textarea,button,.btn{max-width:100%}
 
 
 <style>
-/* V14 Add to Home Screen */
+/* V16 Add to Home Screen */
 .a2hs-backdrop{
   position:fixed;
   inset:0;
@@ -455,7 +455,7 @@ input,select,textarea,button,.btn{max-width:100%}
 
 
 <style>
-/* V14: unified private/public Session flow */
+/* V16: unified private/public Session flow */
 .standalone-net-hint{
   margin-top:7px;
   padding:7px 9px;
@@ -498,7 +498,7 @@ input,select,textarea,button,.btn{max-width:100%}
 
 
 <style>
-/* V14 lap-entry modes */
+/* V16 lap-entry modes */
 .lap-mode-tabs{
   display:grid;
   grid-template-columns:repeat(3,minmax(0,1fr));
@@ -569,6 +569,20 @@ input,select,textarea,button,.btn{max-width:100%}
 }
 </style>
 
+
+<style>
+.car-picker-button{width:100%;min-height:52px;display:flex;align-items:center;justify-content:space-between;gap:12px;text-align:left;padding:9px 12px}
+.car-picker-copy{display:flex;min-width:0;flex-direction:column;gap:2px}.car-picker-copy small{color:var(--muted);font-weight:600}.car-picker-copy b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.car-picker-arrow{font-size:24px;color:var(--muted);line-height:1}
+.car-picker-overlay{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.68);display:flex;justify-content:center;align-items:flex-end;padding:14px}
+.car-picker-sheet{width:min(620px,100%);height:min(86vh,760px);background:var(--panel);border:1px solid var(--line);border-radius:18px 18px 12px 12px;box-shadow:0 24px 80px rgba(0,0,0,.45);display:grid;grid-template-rows:auto auto 1fr;overflow:hidden}
+.car-picker-header{display:grid;grid-template-columns:92px 1fr 44px;align-items:center;gap:8px;padding:12px;border-bottom:1px solid var(--line)}.car-picker-header>div{text-align:center;min-width:0}.car-picker-header b{display:block}.car-picker-header small{display:block;color:var(--muted);margin-top:2px}.car-picker-nav,.car-picker-close{padding:8px 9px}.car-picker-close{font-size:18px}
+.car-picker-search-wrap{padding:10px 12px;border-bottom:1px solid var(--line)}.car-picker-search-wrap input{margin:0}.car-picker-body{overflow:auto;padding:10px 12px 18px;-webkit-overflow-scrolling:touch}
+.car-picker-section-title{color:var(--muted);font-size:11px;font-weight:800;letter-spacing:.08em;margin:13px 4px 6px}.car-picker-list{display:grid;gap:7px}.car-picker-item{width:100%;min-height:48px;display:flex;align-items:center;justify-content:space-between;gap:10px;text-align:left;background:#111720}.car-picker-item small{color:var(--muted);display:block;font-weight:500;margin-top:2px}.car-picker-item .right{color:var(--muted);font-size:18px}.car-picker-item.recent{border-color:#35557e}.car-picker-item.other{border-style:dashed}
+.car-picker-custom{display:grid;gap:10px;padding:4px 2px}.car-picker-custom-actions{display:flex;gap:8px}.car-picker-custom-actions button{flex:1}.car-model-cell b{display:block;font-size:12px}.car-model-cell small{display:block;color:var(--muted);margin-top:1px}
+@media(min-width:700px){.car-picker-overlay{align-items:center}.car-picker-sheet{border-radius:18px}}
+@media(max-width:420px){.car-picker-overlay{padding:0;align-items:flex-end}.car-picker-sheet{width:100%;height:90vh;border-radius:18px 18px 0 0;border-left:0;border-right:0;border-bottom:0}.car-picker-header{grid-template-columns:82px 1fr 42px}.car-picker-header,.car-picker-search-wrap,.car-picker-body{padding-left:10px;padding-right:10px}}
+</style>
+
 </head>
 <body>
 
@@ -616,7 +630,7 @@ input,select,textarea,button,.btn{max-width:100%}
 <header>
   <div class="wrap">
     <h1>RC On-road 設定・圈速紀錄</h1>
-    <div class="sub compact-version"><span class="tag">V14</span></div>
+    <div class="sub compact-version"><span class="tag">V16</span></div>
     <nav>
       <button onclick="showView('dashboard')">總覽</button>
       <button onclick="newSession()" class="primary">＋ 新增</button>
@@ -696,7 +710,18 @@ input,select,textarea,button,.btn{max-width:100%}
           </select>
         </div>
         <input id="carType" type="hidden" value="touring">
-        <div><label>車型</label><input id="car" value="Xpress XQ3S" placeholder="例如：Xpress XQ3S / Mugen MRX7"></div>
+        <div class="wide">
+          <label>車型</label>
+          <div id="touringCarPickerWrap">
+            <button id="carPickerButton" type="button" class="car-picker-button" onclick="openCarPicker()">
+              <span class="car-picker-copy"><small id="carPickerBrand">選擇品牌</small><b id="carPickerModel">選擇車型</b></span>
+              <span class="car-picker-arrow">›</span>
+            </button>
+            <input id="carBrand" type="hidden">
+            <input id="carModel" type="hidden">
+          </div>
+          <input id="car" class="hidden" placeholder="例如：Mugen MRX7 / XRAY RX8" oninput="onCarModelChange()">
+        </div>
         <div id="classField">
           <label>組別</label>
           <select id="className" onchange="syncPublicOptionsUI()">
@@ -1025,7 +1050,7 @@ input,select,textarea,button,.btn{max-width:100%}
         <div>
           <h2>台灣 RC 賽道・公開圈速板</h2>
           <div class="muted" style="font-size:13px;line-height:1.55">
-            依賽道分開顯示「最近上車」與排行榜。V14 的榜單資料來自車手主動發布的 Session，
+            依賽道分開顯示「最近上車」與排行榜。V16 的榜單資料來自車手主動發布的 Session，
             屬於自報圈速；未接入場地官方計時器前，不標示為官方紀錄。
           </div>
         </div>
@@ -1043,7 +1068,7 @@ input,select,textarea,button,.btn{max-width:100%}
         <div class="track-board-actions">
           <div>
             <label>組別</label>
-            <select id="trackClassFilter" onchange="renderTrackBoard()">
+            <select id="trackClassFilter" onchange="onTrackClassFilterChange()">
               <option value="">全部組別</option>
               <option value="Modified">Modified</option>
               <option value="13.5 Stock">13.5 Stock</option>
@@ -1054,8 +1079,12 @@ input,select,textarea,button,.btn{max-width:100%}
             </select>
           </div>
           <div>
-            <label>車型搜尋</label>
-            <input id="trackCarFilter" type="search" placeholder="例如 XQ3S / MTC3" oninput="renderTrackBoard()">
+            <label>品牌</label>
+            <select id="trackBrandFilter" onchange="onTrackBrandFilterChange()"><option value="">全部品牌</option></select>
+          </div>
+          <div>
+            <label>車型</label>
+            <select id="trackModelFilter" onchange="renderTrackBoard()"><option value="">全部車型</option></select>
           </div>
           <div>
             <label>排序</label>
@@ -1115,7 +1144,7 @@ input,select,textarea,button,.btn{max-width:100%}
 
 </main>
 
-<footer>Garage V14｜個人練車紀錄・設定比較・台灣 RC 賽道公開圈速板</footer>
+<footer>Garage V16｜個人練車紀錄・設定比較・台灣 RC 賽道公開圈速板</footer>
 
 
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
@@ -1137,7 +1166,7 @@ let personalSetups=[];
 let hiddenMotorHistory=[];
 let hiddenEscHistory=[];
 
-// V14 public track timing board
+// V16 public track timing board
 let currentTrackId='ganyuan';
 let trackEntries=[];
 let trackUnsub=null;
@@ -1416,7 +1445,7 @@ function toggleGoogleAuth(){
     return;
   }
 
-  // V14 Auth Fix：
+  // V16 Auth Fix：
   // Google popup 必須直接由使用者點擊觸發。
   // 不在這裡 await setPersistence，避免 Safari / iOS 把它視為非使用者觸發彈窗而封鎖。
   // LOCAL persistence 已在 Firebase 初始化後背景設定。
@@ -1461,11 +1490,317 @@ auth.onAuthStateChanged(async user=>{
   }
 });
 
+
+const TOURING_CAR_CATALOG={
+'ARC':['R11','R11 2017','R11 2018','R11 2019','R11 MID','R12','R12.1','A10','A10-23','A10-25','A11'],
+'Awesomatix':['A800','A800X','A800XEvo','A800MMX','A800R','A800RR'],
+'Axon':['TC10','TC10/2','TC10/3','TC10/4'],
+'Infinity':['IF14','IF14-2','IF14-2 Team Edition','IF14-2 MID','IF14 Speciale'],
+'Mugen Seiki':['MTC1','MTC2','MTC2R','MTC3'],
+'RC Maker':['SP1','SP2'],
+'Schumacher':['Mi6','Mi6evo','Mi7','Mi8','Mi9','Mi10'],
+'Serpent':['Project 4X','Project 4X EVO','Medius X20',"Medius X20 '21","Medius X20 '23","Medius X20 '24",'Medius X25'],
+'SNRC':['R2-G V2','MTS-T3M','R3-G','R3-C V2','R3-PRO V2','DK6'],
+'Tamiya':['TRF419X','TRF419XR','TRF420','TRF420X','TRF421','TRF421X','TT-02','TA08R'],
+'Team Associated':['TC7.1','TC7.2','TC8'],
+'Xpress':['Arrow AT1S','Arrow AT1','Execute XQ1','Execute XQ1S','Execute XQ2S','Execute XQ10','Execute XQ10R','Execute XQ3S','Execute XQ11','Execute XQ11R','Execute XQ11RR'],
+'XRAY':["T4'17","T4'18","T4'19","T4'20","T4'21","X4'22","X4'23","X4'24","X4'25","X4'26"],
+'Yokomo':['BD8','BD8 2018','BD9 2019','BD10','BD11','BD12','MS1.0','MS2.0','RS2.0']
+};
+const TOURING_BRAND_ORDER=Object.keys(TOURING_CAR_CATALOG);
+const TOURING_BRAND_ALIASES={'Mugen Seiki':['mugen','mugenseiki'],'Team Associated':['teamassociated','associated','rc10'],'RC Maker':['rcmaker'],'XRAY':['xray'],'Xpress':['xpress']};
+let carPickerLayer='brands',carPickerSelectedBrand='',carPickerCustomMode='';
+
+function carKey(v){return String(v||'').toLowerCase().replace(/[^a-z0-9]/g,'')}
+function modelKeys(model){const out=new Set([carKey(model),carKey(String(model||'').replace(/^(Execute|Arrow)\s+/i,''))]);if(model==='TC8')out.add('rc10tc8');if(model==='TT-02')out.add('tt02');return [...out].filter(Boolean)}
+function isCatalogBrand(b){return Object.prototype.hasOwnProperty.call(TOURING_CAR_CATALOG,b)}
+function isCatalogModel(b,m){return isCatalogBrand(b)&&TOURING_CAR_CATALOG[b].includes(m)}
+function formatCarName(b,m){return [String(b||'').trim(),String(m||'').trim()].filter(Boolean).join(' ')}
+function inferCarIdentity(source){
+  if(!source)return {brand:'',model:'',listed:false};
+  if(typeof source==='object'){const b=String(source.carBrand||'').trim(),m=String(source.carModel||'').trim();if(b&&m)return {brand:b,model:m,listed:isCatalogModel(b,m)}}
+  const raw=typeof source==='string'?source:String(source.car||''),rk=carKey(raw);if(!rk)return {brand:'',model:'',listed:false};
+  for(const brand of TOURING_BRAND_ORDER){
+    const brandSeen=[carKey(brand),...(TOURING_BRAND_ALIASES[brand]||[])].some(k=>k&&rk.includes(k));
+    if(!brandSeen)continue;
+    for(const model of [...TOURING_CAR_CATALOG[brand]].sort((a,b)=>carKey(b).length-carKey(a).length)){
+      if(modelKeys(model).some(k=>k&&rk.includes(k)))return {brand,model,listed:true};
+    }
+  }
+  const matches=[];
+  for(const brand of TOURING_BRAND_ORDER)for(const model of TOURING_CAR_CATALOG[brand])if(modelKeys(model).some(k=>k&&rk===k))matches.push({brand,model,listed:true});
+  return matches.length===1?matches[0]:{brand:'',model:'',listed:false};
+}
+function sessionCarIdentity(s){return typeOf(s)==='touring'?inferCarIdentity(s):{brand:'',model:String(s?.car||''),listed:false}}
+function currentCarIdentity(){if(currentType()==='nitro8')return {brand:'',model:(car?.value||'').trim(),listed:false};const b=(carBrand?.value||'').trim(),m=(carModel?.value||'').trim();return {brand:b,model:m,listed:isCatalogModel(b,m)}}
+function sessionMatchesCurrentCar(s){if(typeOf(s)!==currentType())return false;if(currentType()==='nitro8'){const m=(car?.value||'').trim();return !m||!s.car||String(s.car).trim()===m}const c=currentCarIdentity(),x=sessionCarIdentity(s);return !!c.brand&&!!c.model&&x.brand===c.brand&&x.model===c.model}
+function applyTouringIdentity(b,m,notify=true){b=String(b||'').trim();m=String(m||'').trim();carBrand.value=b;carModel.value=m;car.value=formatCarName(b,m);syncCarPickerDisplay();if(b&&m)rememberRecentTouringCar(b,m);if(notify)onCarModelChange()}
+function hydrateTouringIdentity(source,notify=false){const id=inferCarIdentity(source);if(id.brand&&id.model){applyTouringIdentity(id.brand,id.model,notify);return true}carBrand.value='';carModel.value='';if(source?.car!==undefined)car.value=source.car||'';syncCarPickerDisplay();return false}
+function syncCarPickerDisplay(){const b=(carBrand?.value||'').trim(),m=(carModel?.value||'').trim(),raw=(car?.value||'').trim();if(!carPickerBrand||!carPickerModel)return;if(b&&m){carPickerBrand.textContent=b;carPickerModel.textContent=m}else if(raw){carPickerBrand.textContent='未分類車型';carPickerModel.textContent=raw}else{carPickerBrand.textContent='選擇品牌';carPickerModel.textContent='選擇車型'}}
+function carCellHtml(s){if(typeOf(s)==='nitro8')return escHtml(s.car||'—');const id=sessionCarIdentity(s);return id.brand&&id.model?`<span class="car-model-cell"><small>${escHtml(id.brand)}</small><b>${escHtml(id.model)}</b></span>`:`<span class="car-model-cell"><small>未分類</small><b>${escHtml(s.car||'—')}</b></span>`}
+function recentTouringCars(){
+  const seen=new Set(),out=[];
+  try{for(const x of JSON.parse(localStorage.getItem('rc_recent_touring_cars_v15')||'[]')){const b=String(x?.brand||''),m=String(x?.model||''),k=b+'|'+m;if(b&&m&&!seen.has(k)){seen.add(k);out.push({brand:b,model:m})}}}catch(_){}
+  const pool=[...personalSetups,...sessions].filter(s=>!s.deletedAt&&typeOf(s)==='touring'&&(!currentUser||!s.ownerUid||s.ownerUid===currentUser.uid)).sort((a,b)=>(b.updatedAt||b.createdAt||b.date||'').localeCompare(a.updatedAt||a.createdAt||a.date||''));
+  for(const s of pool){const id=sessionCarIdentity(s),k=id.brand+'|'+id.model;if(id.brand&&id.model&&!seen.has(k)){seen.add(k);out.push({brand:id.brand,model:id.model})}if(out.length>=5)break}return out.slice(0,5)
+}
+function rememberRecentTouringCar(b,m){if(!b||!m)return;const arr=recentTouringCars().filter(x=>!(x.brand===b&&x.model===m));arr.unshift({brand:b,model:m});try{localStorage.setItem('rc_recent_touring_cars_v15',JSON.stringify(arr.slice(0,5)))}catch(_){}}
+function pickerEl(id){return document.getElementById(id)}
+
+function openCarPicker(){
+  if(currentType()!=='touring')return;
+  carPickerLayer='brands';
+  carPickerSelectedBrand='';
+  carPickerCustomMode='';
+  const search=pickerEl('carPickerSearch');
+  if(search)search.value='';
+  pickerEl('carPickerModal')?.classList.remove('hidden');
+  renderCarPicker();
+  // iPhone 不自動叫出鍵盤；使用者可以直接從品牌清單點選。
+}
+
+function closeCarPicker(){
+  pickerEl('carPickerModal')?.classList.add('hidden');
+}
+
+function carPickerBackdrop(e){
+  if(e.target===pickerEl('carPickerModal'))closeCarPicker();
+}
+
+function goCarPickerBack(){
+  if(carPickerLayer==='custom' && carPickerSelectedBrand && isCatalogBrand(carPickerSelectedBrand)){
+    carPickerLayer='models';
+  }else{
+    carPickerLayer='brands';
+    carPickerSelectedBrand='';
+  }
+  carPickerCustomMode='';
+  const search=pickerEl('carPickerSearch');
+  if(search)search.value='';
+  renderCarPicker();
+}
+
+function openCarBrand(b){
+  carPickerSelectedBrand=String(b||'');
+  carPickerLayer='models';
+  carPickerCustomMode='';
+  const search=pickerEl('carPickerSearch');
+  if(search)search.value='';
+  renderCarPicker();
+}
+
+function openCustomCar(b=''){
+  carPickerSelectedBrand=String(b||'');
+  carPickerLayer='custom';
+  carPickerCustomMode=b?'model':'brand';
+  const search=pickerEl('carPickerSearch');
+  if(search)search.value='';
+  renderCarPicker();
+}
+
+function chooseCatalogCar(b,m){
+  applyTouringIdentity(b,m,true);
+  closeCarPicker();
+}
+
+function chooseRecentCar(b,m){
+  applyTouringIdentity(b,m,true);
+  closeCarPicker();
+}
+
+function saveCustomCar(){
+  const brandInput=pickerEl('customCarBrand');
+  const modelInput=pickerEl('customCarModel');
+  const b=carPickerCustomMode==='model'
+    ? carPickerSelectedBrand
+    : String(brandInput?.value||'').trim();
+  const m=String(modelInput?.value||'').trim();
+  if(!b||!m){
+    alert('請輸入品牌與車型。');
+    return;
+  }
+  applyTouringIdentity(b,m,true);
+  closeCarPicker();
+}
+
+function bindCarPickerBody(){
+  const body=pickerEl('carPickerBody');
+  if(!body)return;
+  body.onclick=(e)=>{
+    const btn=e.target.closest('[data-picker-action]');
+    if(!btn || !body.contains(btn))return;
+    const action=btn.dataset.pickerAction;
+    const brand=btn.dataset.brand||'';
+    const model=btn.dataset.model||'';
+
+    if(action==='brand')openCarBrand(brand);
+    else if(action==='car')chooseCatalogCar(brand,model);
+    else if(action==='recent')chooseRecentCar(brand,model);
+    else if(action==='custom-brand')openCustomCar('');
+    else if(action==='custom-model')openCustomCar(brand);
+    else if(action==='back')goCarPickerBack();
+    else if(action==='save-custom')saveCustomCar();
+  };
+}
+
+function renderCarPicker(){
+  const body=pickerEl('carPickerBody');
+  const title=pickerEl('carPickerTitle');
+  const subtitle=pickerEl('carPickerSubtitle');
+  const backBtn=pickerEl('carPickerBackBtn');
+  const searchEl=pickerEl('carPickerSearch');
+
+  if(!body||!title||!subtitle||!backBtn)return;
+
+  const q=String(searchEl?.value||'').trim().toLowerCase();
+  backBtn.classList.toggle('hidden',carPickerLayer==='brands');
+
+  if(carPickerLayer==='custom'){
+    title.textContent=carPickerSelectedBrand||'其他品牌';
+    subtitle.textContent='其他／未列出車型';
+    body.innerHTML=`
+      <div class="car-picker-custom">
+        ${carPickerCustomMode==='brand'
+          ? '<div><label>品牌</label><input id="customCarBrand" placeholder="例如 HPI"></div>'
+          : ''}
+        <div><label>車型</label><input id="customCarModel" placeholder="輸入未列出的車型"></div>
+        <div class="notice">其他車型可以正常儲存與上公開榜；公開榜保留實際名稱，分類時歸在「其他／未列出」。</div>
+        <div class="car-picker-custom-actions">
+          <button type="button" data-picker-action="back">返回</button>
+          <button type="button" class="primary" data-picker-action="save-custom">使用這個車型</button>
+        </div>
+      </div>`;
+    bindCarPickerBody();
+    return;
+  }
+
+  if(carPickerLayer==='models'){
+    const brand=carPickerSelectedBrand;
+    const models=(TOURING_CAR_CATALOG[brand]||[])
+      .filter(m=>!q || m.toLowerCase().includes(q));
+
+    title.textContent=brand;
+    subtitle.textContent='選擇車型';
+
+    body.innerHTML=`
+      <div class="car-picker-list">
+        ${models.map(model=>`
+          <button type="button" class="car-picker-item"
+            data-picker-action="car"
+            data-brand="${escHtml(brand)}"
+            data-model="${escHtml(model)}">
+            <span><b>${escHtml(model)}</b></span><span class="right">›</span>
+          </button>`).join('')}
+        <button type="button" class="car-picker-item other"
+          data-picker-action="custom-model"
+          data-brand="${escHtml(brand)}">
+          <span><b>其他／未列出車型</b><small>${escHtml(brand)} 的新車或未收錄型號</small></span>
+          <span class="right">›</span>
+        </button>
+      </div>`;
+    bindCarPickerBody();
+    return;
+  }
+
+  title.textContent='選擇品牌';
+  subtitle.textContent='1/10 電房';
+
+  if(q){
+    const hits=[];
+    for(const brand of TOURING_BRAND_ORDER){
+      if(brand.toLowerCase().includes(q))hits.push({brand,model:''});
+      for(const model of TOURING_CAR_CATALOG[brand]){
+        if(model.toLowerCase().includes(q) || `${brand} ${model}`.toLowerCase().includes(q)){
+          hits.push({brand,model});
+        }
+      }
+    }
+
+    body.innerHTML=hits.length
+      ? `<div class="car-picker-list">
+          ${hits.slice(0,80).map(x=>x.model
+            ? `<button type="button" class="car-picker-item"
+                 data-picker-action="car"
+                 data-brand="${escHtml(x.brand)}"
+                 data-model="${escHtml(x.model)}">
+                 <span><b>${escHtml(x.model)}</b><small>${escHtml(x.brand)}</small></span>
+                 <span class="right">›</span>
+               </button>`
+            : `<button type="button" class="car-picker-item"
+                 data-picker-action="brand"
+                 data-brand="${escHtml(x.brand)}">
+                 <span><b>${escHtml(x.brand)}</b><small>查看全部車型</small></span>
+                 <span class="right">›</span>
+               </button>`
+          ).join('')}
+        </div>`
+      : `<div class="notice">找不到符合的品牌或車型。</div>
+         <div class="car-picker-list" style="margin-top:8px">
+           <button type="button" class="car-picker-item other" data-picker-action="custom-brand">
+             <span><b>其他品牌</b><small>自行輸入品牌與車型</small></span>
+             <span class="right">›</span>
+           </button>
+         </div>`;
+    bindCarPickerBody();
+    return;
+  }
+
+  const groups={};
+  for(const brand of TOURING_BRAND_ORDER){
+    const letter=brand[0].toUpperCase();
+    (groups[letter]||(groups[letter]=[])).push(brand);
+  }
+
+  const recent=recentTouringCars();
+  let html='';
+
+  if(recent.length){
+    html+=`
+      <div class="car-picker-section-title">最近使用</div>
+      <div class="car-picker-list">
+        ${recent.map(x=>`
+          <button type="button" class="car-picker-item recent"
+            data-picker-action="recent"
+            data-brand="${escHtml(x.brand)}"
+            data-model="${escHtml(x.model)}">
+            <span><b>${escHtml(x.model)}</b><small>${escHtml(x.brand)}</small></span>
+            <span class="right">›</span>
+          </button>`).join('')}
+      </div>`;
+  }
+
+  for(const letter of Object.keys(groups).sort()){
+    html+=`
+      <div class="car-picker-section-title">${letter}</div>
+      <div class="car-picker-list">
+        ${groups[letter].map(brand=>`
+          <button type="button" class="car-picker-item"
+            data-picker-action="brand"
+            data-brand="${escHtml(brand)}">
+            <span><b>${escHtml(brand)}</b><small>${TOURING_CAR_CATALOG[brand].length} 個車型</small></span>
+            <span class="right">›</span>
+          </button>`).join('')}
+      </div>`;
+  }
+
+  html+=`
+    <div class="car-picker-section-title">OTHER</div>
+    <div class="car-picker-list">
+      <button type="button" class="car-picker-item other" data-picker-action="custom-brand">
+        <span><b>其他品牌</b><small>自行輸入品牌與車型</small></span>
+        <span class="right">›</span>
+      </button>
+    </div>`;
+
+  body.innerHTML=html;
+  bindCarPickerBody();
+}
+
 const touringFields=['motor','esc','pinion','spur','internalRatio','fdr','tires','additive','warmerTemp','warmerMin','rideF','rideR','downF','downR','toeF','toeR','camberF','camberR','shockF','shockR','diffOil','arb'];
 const nitroFieldsList=['nEngine','nPipe','nManifold','nGlowPlug','nFuel','nNitroPct','nCarbDia','nHeadClearance','nAirTemp','nTrackTemp','nTraction','nLayout','nTrackCondition','nResult','nTransmitter','nReceiver','nSteeringServo','nSteeringExpo','nSteeringSpeed','nThrottleServo','nThrottleExpo','nThrottleSpeed','nClutchType','nClutchShoe','nClutchSpring','nClutchPreload','nClutchGap','nClutchEndplay','nBrakeDisc','nBrakePad','nGear1Pinion','nGear1Spur','nGear2Pinion','nGear2Spur','nShift','nTireBrandF','nTireBrandR','nShoreF','nShoreR','nTireDiaFStart','nTireDiaRStart','nTireDiaFEnd','nTireDiaREnd','nAdditiveF','nAdditiveR','nRideF','nRideR','nDownF','nDownR','nToeF','nToeR','nCamberF','nCamberR','nArbF','nArbR','nSpringF','nSpringR','nShockOilF','nShockOilR','nPistonF','nPistonR','nReboundF','nReboundR','nShockPosF','nShockPosR','nCaster','nWidthF','nWidthR','nWheelbase','nAckermann','nBumpSteer','nUpperArmF','nUpperArmR','nRollCenterF','nRollCenterR','nUprightF','nUprightR','nFrontAxle','nFlex','nBody','nBodyPos','nBumperDist','nWingPos','nWingHeight','nWeight'];
-const fields=['date','track','carType','car','className',...touringFields,...nitroFieldsList,'notes'];
+const fields=['date','track','carType','car','carBrand','carModel','className',...touringFields,...nitroFieldsList,'notes'];
 const nitroCarryFields=nitroFieldsList.filter(f=>!['nAirTemp','nTrackTemp','nTraction','nLayout','nTrackCondition','nResult','nTireDiaFEnd','nTireDiaREnd'].includes(f));
-const carryFields=['track','carType','car','className',...touringFields,...nitroCarryFields];
+const carryFields=['track','carType','car','carBrand','carModel','className',...touringFields,...nitroCarryFields];
 let siteMode=null;
 function openModeGate(){ document.getElementById('modeGate')?.classList.remove('hidden'); }
 function chooseSiteMode(type){
@@ -1493,38 +1828,31 @@ function toggleTypeUI(){
   document.getElementById('touringFields')?.classList.toggle('hidden',nitro);
   document.getElementById('nitroFields')?.classList.toggle('hidden',!nitro);
   document.getElementById('classField')?.classList.toggle('hidden',nitro);
-  const carEl=document.getElementById('car'); if(carEl)carEl.placeholder=nitro?'例如：MRX7 / RX8 / Viper 990':'例如：Xpress XQ3S';
-  if(nitro){ const cf=document.getElementById('className'); if(cf)cf.value='13.5 Open'; setNitroDefaults(false); }
+  document.getElementById('touringCarPickerWrap')?.classList.toggle('hidden',nitro);
+  const carEl=document.getElementById('car');if(carEl){carEl.classList.toggle('hidden',!nitro);carEl.placeholder='例如：Mugen MRX7 / XRAY RX8';}
+  if(nitro){const cf=document.getElementById('className');if(cf)cf.value='13.5 Open';setNitroDefaults(false);}else syncCarPickerDisplay();
   syncPublicOptionsUI();
 }
 function refreshPersonalSuggestions(){
   const type=currentType();
-  const model=(document.getElementById('car')?.value||'').trim();
-  const mine=personalSetups.filter(s=>!s.deletedAt && typeOf(s)===type && (!model || !s.car || s.car===model));
-  const allTouring=personalSetups.filter(s=>!s.deletedAt && typeOf(s)==='touring');
+  const mine=personalSetups.filter(s=>!s.deletedAt&&typeOf(s)===type&&sessionMatchesCurrentCar(s));
+  const allTouring=personalSetups.filter(s=>!s.deletedAt&&typeOf(s)==='touring');
   const unique=(list,key)=>[...new Set(list.map(s=>(s[key]||'').trim()).filter(Boolean))];
-  const motors=unique(allTouring,'motor').filter(v=>!hiddenMotorHistory.includes(v));
-  const escs=unique(allTouring,'esc').filter(v=>!hiddenEscHistory.includes(v));
-  const md=document.getElementById('motorHistory'), ed=document.getElementById('escHistory');
+  const motors=unique(allTouring,'motor').filter(v=>!hiddenMotorHistory.includes(v)),escs=unique(allTouring,'esc').filter(v=>!hiddenEscHistory.includes(v));
+  const md=document.getElementById('motorHistory'),ed=document.getElementById('escHistory');
   if(md)md.innerHTML=motors.map(v=>`<option value="${escHtml(v)}"></option>`).join('');
   if(ed)ed.innerHTML=escs.map(v=>`<option value="${escHtml(v)}"></option>`).join('');
-  const ss=document.getElementById('setupSource'); if(ss){
-    ss.innerHTML='<option value="latest">上一次我的同車種／同車型設定（自動）</option><option value="blank">空白設定</option>'+mine.map(s=>`<option value="${escHtml(String(s.id))}">${escHtml(s.date||'無日期')}｜${escHtml(s.car||'未填車型')}｜${escHtml(s.track||'未填場地')}</option>`).join('');
-  }
+  const ss=document.getElementById('setupSource');if(ss)ss.innerHTML='<option value="latest">上一次我的同車種／同車型設定（自動）</option><option value="blank">空白設定</option>'+mine.map(s=>`<option value="${escHtml(String(s.id))}">${escHtml(s.date||'無日期')}｜${escHtml(s.car||'未填車型')}｜${escHtml(s.track||'未填場地')}</option>`).join('');
   renderManage();
 }
 function onCarModelChange(){
-  const type=currentType(), model=(document.getElementById('car')?.value||'').trim();
-  refreshPersonalSuggestions();
-  const latest=personalSetups.find(s=>!s.deletedAt && typeOf(s)===type && model && s.car===model);
-  const ss=document.getElementById('setupSource'); if(ss)ss.value=latest?'latest':'blank';
-  // 新增紀錄時切換車型，避免上一台車的設定殘留；編輯既有紀錄時則不自動覆蓋。
-  if(currentId || !model)return;
-  const keepCar=model;
-  clearTypeFields(type);
-  document.getElementById('car').value=keepCar;
-  if(latest) copySetupFromSession(latest);
-  else { document.getElementById('car').value=keepCar; if(type==='nitro8')setNitroDefaults(true); }
+  const type=currentType();refreshPersonalSuggestions();let latest=null;
+  if(type==='touring'){const c=currentCarIdentity();if(c.brand&&c.model)latest=personalSetups.find(s=>!s.deletedAt&&typeOf(s)==='touring'&&sessionMatchesCurrentCar(s));}
+  else{const model=(car?.value||'').trim();latest=personalSetups.find(s=>!s.deletedAt&&typeOf(s)===type&&model&&String(s.car||'').trim()===model);}
+  const ss=document.getElementById('setupSource');if(ss)ss.value=latest?'latest':'blank';
+  if(currentId)return;
+  if(type==='touring'){const c=currentCarIdentity();if(!c.brand||!c.model)return;clearTypeFields(type);applyTouringIdentity(c.brand,c.model,false);if(latest)copySetupFromSession(latest);else applyTouringIdentity(c.brand,c.model,false);}
+  else{const model=(car?.value||'').trim();if(!model)return;clearTypeFields(type);car.value=model;if(latest)copySetupFromSession(latest);else{car.value=model;setNitroDefaults(true);}}
   if(ss)ss.value=latest?'latest':'blank';
 }
 function clearTypeFields(type){
@@ -1536,45 +1864,30 @@ function clearTypeFields(type){
 function copySetupFromSession(s){
   if(!s)return;
   const type=typeOf(s);
-  const ct=document.getElementById('carType'); if(ct)ct.value=type;
+  const ct=document.getElementById('carType');if(ct)ct.value=type;
   toggleTypeUI();
-  carryFields.forEach(f=>{const el=document.getElementById(f); if(el && s[f]!==undefined)el.value=s[f]??''});
+  carryFields.forEach(f=>{const el=document.getElementById(f);if(el&&s[f]!==undefined)el.value=s[f]??''});
+  if(type==='touring')hydrateTouringIdentity(s,false);
   if(type==='nitro8')setNitroDefaults(false);
-  updateNitroTireWear();
-  refreshPersonalSuggestions();
+  updateNitroTireWear();refreshPersonalSuggestions();
 }
 function applySelectedSetup(){
   if(!currentUser){alert('請先登入，才能讀取你自己的歷史設定。');return;}
-  const type=currentType();
-  const val=document.getElementById('setupSource').value;
+  const type=currentType(),val=setupSource.value;
   if(val==='blank'){
-    clearTypeFields(type);
-    if(type==='touring'){car.value='Xpress XQ3S';internalRatio.value='1.90';}
-    else if(car.value==='Xpress XQ3S'||!car.value)car.value='';
+    if(type==='touring'){const c=currentCarIdentity();clearTypeFields(type);if(c.brand&&c.model)applyTouringIdentity(c.brand,c.model,false);}
+    else{const keep=(car?.value||'').trim();clearTypeFields(type);car.value=keep;}
     return;
   }
-  const model=(document.getElementById('car')?.value||'').trim();
-  const mine=personalSetups.filter(s=>!s.deletedAt && typeOf(s)===type && (!model || !s.car || s.car===model));
+  const mine=personalSetups.filter(s=>!s.deletedAt&&typeOf(s)===type&&sessionMatchesCurrentCar(s));
   const chosen=val==='latest'?mine[0]:mine.find(x=>String(x.id)===String(val));
-  if(!chosen){alert('目前還沒有你自己的同車種／同車型歷史設定。');return;}
-  copySetupFromSession(chosen);
+  if(!chosen){alert('目前還沒有你自己的同車種／同車型歷史設定。');return;}copySetupFromSession(chosen);
 }
 function onCarTypeChange(autoApply=false){
-  const type=currentType();
-  toggleTypeUI();
-  refreshPersonalSuggestions();
-  if(!autoApply || currentId)return;
-  clearTypeFields(type);
-  if(type==='touring'){
-    if(!car.value||car.value==='1/8 Nitro On-road')car.value='Xpress XQ3S';
-    const latest=personalSetups.find(s=>!s.deletedAt && typeOf(s)==='touring');
-    if(latest)copySetupFromSession(latest);
-  }else{
-    if(car.value==='Xpress XQ3S')car.value='';
-    const latest=personalSetups.find(s=>!s.deletedAt && typeOf(s)==='nitro8');
-    if(latest)copySetupFromSession(latest); else setNitroDefaults(true);
-  }
-  const ss=document.getElementById('setupSource');if(ss)ss.value=personalSetups.some(s=>!s.deletedAt&&typeOf(s)===type)?'latest':'blank';
+  const type=currentType();toggleTypeUI();refreshPersonalSuggestions();if(!autoApply||currentId)return;clearTypeFields(type);
+  if(type==='touring'){const latest=personalSetups.find(s=>!s.deletedAt&&typeOf(s)==='touring');if(latest)copySetupFromSession(latest);else applyTouringIdentity('Xpress','Execute XQ3S',false);}
+  else{car.value='';carBrand.value='';carModel.value='';const latest=personalSetups.find(s=>!s.deletedAt&&typeOf(s)==='nitro8');if(latest)copySetupFromSession(latest);else setNitroDefaults(true);}
+  const ss=document.getElementById('setupSource');if(ss)ss.value=personalSetups.some(s=>!s.deletedAt&&typeOf(s)===type&&sessionMatchesCurrentCar(s))?'latest':'blank';
 }
 function updateNitroTireWear(){
   const out=document.getElementById('nitroWear');if(!out)return;
@@ -1817,7 +2130,9 @@ function newSession(){
   if(pub)pub.checked=false;if(share){share.checked=false;share.disabled=true;}
   fields.forEach(f=>{const el=document.getElementById(f);if(el)el.value='';});
   const type=siteMode||'touring';
-  carType.value=type; car.value=type==='touring'?'Xpress XQ3S':''; internalRatio.value='1.90';
+  carType.value=type;car.value='';carBrand.value='';carModel.value='';
+  if(type==='touring')applyTouringIdentity('Xpress','Execute XQ3S',false);
+  internalRatio.value='1.90';
   date.value=new Date().toISOString().slice(0,10);
   setNitroDefaults(true); toggleTypeUI();
   lapText.value='';
@@ -1827,7 +2142,7 @@ function newSession(){
   lapTimerSource='manual';
   setLapInputMode('full',true);
   updateLapStats(); refreshPersonalSuggestions();
-  const latest=personalSetups.find(s=>!s.deletedAt && typeOf(s)===type);
+  const latest=personalSetups.find(s=>!s.deletedAt && typeOf(s)===type && sessionMatchesCurrentCar(s));
   if(latest) copySetupFromSession(latest);
   else { carType.value=type; toggleTypeUI(); if(type==='nitro8')setNitroDefaults(true); }
   document.getElementById('setupSource').value=latest?'latest':'blank';
@@ -1871,7 +2186,11 @@ async function saveSession(){
   };
   fields.forEach(f=>{const el=document.getElementById(f);obj[f]=el?el.value:'';});
   obj.carType=siteMode||obj.carType||'touring';
-
+  if(obj.carType==='touring'){
+    obj.carBrand=String(obj.carBrand||'').trim();obj.carModel=String(obj.carModel||'').trim();
+    if(!obj.carBrand||!obj.carModel){alert('請先選擇 1/10 電房的品牌與車型。');return;}
+    obj.car=formatCarName(obj.carBrand,obj.carModel);
+  }else{obj.carBrand='';obj.carModel='';obj.car=String(obj.car||'').trim();}
   // 不同車種專用欄位不交叉寫入；1/8 公開組別固定由公開榜邏輯指定。
   if(obj.carType==='nitro8'){ obj.className=''; touringFields.forEach(f=>obj[f]=''); }
   else nitroFieldsList.forEach(f=>obj[f]='');
@@ -1934,7 +2253,7 @@ function renderDashboard(){
       <td>${escHtml(s.date||'—')}</td>
       <td class="creator">${escHtml(s.ownerName||'舊資料')}</td>
       <td>${escHtml(s.track||'—')}</td>
-      <td>${escHtml(s.car||'—')}</td>
+      <td>${carCellHtml(s)}</td>
       <td>${powerSummary(s)}</td>
       <td>${tireSummary(s)}</td>
       <td class="good">${fmt(st.best)}</td>
@@ -1998,7 +2317,7 @@ function editSession(id){
   currentId=id;
   editorTitle.textContent='編輯練車紀錄';
   fields.forEach(f=>{const el=document.getElementById(f);if(el)el.value=s[f]??'';});
-  carType.value=typeOf(s);toggleTypeUI();refreshPersonalSuggestions();updateNitroTireWear();
+  carType.value=typeOf(s);if(typeOf(s)==='touring')hydrateTouringIdentity(s,false);toggleTypeUI();refreshPersonalSuggestions();updateNitroTireWear();
   const pub=document.getElementById('publishPublic'),share=document.getElementById('shareSetupPublic');
   if(pub)pub.checked=s.publishPublic===true;
   if(share){share.checked=s.publishPublic===true && s.shareSetupPublic===true;share.disabled=!pub?.checked;}
@@ -2159,7 +2478,7 @@ function renderManage(){
   escManageList.innerHTML=(escs.map(v=>`<div class="manage-item"><div class="meta"><b>${escHtml(v)}</b></div>${hiddenEscHistory.includes(v)?`<button onclick='unhideHistory("esc",${JSON.stringify(v)})'>恢復建議</button>`:`<button class="danger" onclick='hideHistory("esc",${JSON.stringify(v)})'>從建議移除</button>`}</div>`).join('')||'<span class="muted">尚無 ESC 歷史。</span>');
 }
 
-// ---------------- V14 Track Hub / Public Timing Board ----------------
+// ---------------- V16 Track Hub / Public Timing Board ----------------
 const TRACK_CATALOG=[
   {
     id:'ganyuan',
@@ -2283,6 +2602,8 @@ async function syncSavedSessionToPublic(s){
     className,
     carType:typeOf(s),
     car:s.car||'',
+    carBrand:typeOf(s)==='touring'?(sessionCarIdentity(s).brand||''):'',
+    carModel:typeOf(s)==='touring'?(sessionCarIdentity(s).model||''):'',
     date:s.date||'',
     bestLap:st.best,
     best3:s.lapInputMode==='best'?null:st.best3,
@@ -2351,7 +2672,7 @@ function renderTrackCatalog(){
   const box=document.getElementById('trackCards'); if(!box)return;
   box.innerHTML=TRACK_CATALOG.map(t=>`
     <div class="track-card ${t.id===currentTrackId?'active':''} ${t.enabled?'':'track-unsupported'}">
-      <button onclick="${t.enabled?`selectTrack('${t.id}')`:`alert('這個場地先收錄資訊；目前 Garage V14 的公開圈速榜先支援 On-road Session。')`}">
+      <button onclick="${t.enabled?`selectTrack('${t.id}')`:`alert('這個場地先收錄資訊；目前 Garage V16 的公開圈速榜先支援 On-road Session。')`}">
         <b>${escHtml(t.name)}</b>
         <small>${escHtml(t.region)}｜${escHtml(t.surface)}</small>
         <div class="track-meta">
@@ -2364,6 +2685,7 @@ function renderTrackCatalog(){
 }
 
 function renderTrackPage(){
+  rebuildTrackCarFilters();
   renderTrackCatalog();
   if(!trackUnsub) selectTrack(currentTrackId);
   else {
@@ -2399,25 +2721,36 @@ function selectTrack(id){
       renderTrackBoard();
     },err=>{
       console.error('track board load',err);
-      document.getElementById('trackLoadStatus').textContent='排行榜讀取失敗。若這是第一次使用 V14，請先更新 Firestore Rules。';
+      document.getElementById('trackLoadStatus').textContent='排行榜讀取失敗。若這是第一次使用 V16，請先更新 Firestore Rules。';
       trackEntries=[];
       renderTrackBoard();
     });
 }
 
 function rebuildTrackClassFilter(){
-  // V14 組別固定為 PUBLIC_CLASSES；不再依已上傳資料動態增加其他組別。
+  // V16 組別固定為 PUBLIC_CLASSES；不再依已上傳資料動態增加其他組別。
 }
 
+function publicCarIdentity(e){return e?.carType==='nitro8'?{brand:'',model:String(e?.car||''),listed:false}:inferCarIdentity(e)}
+function rebuildTrackCarFilters(){
+  const b=document.getElementById('trackBrandFilter'),m=document.getElementById('trackModelFilter');if(!b||!m)return;const keep=b.value;
+  b.innerHTML='<option value="">全部品牌</option>'+TOURING_BRAND_ORDER.map(x=>`<option value="${escHtml(x)}">${escHtml(x)}</option>`).join('')+'<option value="__other__">其他品牌</option>';
+  if([...b.options].some(o=>o.value===keep))b.value=keep;rebuildTrackModelFilter();
+}
+function rebuildTrackModelFilter(){
+  const b=document.getElementById('trackBrandFilter'),m=document.getElementById('trackModelFilter');if(!b||!m)return;const brand=b.value,keep=m.value;let html='<option value="">全部車型</option>';
+  if(brand&&brand!=='__other__')html+=(TOURING_CAR_CATALOG[brand]||[]).map(x=>`<option value="${escHtml(x)}">${escHtml(x)}</option>`).join('')+'<option value="__other__">其他／未列出車型</option>';
+  else if(brand==='__other__')html+='<option value="__other__">其他／未列出車型</option>';
+  m.innerHTML=html;if([...m.options].some(o=>o.value===keep))m.value=keep;
+}
+function onTrackBrandFilterChange(){rebuildTrackModelFilter();renderTrackBoard()}
+function onTrackClassFilterChange(){const nitro=trackClassFilter?.value==='1/8 油平跑';if(trackBrandFilter){trackBrandFilter.disabled=nitro;if(nitro)trackBrandFilter.value='';}if(trackModelFilter){trackModelFilter.disabled=nitro;if(nitro)trackModelFilter.value='';}if(!nitro)rebuildTrackModelFilter();renderTrackBoard()}
 function filteredTrackEntries(){
-  const f=document.getElementById('trackClassFilter')?.value||'';
-  const carQ=(document.getElementById('trackCarFilter')?.value||'').trim().toLowerCase();
-  const sharedOnly=!!document.getElementById('trackSharedSetupOnly')?.checked;
+  const f=trackClassFilter?.value||'',bf=trackBrandFilter?.value||'',mf=trackModelFilter?.value||'',shared=!!trackSharedSetupOnly?.checked;
   return trackEntries.filter(e=>{
-    if(!PUBLIC_CLASSES.includes(e.className))return false;
-    if(f && e.className!==f)return false;
-    if(carQ && !(e.car||'').toLowerCase().includes(carQ))return false;
-    if(sharedOnly && e.shareSetup!==true)return false;
+    if(!PUBLIC_CLASSES.includes(e.className)||f&&e.className!==f||shared&&e.shareSetup!==true)return false;
+    if((bf||mf)&&e.carType==='nitro8')return false;
+    if(bf||mf){const id=publicCarIdentity(e),known=isCatalogBrand(id.brand);if(bf==='__other__'){if(known)return false}else if(bf&&id.brand!==bf)return false;if(mf){if(mf==='__other__'){if(id.brand&&isCatalogModel(id.brand,id.model))return false}else if(id.model!==mf)return false}}
     return true;
   });
 }
@@ -2467,7 +2800,7 @@ function renderTrackBoard(){
       <td class="track-rank">${i+1}</td>
       <td>${escHtml(e.driverName||'車手')}</td>
       <td>${escHtml(e.className||'未分類')}</td>
-      <td>${escHtml(e.car||'—')}</td>
+      <td>${carCellHtml(e)}</td>
       <td class="track-best">${finiteMetric(e.bestLap)?Number(e.bestLap).toFixed(3)+' s':'—'}</td>
       <td class="track-time">${finiteMetric(e.best3)?Number(e.best3).toFixed(3)+' s':'—'}</td>
       <td><span class="source-pill">${escHtml(lapDataLabel(e.lapDataMode||'full',e.timingSource||'manual'))}</span></td>
@@ -2484,7 +2817,7 @@ function renderTrackBoard(){
       <td>${escHtml((e.createdAt||e.date||'').slice(0,16).replace('T',' '))}</td>
       <td>${escHtml(e.driverName||'車手')}</td>
       <td>${escHtml(e.className||'未分類')}</td>
-      <td>${escHtml(e.car||'—')}</td>
+      <td>${carCellHtml(e)}</td>
       <td class="track-best">${finiteMetric(e.bestLap)?Number(e.bestLap).toFixed(3)+' s':'—'}</td>
       <td class="track-time">${finiteMetric(e.avgLap)?Number(e.avgLap).toFixed(3)+' s':'—'}</td>
       <td>${e.lapDataMode==='best'?'—':(Array.isArray(e.laps)?e.laps.length:(e.lapCount||0))}</td>
@@ -2641,7 +2974,7 @@ renderDashboard();
 </script>
 <script>
 
-// ---------------- V14 Add to Home Screen ----------------
+// ---------------- V16 Add to Home Screen ----------------
 let deferredInstallPrompt=null;
 
 function isStandaloneMode(){
@@ -2776,10 +3109,23 @@ window.addEventListener('appinstalled',()=>{
 // It deliberately does not cache app HTML, so version testing will not be trapped on an old copy.
 if('serviceWorker' in navigator){
   window.addEventListener('load',()=>{
-    navigator.serviceWorker.register('./sw_v14.js').catch(err=>console.warn('SW register failed',err));
+    navigator.serviceWorker.register('./sw_v16.js').catch(err=>console.warn('SW register failed',err));
   });
 }
 
 </script>
+
+<div id="carPickerModal" class="car-picker-overlay hidden" onclick="carPickerBackdrop(event)">
+  <div class="car-picker-sheet" role="dialog" aria-modal="true" aria-labelledby="carPickerTitle">
+    <div class="car-picker-header">
+      <button id="carPickerBackBtn" type="button" class="car-picker-nav hidden" onclick="goCarPickerBack()">‹ 品牌</button>
+      <div><b id="carPickerTitle">選擇品牌</b><small id="carPickerSubtitle">1/10 電房</small></div>
+      <button type="button" class="car-picker-close" onclick="closeCarPicker()" aria-label="關閉">✕</button>
+    </div>
+    <div class="car-picker-search-wrap"><input id="carPickerSearch" type="search" placeholder="搜尋品牌或車型" oninput="renderCarPicker()"></div>
+    <div id="carPickerBody" class="car-picker-body"></div>
+  </div>
+</div>
+
 </body>
 </html>
