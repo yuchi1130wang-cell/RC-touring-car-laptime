@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>RC On-road 設定・圈速紀錄 V17</title>
+<title>1/10 RC Lap Time · 圈速紀錄 V18</title>
 <style>
 :root{
   --bg:#0b0d10;--panel:#141820;--panel2:#1b202a;--text:#eef2f7;--muted:#9aa6b2;
@@ -122,6 +122,22 @@ details.advanced summary{cursor:pointer;font-weight:700;color:#dce7f6}
   #editor input,#editor select,#editor textarea{padding:7px 8px}
   #editor .optional-note{font-size:11px;margin-top:5px}
 }
+
+/* V19 landing refresh */
+.landing-bar{display:none!important}
+.landing-main{grid-template-columns:minmax(0,1.02fr) minmax(0,.98fr)!important;gap:10px!important;padding-top:54px!important}
+.landing-text h2{margin:0 0 24px!important}
+.landing-greeting{font-size:clamp(24px,2.1vw,31px)!important;margin:0 0 12px!important}
+.landing-message{font-size:17px!important;line-height:1.75!important;max-width:520px!important;margin:0 0 28px!important;color:#b7c9da!important}
+.landing-mycar{margin-top:26px!important}
+.landing-illustration{height:min(52vw,540px)!important;min-height:350px!important}
+.landing-grid{inset:0!important;transform:none!important;opacity:.42!important}
+.landing-orbit,.landing-track-line,.landing-timing,.landing-caption{display:none!important}
+.landing-car{position:absolute;width:100%;max-width:760px;top:12%;left:-1%;filter:drop-shadow(0 18px 40px #04101f)}
+.landing-foot{padding-top:20px!important}
+.landing-foot button{font-size:26px;font-weight:800;letter-spacing:-.04em}
+@media (max-width:900px){.landing-main{grid-template-columns:1fr!important;padding-top:34px!important}.landing-illustration{order:2;height:320px!important;min-height:320px!important;margin-top:6px}.landing-car{top:0;left:-5%;width:110%}.landing-foot{padding-top:14px!important}.landing-foot button{font-size:18px}}
+
 </style>
 <meta name="theme-color" content="#0b0d10">
 
@@ -144,11 +160,27 @@ details.advanced summary{cursor:pointer;font-weight:700;color:#dce7f6}
 .auth-help-card{width:min(520px,100%);background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px}
 .auth-help-card h3{font-size:20px;margin:0 0 8px}.auth-help-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
 .auth-help-actions button{flex:1;min-width:120px}
+
+/* V19 landing refresh */
+.landing-bar{display:none!important}
+.landing-main{grid-template-columns:minmax(0,1.02fr) minmax(0,.98fr)!important;gap:10px!important;padding-top:54px!important}
+.landing-text h2{margin:0 0 24px!important}
+.landing-greeting{font-size:clamp(24px,2.1vw,31px)!important;margin:0 0 12px!important}
+.landing-message{font-size:17px!important;line-height:1.75!important;max-width:520px!important;margin:0 0 28px!important;color:#b7c9da!important}
+.landing-mycar{margin-top:26px!important}
+.landing-illustration{height:min(52vw,540px)!important;min-height:350px!important}
+.landing-grid{inset:0!important;transform:none!important;opacity:.42!important}
+.landing-orbit,.landing-track-line,.landing-timing,.landing-caption{display:none!important}
+.landing-car{position:absolute;width:100%;max-width:760px;top:12%;left:-1%;filter:drop-shadow(0 18px 40px #04101f)}
+.landing-foot{padding-top:20px!important}
+.landing-foot button{font-size:26px;font-weight:800;letter-spacing:-.04em}
+@media (max-width:900px){.landing-main{grid-template-columns:1fr!important;padding-top:34px!important}.landing-illustration{order:2;height:320px!important;min-height:320px!important;margin-top:6px}.landing-car{top:0;left:-5%;width:110%}.landing-foot{padding-top:14px!important}.landing-foot button{font-size:18px}}
+
 </style>
 
 
 <style>
-/* V17 Track Hub / public timing board */
+/* V18 Track Hub / public timing board */
 .track-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
 .track-card{border:1px solid var(--line);background:#0e1218;border-radius:12px;padding:12px;min-width:0}
 .track-card.active{border-color:var(--accent);background:#152035}
@@ -180,11 +212,27 @@ details.advanced summary{cursor:pointer;font-weight:700;color:#dce7f6}
   .track-board-actions>div{flex:1;min-width:145px}
   .track-board-actions select{width:100%;min-width:0}
 }
+
+/* V19 landing refresh */
+.landing-bar{display:none!important}
+.landing-main{grid-template-columns:minmax(0,1.02fr) minmax(0,.98fr)!important;gap:10px!important;padding-top:54px!important}
+.landing-text h2{margin:0 0 24px!important}
+.landing-greeting{font-size:clamp(24px,2.1vw,31px)!important;margin:0 0 12px!important}
+.landing-message{font-size:17px!important;line-height:1.75!important;max-width:520px!important;margin:0 0 28px!important;color:#b7c9da!important}
+.landing-mycar{margin-top:26px!important}
+.landing-illustration{height:min(52vw,540px)!important;min-height:350px!important}
+.landing-grid{inset:0!important;transform:none!important;opacity:.42!important}
+.landing-orbit,.landing-track-line,.landing-timing,.landing-caption{display:none!important}
+.landing-car{position:absolute;width:100%;max-width:760px;top:12%;left:-1%;filter:drop-shadow(0 18px 40px #04101f)}
+.landing-foot{padding-top:20px!important}
+.landing-foot button{font-size:26px;font-weight:800;letter-spacing:-.04em}
+@media (max-width:900px){.landing-main{grid-template-columns:1fr!important;padding-top:34px!important}.landing-illustration{order:2;height:320px!important;min-height:320px!important;margin-top:6px}.landing-car{top:0;left:-5%;width:110%}.landing-foot{padding-top:14px!important}.landing-foot button{font-size:18px}}
+
 </style>
 
 
 <style>
-/* V17 mobile/readability pass */
+/* V18 mobile/readability pass */
 
 /* First screen: literally only two choices */
 .mode-panel-simple{
@@ -344,10 +392,26 @@ input,select,textarea,button,.btn{max-width:100%}
   .track-board-actions{grid-template-columns:1fr}
   .track-detail .formgrid{grid-template-columns:1fr}
 }
+
+/* V19 landing refresh */
+.landing-bar{display:none!important}
+.landing-main{grid-template-columns:minmax(0,1.02fr) minmax(0,.98fr)!important;gap:10px!important;padding-top:54px!important}
+.landing-text h2{margin:0 0 24px!important}
+.landing-greeting{font-size:clamp(24px,2.1vw,31px)!important;margin:0 0 12px!important}
+.landing-message{font-size:17px!important;line-height:1.75!important;max-width:520px!important;margin:0 0 28px!important;color:#b7c9da!important}
+.landing-mycar{margin-top:26px!important}
+.landing-illustration{height:min(52vw,540px)!important;min-height:350px!important}
+.landing-grid{inset:0!important;transform:none!important;opacity:.42!important}
+.landing-orbit,.landing-track-line,.landing-timing,.landing-caption{display:none!important}
+.landing-car{position:absolute;width:100%;max-width:760px;top:12%;left:-1%;filter:drop-shadow(0 18px 40px #04101f)}
+.landing-foot{padding-top:20px!important}
+.landing-foot button{font-size:26px;font-weight:800;letter-spacing:-.04em}
+@media (max-width:900px){.landing-main{grid-template-columns:1fr!important;padding-top:34px!important}.landing-illustration{order:2;height:320px!important;min-height:320px!important;margin-top:6px}.landing-car{top:0;left:-5%;width:110%}.landing-foot{padding-top:14px!important}.landing-foot button{font-size:18px}}
+
 </style>
 
 
-<link rel="manifest" href="manifest_v17.webmanifest">
+<link rel="manifest" href="manifest_v18.webmanifest">
 <meta name="theme-color" content="#0b0d10">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -356,7 +420,7 @@ input,select,textarea,button,.btn{max-width:100%}
 
 
 <style>
-/* V17 Add to Home Screen */
+/* V18 Add to Home Screen */
 .a2hs-backdrop{
   position:fixed;
   inset:0;
@@ -451,11 +515,27 @@ input,select,textarea,button,.btn{max-width:100%}
   .a2hs-icon{width:58px;height:58px;flex-basis:58px}
   .a2hs-step-text{font-size:15px}
 }
+
+/* V19 landing refresh */
+.landing-bar{display:none!important}
+.landing-main{grid-template-columns:minmax(0,1.02fr) minmax(0,.98fr)!important;gap:10px!important;padding-top:54px!important}
+.landing-text h2{margin:0 0 24px!important}
+.landing-greeting{font-size:clamp(24px,2.1vw,31px)!important;margin:0 0 12px!important}
+.landing-message{font-size:17px!important;line-height:1.75!important;max-width:520px!important;margin:0 0 28px!important;color:#b7c9da!important}
+.landing-mycar{margin-top:26px!important}
+.landing-illustration{height:min(52vw,540px)!important;min-height:350px!important}
+.landing-grid{inset:0!important;transform:none!important;opacity:.42!important}
+.landing-orbit,.landing-track-line,.landing-timing,.landing-caption{display:none!important}
+.landing-car{position:absolute;width:100%;max-width:760px;top:12%;left:-1%;filter:drop-shadow(0 18px 40px #04101f)}
+.landing-foot{padding-top:20px!important}
+.landing-foot button{font-size:26px;font-weight:800;letter-spacing:-.04em}
+@media (max-width:900px){.landing-main{grid-template-columns:1fr!important;padding-top:34px!important}.landing-illustration{order:2;height:320px!important;min-height:320px!important;margin-top:6px}.landing-car{top:0;left:-5%;width:110%}.landing-foot{padding-top:14px!important}.landing-foot button{font-size:18px}}
+
 </style>
 
 
 <style>
-/* V17: unified private/public Session flow */
+/* V18: unified private/public Session flow */
 .standalone-net-hint{
   margin-top:7px;
   padding:7px 9px;
@@ -494,11 +574,27 @@ input,select,textarea,button,.btn{max-width:100%}
   .standalone-net-hint{font-size:11px}
   .public-sync-box{padding:10px}
 }
+
+/* V19 landing refresh */
+.landing-bar{display:none!important}
+.landing-main{grid-template-columns:minmax(0,1.02fr) minmax(0,.98fr)!important;gap:10px!important;padding-top:54px!important}
+.landing-text h2{margin:0 0 24px!important}
+.landing-greeting{font-size:clamp(24px,2.1vw,31px)!important;margin:0 0 12px!important}
+.landing-message{font-size:17px!important;line-height:1.75!important;max-width:520px!important;margin:0 0 28px!important;color:#b7c9da!important}
+.landing-mycar{margin-top:26px!important}
+.landing-illustration{height:min(52vw,540px)!important;min-height:350px!important}
+.landing-grid{inset:0!important;transform:none!important;opacity:.42!important}
+.landing-orbit,.landing-track-line,.landing-timing,.landing-caption{display:none!important}
+.landing-car{position:absolute;width:100%;max-width:760px;top:12%;left:-1%;filter:drop-shadow(0 18px 40px #04101f)}
+.landing-foot{padding-top:20px!important}
+.landing-foot button{font-size:26px;font-weight:800;letter-spacing:-.04em}
+@media (max-width:900px){.landing-main{grid-template-columns:1fr!important;padding-top:34px!important}.landing-illustration{order:2;height:320px!important;min-height:320px!important;margin-top:6px}.landing-car{top:0;left:-5%;width:110%}.landing-foot{padding-top:14px!important}.landing-foot button{font-size:18px}}
+
 </style>
 
 
 <style>
-/* V17 lap-entry modes */
+/* V18 lap-entry modes */
 .lap-mode-tabs{
   display:grid;
   grid-template-columns:repeat(3,minmax(0,1fr));
@@ -567,6 +663,22 @@ input,select,textarea,button,.btn{max-width:100%}
   .lap-mode-tabs button{font-size:12px;padding:9px 3px}
   .best-lap-entry{grid-template-columns:1fr}
 }
+
+/* V19 landing refresh */
+.landing-bar{display:none!important}
+.landing-main{grid-template-columns:minmax(0,1.02fr) minmax(0,.98fr)!important;gap:10px!important;padding-top:54px!important}
+.landing-text h2{margin:0 0 24px!important}
+.landing-greeting{font-size:clamp(24px,2.1vw,31px)!important;margin:0 0 12px!important}
+.landing-message{font-size:17px!important;line-height:1.75!important;max-width:520px!important;margin:0 0 28px!important;color:#b7c9da!important}
+.landing-mycar{margin-top:26px!important}
+.landing-illustration{height:min(52vw,540px)!important;min-height:350px!important}
+.landing-grid{inset:0!important;transform:none!important;opacity:.42!important}
+.landing-orbit,.landing-track-line,.landing-timing,.landing-caption{display:none!important}
+.landing-car{position:absolute;width:100%;max-width:760px;top:12%;left:-1%;filter:drop-shadow(0 18px 40px #04101f)}
+.landing-foot{padding-top:20px!important}
+.landing-foot button{font-size:26px;font-weight:800;letter-spacing:-.04em}
+@media (max-width:900px){.landing-main{grid-template-columns:1fr!important;padding-top:34px!important}.landing-illustration{order:2;height:320px!important;min-height:320px!important;margin-top:6px}.landing-car{top:0;left:-5%;width:110%}.landing-foot{padding-top:14px!important}.landing-foot button{font-size:18px}}
+
 </style>
 
 
@@ -581,6 +693,22 @@ input,select,textarea,button,.btn{max-width:100%}
 .car-picker-custom{display:grid;gap:10px;padding:4px 2px}.car-picker-custom-actions{display:flex;gap:8px}.car-picker-custom-actions button{flex:1}.car-model-cell b{display:block;font-size:12px}.car-model-cell small{display:block;color:var(--muted);margin-top:1px}
 @media(min-width:700px){.car-picker-overlay{align-items:center}.car-picker-sheet{border-radius:18px}}
 @media(max-width:420px){.car-picker-overlay{padding:0;align-items:flex-end}.car-picker-sheet{width:100%;height:90vh;border-radius:18px 18px 0 0;border-left:0;border-right:0;border-bottom:0}.car-picker-header{grid-template-columns:82px 1fr 42px}.car-picker-header,.car-picker-search-wrap,.car-picker-body{padding-left:10px;padding-right:10px}}
+
+/* V19 landing refresh */
+.landing-bar{display:none!important}
+.landing-main{grid-template-columns:minmax(0,1.02fr) minmax(0,.98fr)!important;gap:10px!important;padding-top:54px!important}
+.landing-text h2{margin:0 0 24px!important}
+.landing-greeting{font-size:clamp(24px,2.1vw,31px)!important;margin:0 0 12px!important}
+.landing-message{font-size:17px!important;line-height:1.75!important;max-width:520px!important;margin:0 0 28px!important;color:#b7c9da!important}
+.landing-mycar{margin-top:26px!important}
+.landing-illustration{height:min(52vw,540px)!important;min-height:350px!important}
+.landing-grid{inset:0!important;transform:none!important;opacity:.42!important}
+.landing-orbit,.landing-track-line,.landing-timing,.landing-caption{display:none!important}
+.landing-car{position:absolute;width:100%;max-width:760px;top:12%;left:-1%;filter:drop-shadow(0 18px 40px #04101f)}
+.landing-foot{padding-top:20px!important}
+.landing-foot button{font-size:26px;font-weight:800;letter-spacing:-.04em}
+@media (max-width:900px){.landing-main{grid-template-columns:1fr!important;padding-top:34px!important}.landing-illustration{order:2;height:320px!important;min-height:320px!important;margin-top:6px}.landing-car{top:0;left:-5%;width:110%}.landing-foot{padding-top:14px!important}.landing-foot button{font-size:18px}}
+
 </style>
 
 <style>
@@ -589,7 +717,76 @@ body.quick-collapsed #touringFields,body.quick-collapsed #nitroFields{display:no
 .draft-banner small{display:block;margin-top:4px;opacity:.8}.draft-actions{display:flex;gap:7px;flex-wrap:wrap}
 .trend-history{display:grid;gap:9px}.trend-entry{padding:12px;border-radius:11px;background:#101720;border:1px solid var(--line);display:grid;gap:7px}.trend-entry .change-list{margin:3px 0;padding-left:18px}.trend-meta{color:var(--muted);font-size:12px}.trend-kpis{grid-template-columns:repeat(4,minmax(0,1fr))}
 @media(max-width:650px){.trend-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.draft-banner{display:block}.draft-actions{margin-top:9px}}
+
+/* V19 landing refresh */
+.landing-bar{display:none!important}
+.landing-main{grid-template-columns:minmax(0,1.02fr) minmax(0,.98fr)!important;gap:10px!important;padding-top:54px!important}
+.landing-text h2{margin:0 0 24px!important}
+.landing-greeting{font-size:clamp(24px,2.1vw,31px)!important;margin:0 0 12px!important}
+.landing-message{font-size:17px!important;line-height:1.75!important;max-width:520px!important;margin:0 0 28px!important;color:#b7c9da!important}
+.landing-mycar{margin-top:26px!important}
+.landing-illustration{height:min(52vw,540px)!important;min-height:350px!important}
+.landing-grid{inset:0!important;transform:none!important;opacity:.42!important}
+.landing-orbit,.landing-track-line,.landing-timing,.landing-caption{display:none!important}
+.landing-car{position:absolute;width:100%;max-width:760px;top:12%;left:-1%;filter:drop-shadow(0 18px 40px #04101f)}
+.landing-foot{padding-top:20px!important}
+.landing-foot button{font-size:26px;font-weight:800;letter-spacing:-.04em}
+@media (max-width:900px){.landing-main{grid-template-columns:1fr!important;padding-top:34px!important}.landing-illustration{order:2;height:320px!important;min-height:320px!important;margin-top:6px}.landing-car{top:0;left:-5%;width:110%}.landing-foot{padding-top:14px!important}.landing-foot button{font-size:18px}}
+
 </style>
+
+<style>
+/* V18: a calm, lap-time-first landing page; racing-inspired rather than competition-driven. */
+body{background:radial-gradient(circle at 90% -10%,#132139 0%,transparent 32%),#0b0d10}
+.brand-home{cursor:pointer;letter-spacing:-.03em}
+.lap-landing{padding:0!important;overflow:auto;align-items:stretch;z-index:9999;background:#090e16}
+.landing-shell{position:relative;width:100%;min-height:100dvh;display:flex;flex-direction:column;isolation:isolate;overflow:hidden;background:radial-gradient(ellipse at 70% 45%,#172e4b 0%,#0c1625 35%,#080d15 75%)}
+.landing-shell:before{content:'';position:absolute;inset:0;pointer-events:none;opacity:.14;background-image:linear-gradient(90deg,transparent 95%,#a7c9eb 95%),linear-gradient(0deg,transparent 95%,#a7c9eb 95%);background-size:56px 56px;mask-image:linear-gradient(to right,transparent,#000 75%)}
+.landing-bar,.landing-foot{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:14px;max-width:1280px;width:100%;margin:0 auto;padding:27px clamp(24px,5vw,60px)}
+.landing-bar{border-bottom:1px solid #263348}.landing-mark{font-weight:850;letter-spacing:.22em;font-size:13px}.landing-mark i{display:inline-block;height:11px;width:11px;border-radius:2px;background:#67bbff;margin-right:9px;transform:rotate(45deg)}.landing-kicker{font-size:11px;letter-spacing:.18em;color:#94a9c0;font-weight:650}
+.landing-main{position:relative;display:grid;grid-template-columns:minmax(0,1.04fr) minmax(0,.96fr);align-items:center;gap:20px;max-width:1280px;width:100%;margin:auto;padding:35px clamp(24px,5vw,60px)}
+.landing-text{position:relative;z-index:3}.landing-eyebrow{display:flex;gap:9px;align-items:center;color:#9cb8d7;font-size:13px;letter-spacing:.08em;margin-bottom:24px}.landing-dot{width:7px;height:7px;background:#6ce0c3;border-radius:50%;box-shadow:0 0 16px #6ce0c3}
+.landing-text h2{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:clamp(54px,7vw,104px);font-weight:870;letter-spacing:-.075em;line-height:.94;margin:0 0 30px;white-space:nowrap;color:#f6faff}
+.landing-text h2 em{color:#8acaff;font-style:normal}.landing-text h2 strong{font-weight:880}.landing-punctuation{color:#63beff}
+.landing-greeting{font-size:clamp(20px,2vw,29px);font-weight:750;margin:0 0 12px;color:#f1f7ff}.landing-message{font-size:15px;line-height:1.9;color:#adc0d4;max-width:525px;margin:0 0 29px}
+.landing-actions{display:flex;gap:11px;flex-wrap:wrap}.landing-actions button{font-size:15px;padding:15px 19px;min-height:54px}.landing-primary{background:#78bfff!important;color:#061525!important;border:1px solid #78bfff!important}.landing-primary span{padding-left:18px}.landing-secondary{background:#1a2b41!important;color:#e6f3ff!important;border-color:#415c7c!important}
+.landing-mycar{background:transparent!important;border:0!important;border-bottom:1px solid #5c7795!important;border-radius:0!important;margin-top:21px;color:#a6d5ff!important;padding:9px 1px!important}.landing-mycar span{font-size:12px;color:#819bb7;margin-left:9px}
+.landing-illustration{height:min(50vw,520px);min-height:340px;position:relative}.landing-grid{position:absolute;inset:4%;background:repeating-linear-gradient(0deg,transparent 0 51px,#28466666 52px 53px),repeating-linear-gradient(90deg,transparent 0 51px,#28466666 52px 53px);transform:perspective(600px) rotateX(36deg) rotateZ(-20deg);opacity:.5}.landing-orbit{position:absolute;border:1px solid #355c78;border-radius:50%;top:7%;left:14%;width:75%;height:80%;transform:rotate(-22deg)}.orbit-two{top:19%;left:6%;width:87%;height:57%;border-style:dashed;opacity:.5}.landing-track-line{position:absolute;top:9%;left:9%;width:75%;height:82%;border:3px solid #5caad755;border-radius:50% 50% 48% 52%;transform:rotate(-27deg)}.landing-car{position:absolute;width:100%;top:19%;left:3%;filter:drop-shadow(0 22px 30px #000e)}
+.landing-timing{position:absolute;right:0;bottom:6%;border:1px solid #426889;background:#081321df;border-radius:15px;backdrop-filter:blur(8px);padding:14px 19px;display:grid;gap:2px}.landing-timing small,.landing-timing>span{font-size:10px;letter-spacing:.22em;color:#89aecb}.landing-timing b{font-size:clamp(35px,4vw,59px);letter-spacing:-.055em;font-family:ui-monospace,SFMono-Regular,monospace;font-weight:750;color:#e8f6ff}.landing-timing b span{color:#65d9b3}.landing-caption{position:absolute;top:5%;right:0;color:#7790aa;font-size:10px;letter-spacing:.2em;writing-mode:vertical-rl}
+.landing-foot{border-top:1px solid #263348;color:#8babc7;font-size:12px}.landing-foot button{background:transparent;color:#e1f2ff;border:0}
+.my-chassis-list{display:grid;gap:9px;margin-top:12px}.my-chassis-item{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 14px;border:1px solid #2d4056;border-radius:13px;background:#111923}.my-chassis-item b{display:block}.my-chassis-item small{display:block;margin-top:3px;color:var(--muted)}
+.chassis-quick-select{display:grid;gap:5px;margin-top:11px}.chassis-select-head{display:flex;justify-content:space-between;gap:10px;align-items:center}.chassis-select-head label{margin:0}
+.setup-disclosure{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:18px 0 4px}.setup-disclosure button{background:#18273a;border-color:#375170;color:#cae2fc}.setup-disclosure span{font-size:11px;color:var(--muted)}
+body.setup-compact #touringFields,body.setup-compact .optional-setup-content{display:none!important}
+body.setup-compact #setupDisclosureBtn{background:#17283e}
+#editor>.grid>.card.span-8{order:0}#editor>.grid>.card.span-4{order:0}
+@media(max-width:850px){
+ .landing-main{grid-template-columns:1fr;padding-top:45px;padding-bottom:24px;gap:0}.landing-illustration{height:240px;min-height:200px;max-width:460px;width:100%;margin:12px auto 0;opacity:.67}.landing-car{top:0;width:75%;left:8%}.landing-timing{bottom:0}.landing-text h2{font-size:clamp(52px,10vw,82px)}
+ .landing-bar,.landing-foot{padding:20px 24px}
+}
+@media(max-width:600px){
+ .landing-main{padding:28px 22px 20px}.landing-text h2{font-size:clamp(49px,11vw,67px);margin-bottom:23px}.landing-text h2 strong{font-size:.93em}.landing-greeting{font-size:20px}.landing-message{font-size:13px;line-height:1.75}.landing-actions button{flex:1;min-width:120px;padding:14px 9px;font-size:13px}
+ .landing-illustration{height:220px;min-height:190px}.landing-car{width:78%;left:8%}.landing-timing{right:3%;bottom:-2%;padding:10px 13px}.landing-timing b{font-size:32px}.landing-caption{display:none}.landing-kicker{font-size:9px}.landing-foot{font-size:11px}
+ .my-chassis-item{align-items:flex-start;flex-direction:column}.my-chassis-item .row-actions{width:100%}.my-chassis-item .row-actions button{flex:1}
+}
+
+/* V19 landing refresh */
+.landing-bar{display:none!important}
+.landing-main{grid-template-columns:minmax(0,1.02fr) minmax(0,.98fr)!important;gap:10px!important;padding-top:54px!important}
+.landing-text h2{margin:0 0 24px!important}
+.landing-greeting{font-size:clamp(24px,2.1vw,31px)!important;margin:0 0 12px!important}
+.landing-message{font-size:17px!important;line-height:1.75!important;max-width:520px!important;margin:0 0 28px!important;color:#b7c9da!important}
+.landing-mycar{margin-top:26px!important}
+.landing-illustration{height:min(52vw,540px)!important;min-height:350px!important}
+.landing-grid{inset:0!important;transform:none!important;opacity:.42!important}
+.landing-orbit,.landing-track-line,.landing-timing,.landing-caption{display:none!important}
+.landing-car{position:absolute;width:100%;max-width:760px;top:12%;left:-1%;filter:drop-shadow(0 18px 40px #04101f)}
+.landing-foot{padding-top:20px!important}
+.landing-foot button{font-size:26px;font-weight:800;letter-spacing:-.04em}
+@media (max-width:900px){.landing-main{grid-template-columns:1fr!important;padding-top:34px!important}.landing-illustration{order:2;height:320px!important;min-height:320px!important;margin-top:6px}.landing-car{top:0;left:-5%;width:110%}.landing-foot{padding-top:14px!important}.landing-foot button{font-size:18px}}
+
+</style>
+
 </head>
 <body>
 
@@ -612,12 +809,52 @@ body.quick-collapsed #touringFields,body.quick-collapsed #nitroFields{display:no
   </div>
 </div>
 
-<div id="modeGate" class="mode-gate">
-  <div class="mode-panel mode-panel-simple">
-    <div class="mode-grid mode-grid-simple">
-      <button class="mode-card mode-card-simple" onclick="chooseSiteMode('touring')"><b>1/10 電房</b></button>
-      <button class="mode-card mode-card-simple" onclick="chooseSiteMode('nitro8')"><b>1/8 油平跑</b></button>
+<div id="modeGate" class="mode-gate lap-landing">
+  <div class="landing-shell">
+    <div class="landing-main">
+      <div class="landing-text">
+        <h2>1/10 <em>RC</em><br><strong>Lap Time<span class="landing-punctuation">.</span></strong></h2>
+        <p class="landing-greeting">歡迎大家分享自己的圈速</p>
+        <p class="landing-message">記錄每一次練習，也記錄自己的進步。</p>
+        <div class="landing-actions">
+          <button class="landing-primary" onclick="enterLapSite('tracks')">查看最快圈 <span>↗</span></button>
+          <button class="landing-secondary" onclick="enterLapSite('new')">＋ 記錄我的圈速</button>
+        </div>
+        <button class="landing-mycar" onclick="enterLapSite('cars')">我的車架　› <span>快速選擇常用車架</span></button>
+      </div>
+      <div class="landing-illustration" aria-hidden="true">
+        <div class="landing-grid"></div>
+        <svg viewBox="0 0 900 420" class="landing-car" xmlns="http://www.w3.org/2000/svg">
+          <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M38 300 C140 286, 220 278, 318 272 L380 231 C427 201, 496 179, 565 177 L670 174 C718 173, 755 184, 794 205 L856 239 L862 292 L826 296 L811 248 C805 229,790 216,768 216 H739 C720 216,703 227,694 245 L676 296 H247 L224 246 C215 226,198 214,178 214 H143 C120 214,102 226,96 246 L83 296 H38" stroke="#95d2ff" stroke-width="5"/>
+            <path d="M323 272 L394 214 C431 184, 488 165, 551 163 L676 159 C722 158, 762 176, 797 208" stroke="#6fb9ff" stroke-width="3.5"/>
+            <path d="M415 208 L480 208" stroke="#84d8ff" stroke-width="3"/>
+            <path d="M490 208 L558 205" stroke="#84d8ff" stroke-width="3"/>
+            <path d="M567 204 L638 202" stroke="#84d8ff" stroke-width="3"/>
+            <path d="M652 201 L724 219" stroke="#84d8ff" stroke-width="3"/>
+            <path d="M361 224 L348 271" stroke="#6fb9ff" stroke-width="3"/>
+            <path d="M734 220 L715 296" stroke="#6fb9ff" stroke-width="3"/>
+            <path d="M152 215 C161 187, 173 163, 188 141" stroke="#6fb9ff" stroke-width="3" opacity=".55"/>
+            <path d="M730 196 L781 163 L853 161 L851 193 L798 193" stroke="#95d2ff" stroke-width="4"/>
+            <path d="M774 163 L774 193" stroke="#95d2ff" stroke-width="4"/>
+            <path d="M285 281 L658 281" stroke="#36597c" stroke-width="2" opacity=".45"/>
+            <path d="M277 300 L668 300" stroke="#36597c" stroke-width="2" opacity=".25"/>
+            <circle cx="184" cy="296" r="70" stroke="#79c3ff" stroke-width="5"/>
+            <circle cx="184" cy="296" r="46" stroke="#d8f1ff" stroke-width="3"/>
+            <circle cx="184" cy="296" r="12" stroke="#d8f1ff" stroke-width="3"/>
+            <circle cx="739" cy="296" r="70" stroke="#79c3ff" stroke-width="5"/>
+            <circle cx="739" cy="296" r="46" stroke="#d8f1ff" stroke-width="3"/>
+            <circle cx="739" cy="296" r="12" stroke="#d8f1ff" stroke-width="3"/>
+            <path d="M232 125 C322 84, 468 73, 607 87" stroke="#3b6ca0" stroke-width="2" opacity=".28"/>
+            <path d="M182 345 C281 331, 643 329, 820 344" stroke="#3b6ca0" stroke-width="2" opacity=".28"/>
+            <path d="M25 255 H118" stroke="#3e76a9" stroke-width="8" opacity=".35"/>
+            <path d="M0 279 H92" stroke="#3e76a9" stroke-width="5" opacity=".28"/>
+            <path d="M0 304 H68" stroke="#3e76a9" stroke-width="3" opacity=".25"/>
+          </g>
+        </svg>
+      </div>
     </div>
+    <div class="landing-foot"><span>5 個場地 · 1/10 電房 · 公開分享</span><button onclick="enterLapSite('dashboard')">進入網站　→</button></div>
   </div>
 </div>
 <div id="authHelp" class="auth-help hidden">
@@ -636,19 +873,19 @@ body.quick-collapsed #touringFields,body.quick-collapsed #nitroFields{display:no
 </div>
 <header>
   <div class="wrap">
-    <h1>RC On-road 設定・圈速紀錄</h1>
-    <div class="sub compact-version"><span class="tag">V17</span></div>
+    <h1 class="brand-home" onclick="openModeGate()" role="button" tabindex="0" title="返回首頁">1/10 RC Lap Time</h1>
+    <div class="sub compact-version"><span class="tag">V19</span></div>
     <nav>
-      <button onclick="showView('dashboard')">總覽</button>
-      <button onclick="newSession()" class="primary">＋ 新增</button>
+      <button onclick="openModeGate()">首頁</button><button onclick="showView('dashboard')">我的圈速</button>
+      <button onclick="newSession()" class="primary">＋ 新增圈速</button>
       <button onclick="quickNewSession()" title="沿用上一條電池的設定，只記新的圈速與調整">⚡ 快速記錄</button>
       <button onclick="showView('compare')">比較</button>
       <button onclick="showView('trends')">進步趨勢</button>
-      <button onclick="showView('tracks')">賽道榜</button>
+      <button onclick="showView('tracks')">最快圈</button>
       <button onclick="showView('manage')">資料管理</button>
       <button onclick="exportJSON()">匯出</button>
       <label class="btn">匯入<input id="jsonImport" type="file" accept=".json" class="hidden"></label>
-      <span class="mode-chip"><b id="modeLabel">尚未選擇</b><button class="mini" onclick="openModeGate()">切換</button></span>
+      <span id="modeLabel" class="hidden">1/10 電房</span>
     </nav>
     <div class="authbar">
       <button id="authBtn" onclick="toggleGoogleAuth()">使用 Google 登入</button>
@@ -696,20 +933,20 @@ body.quick-collapsed #touringFields,body.quick-collapsed #nitroFields{display:no
 <section id="editor" class="hidden">
   <div class="grid">
     <div class="card span-8">
-      <h2 id="editorTitle">新增練車紀錄</h2>
+      <h2 id="editorTitle">新增圈速</h2>
       <div id="draftBanner" class="draft-banner hidden">
         <div><b>有尚未完成的草稿</b><small id="draftTime">上次編輯的內容仍保存在本機。</small></div>
         <div class="draft-actions"><button type="button" onclick="restoreEditorDraft()">繼續編輯</button><button type="button" onclick="discardEditorDraft()">捨棄草稿</button></div>
       </div>
       <div id="quickInfo" class="notice hidden" style="margin-bottom:12px">已沿用上一條電池的設定。請輸入新的圈速，並在「本次調整」紀錄修改內容。<div style="margin-top:8px"><button type="button" id="quickAdvancedToggle" onclick="toggleQuickAdvanced()">展開車輛設定</button></div></div>
-      <div class="setupbar">
+      <div class="setupbar optional-setup-content">
         <div>
           <label>設定來源（只顯示「我自己」同車種／同車型的紀錄）</label>
           <select id="setupSource"></select>
         </div>
         <button onclick="applySelectedSetup()">套用設定</button>
       </div>
-      <div class="notice">新增紀錄只會自動沿用你自己的同車種／同車型設定。1/10 Touring 與 1/8 油平跑互不混用；朋友的設定也不會自動帶入。</div>
+      <div class="notice optional-setup-content">只有選定「我的車架」後，才會專門沿用該實體車的設定；舊紀錄不會自動混成另一台車。</div>
       <br>
       <div class="formgrid">
         <div><label>日期</label><input id="date" type="date"></div>
@@ -736,11 +973,16 @@ body.quick-collapsed #touringFields,body.quick-collapsed #nitroFields{display:no
             <input id="carModel" type="hidden">
           </div>
           <input id="car" class="hidden" placeholder="例如：Mugen MRX7 / XRAY RX8" oninput="onCarModelChange()">
+          <div class="chassis-quick-select">
+            <div class="chassis-select-head"><label>我的車架 <span class="muted">可區分相同型號的不同實體車</span></label><button type="button" class="mini" onclick="registerMyChassisFromEditor()">＋ 加入</button></div>
+            <select id="myChassisSelect" onchange="selectMyChassis(this.value)"><option value="">沒有指定實體車架（依車型）</option></select>
+            <input id="vehicleId" type="hidden"><input id="vehicleName" type="hidden">
+          </div>
         </div>
         <div id="classField">
           <label>組別</label>
           <select id="className" onchange="syncPublicOptionsUI()">
-            <option value="Modified">Modified</option>
+            <option value="Modified">Modified（例：4.5T／7.5T）</option>
             <option value="13.5 Stock">13.5 Stock</option>
             <option value="13.5 Open" selected>13.5 Open</option>
             <option value="17.5 Stock">17.5 Stock</option>
@@ -748,8 +990,9 @@ body.quick-collapsed #touringFields,body.quick-collapsed #nitroFields{display:no
           </select>
         </div>
       </div>
-      <div class="optional-note">除登入與選擇 Garage 外，其餘設定資料都可以留白後直接儲存；1/8 油平跑不顯示組別／規則。</div>
+      <div class="optional-note">選好場地、車型與圈速即可儲存；其他 Setup 欄位皆為選填。</div>
 
+      <div class="setup-disclosure"><button type="button" id="setupDisclosureBtn" onclick="toggleSetupDisclosure()">展開車輛設定與 Setup　⌄</button><span>選填 · 主要先記錄圈速</span></div>
       <div id="touringFields">
         <h3>電裝 / 傳動</h3>
         <div class="formgrid">
@@ -790,14 +1033,14 @@ body.quick-collapsed #touringFields,body.quick-collapsed #nitroFields{display:no
   <div class="notice">油平跑採基礎紀錄：引擎、輪胎、車高與底盤角度。原本的進階設定不會被刪除，舊 Session 可保留原始資料。</div>
   <h3>引擎與燃油</h3><div class="formgrid"><div class="wide"><label>引擎</label><input id="nEngine" placeholder="例如：O.S. R2105 / Novarossi"/></div><div><label>排氣管 Pipe</label><input id="nPipe" placeholder="型號"/></div><div class="wide"><label>燃油</label><input id="nFuel" placeholder="品牌 / 配方"/></div><div><label>Nitro %</label><input id="nNitroPct" placeholder="16" step="1" type="number"/></div></div><h3>泡棉輪胎</h3><div class="formgrid"><div><label>前胎品牌</label><input id="nTireBrandF" placeholder="Matrix / Hot Race / Contact"/></div><div><label>後胎品牌</label><input id="nTireBrandR" placeholder="Matrix / Hot Race / Contact"/></div><div><label>前胎 Shore</label><input id="nShoreF" placeholder="例如 32" step="1" type="number"/></div><div><label>後胎 Shore</label><input id="nShoreR" placeholder="例如 35" step="1" type="number"/></div><div><label>前胎起始直徑 mm</label><input id="nTireDiaFStart" step="0.1" type="number" value="69"/></div><div><label>後胎起始直徑 mm</label><input id="nTireDiaRStart" step="0.1" type="number" value="76"/></div><div><label>前胎結束直徑 mm</label><input id="nTireDiaFEnd" step="0.1" type="number"/></div><div><label>後胎結束直徑 mm</label><input id="nTireDiaREnd" step="0.1" type="number"/></div></div><div id="nitroWear" class="wearbox">前 — / 後 —</div>
   <h3>車高與底盤角度</h3><div class="formgrid"><div><label>車高 前 mm</label><input id="nRideF" step="0.1" type="number"/></div><div><label>車高 後 mm</label><input id="nRideR" step="0.1" type="number"/></div><div><label>Downstop 前</label><input id="nDownF" step="0.1" type="number"/></div><div><label>Downstop 後</label><input id="nDownR" step="0.1" type="number"/></div><div><label>Toe 前 °</label><input id="nToeF" step="0.1" type="number"/></div><div><label>Toe 後 °</label><input id="nToeR" step="0.1" type="number"/></div><div><label>Camber 前 °</label><input id="nCamberF" step="0.1" type="number"/></div><div><label>Camber 後 °</label><input id="nCamberR" step="0.1" type="number"/></div><div><label>Caster 前（° / Shim mm）</label><input id="nCaster" placeholder="角度或 caster shim"/></div></div><div id="nitroLegacyFields" class="hidden" aria-hidden="true"><input type="hidden" id="nTransmitter" value=""><input type="hidden" id="nReceiver" value=""><input type="hidden" id="nSteeringServo" value=""><input type="hidden" id="nSteeringExpo" value=""><input type="hidden" id="nSteeringSpeed" value=""><input type="hidden" id="nThrottleServo" value=""><input type="hidden" id="nThrottleExpo" value=""><input type="hidden" id="nThrottleSpeed" value=""><input type="hidden" id="nManifold" value=""><input type="hidden" id="nGlowPlug" value=""><input type="hidden" id="nCarbDia" value=""><input type="hidden" id="nHeadClearance" value=""><input type="hidden" id="nAirTemp" value=""><input type="hidden" id="nTrackTemp" value=""><input type="hidden" id="nTraction" value=""><input type="hidden" id="nLayout" value=""><input type="hidden" id="nTrackCondition" value=""><input type="hidden" id="nResult" value=""><input type="hidden" id="nClutchType" value=""><input type="hidden" id="nClutchShoe" value=""><input type="hidden" id="nClutchSpring" value=""><input type="hidden" id="nClutchPreload" value=""><input type="hidden" id="nClutchGap" value=""><input type="hidden" id="nClutchEndplay" value=""><input type="hidden" id="nBrakeDisc" value=""><input type="hidden" id="nBrakePad" value=""><input type="hidden" id="nGear1Pinion" value=""><input type="hidden" id="nGear1Spur" value=""><input type="hidden" id="nGear2Pinion" value=""><input type="hidden" id="nGear2Spur" value=""><input type="hidden" id="nShift" value=""><input type="hidden" id="nAdditiveF" value=""><input type="hidden" id="nAdditiveR" value=""><input type="hidden" id="nArbF" value=""><input type="hidden" id="nArbR" value=""><input type="hidden" id="nSpringF" value=""><input type="hidden" id="nSpringR" value=""><input type="hidden" id="nShockOilF" value=""><input type="hidden" id="nShockOilR" value=""><input type="hidden" id="nPistonF" value=""><input type="hidden" id="nPistonR" value=""><input type="hidden" id="nReboundF" value=""><input type="hidden" id="nReboundR" value=""><input type="hidden" id="nShockPosF" value=""><input type="hidden" id="nShockPosR" value=""><input type="hidden" id="nWidthF" value=""><input type="hidden" id="nWidthR" value=""><input type="hidden" id="nWheelbase" value=""><input type="hidden" id="nAckermann" value=""><input type="hidden" id="nBumpSteer" value=""><input type="hidden" id="nUpperArmF" value=""><input type="hidden" id="nUpperArmR" value=""><input type="hidden" id="nRollCenterF" value=""><input type="hidden" id="nRollCenterR" value=""><input type="hidden" id="nUprightF" value=""><input type="hidden" id="nUprightR" value=""><input type="hidden" id="nFrontAxle" value=""><input type="hidden" id="nFlex" value=""><input type="hidden" id="nBody" value=""><input type="hidden" id="nBodyPos" value=""><input type="hidden" id="nBumperDist" value=""><input type="hidden" id="nWingPos" value=""><input type="hidden" id="nWingHeight" value=""><input type="hidden" id="nWeight" value=""></div></div>
-      <h3>本次調整</h3>
+      <h3>本次調整 <span class="muted" style="font-size:12px;font-weight:400">（選填）</span></h3>
       <textarea id="changeNote" placeholder="例如：後 Downstop 4.5 → 5.0、改粗後防傾桿。未調整可留白。"></textarea>
       <h3>備註</h3>
       <textarea id="notes" placeholder="記錄車感、調整方向、引擎狀況、輪胎磨耗或其他注意事項…"></textarea>
     </div>
 
     <div class="card span-4">
-      <h2>圈速</h2>
+      <h2>記錄你的圈速</h2>
 
       <div class="lap-mode-tabs" role="tablist" aria-label="圈速輸入方式">
         <button type="button" id="lapModeBtnFull" class="active" onclick="setLapInputMode('full')">完整圈速</button>
@@ -866,7 +1109,7 @@ body.quick-collapsed #touringFields,body.quick-collapsed #nitroFields{display:no
         </label>
         <label class="check">
           <input id="shareSetupPublic" type="checkbox">
-          同時分享這筆 Setup
+          附加分享 Setup（選填）
         </label>
         <div id="publicAliasWrap" class="hidden"><label>公開車手暱稱（不要使用 Email）</label><input id="publicDriverAlias" maxlength="80" placeholder="例如：YuChi"></div>
         <div id="publicSyncHint" class="muted" style="font-size:12px"></div>
@@ -941,6 +1184,10 @@ body.quick-collapsed #touringFields,body.quick-collapsed #nitroFields{display:no
       <h2>資料管理</h2><div style="margin-bottom:12px"><button type="button" onclick="openA2HSGuide(true)">加入主畫面</button></div>
       <div class="notice">只管理你自己的資料。共享 Garage 中朋友的 Session 與設定不會出現在這裡，也不會被你刪除。</div>
     </div>
+    <div class="card span-12" id="myChassisManager">
+      <div class="track-board-head"><div><h2>我的車架</h2><div class="muted" style="font-size:13px">可以為同一個型號新增多台車架，例如「X4 比賽車」和「X4 練習車」。車架暱稱不會放在公開排行榜；同 Garage 成員仍可在共享 Session 看到車架名稱。</div></div><button type="button" class="primary" onclick="startRegisterMyChassis()">＋ 新增我的車架</button></div>
+      <div id="myChassisList" class="my-chassis-list"></div>
+    </div>
     <div class="card span-6">
       <h2>最近刪除的 Session</h2>
       <div class="muted" style="font-size:12px;margin-bottom:10px">保留 30 天，可還原；超過 30 天的本人 Session 會在載入時清理。</div>
@@ -967,9 +1214,9 @@ body.quick-collapsed #touringFields,body.quick-collapsed #nitroFields{display:no
     <div class="card span-12">
       <div class="track-board-head">
         <div>
-          <h2>台灣 RC 賽道・公開圈速板</h2>
+          <h2>各場地最快圈</h2>
           <div class="muted" style="font-size:13px;line-height:1.55">
-            依賽道分開顯示「最近上車」與排行榜。V17 的榜單資料來自車手主動發布的 Session，
+            依賽道分開顯示「最近上車」與排行榜。V18 的榜單資料來自車手主動發布的 Session，
             屬於自報圈速；未接入場地官方計時器前，不標示為官方紀錄。
           </div>
         </div>
@@ -989,12 +1236,12 @@ body.quick-collapsed #touringFields,body.quick-collapsed #nitroFields{display:no
             <label>組別</label>
             <select id="trackClassFilter" onchange="onTrackClassFilterChange()">
               <option value="">全部組別</option>
-              <option value="Modified">Modified</option>
+              <option value="Modified">Modified（例：4.5T／7.5T）</option>
               <option value="13.5 Stock">13.5 Stock</option>
               <option value="13.5 Open">13.5 Open</option>
               <option value="17.5 Stock">17.5 Stock</option>
               <option value="17.5 Open">17.5 Open</option>
-              <option value="1/8 油平跑">1/8 油平跑</option>
+
             </select>
           </div>
           <div>
@@ -1033,7 +1280,7 @@ body.quick-collapsed #touringFields,body.quick-collapsed #nitroFields{display:no
       </div>
 
       <hr>
-      <h3>排行榜</h3>
+      <h3>最佳單圈紀錄</h3>
       <div class="table-scroll track-table-scroll">
         <table class="track-table">
           <thead>
@@ -1063,7 +1310,7 @@ body.quick-collapsed #touringFields,body.quick-collapsed #nitroFields{display:no
 
 </main>
 
-<footer>Garage V17｜個人練車紀錄・設定比較・台灣 RC 賽道公開圈速板</footer>
+<footer>1/10 RC Lap Time · 記錄每一次練習，也記錄自己的進步</footer>
 
 
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
@@ -1085,7 +1332,7 @@ let personalSetups=[];
 let hiddenMotorHistory=[];
 let hiddenEscHistory=[];
 
-// V17 public track timing board
+// V18 public track timing board
 let currentTrackId='ganyuan';
 let trackEntries=[];
 let trackUnsub=null;
@@ -1132,7 +1379,7 @@ function setSyncStatus(text, ok=false){
   el.textContent=text;
   el.className='authstatus '+(ok?'cloudok':'cloudoff');
 }
-const PENDING_KEY_PREFIX='rc_v17_pending_';
+const PENDING_KEY_PREFIX='rc_v18_pending_';
 let syncingPending=false;
 function pendingKey(){return PENDING_KEY_PREFIX+(currentUser?.uid||'anonymous')+'_'+(currentGarageId||'local');}
 function readPending(){try{const x=JSON.parse(localStorage.getItem(pendingKey())||'{}');return x&&typeof x==='object'&&!Array.isArray(x)?x:{}}catch(_){return {}}}
@@ -1421,7 +1668,7 @@ function toggleGoogleAuth(){
     return;
   }
 
-  // V17 Auth Fix：
+  // V18 Auth Fix：
   // Google popup 必須直接由使用者點擊觸發。
   // 不在這裡 await setPersistence，避免 Safari / iOS 把它視為非使用者觸發彈窗而封鎖。
   // LOCAL persistence 已在 Firebase 初始化後背景設定。
@@ -1450,6 +1697,8 @@ function toggleGoogleAuth(){
 }
 auth.onAuthStateChanged(async user=>{
   currentUser=user||null;
+  myChassis=[];renderMyChassis();
+  if(user)loadMyChassis();
   const btn=document.getElementById('authBtn');
   const st=document.getElementById('authStatus');
   if(user){
@@ -1483,9 +1732,109 @@ const TOURING_CAR_CATALOG={
 'XRAY':["T4'17","T4'18","T4'19","T4'20","T4'21","X4'22","X4'23","X4'24","X4'25","X4'26"],
 'Yokomo':['BD8','BD8 2018','BD9 2019','BD10','BD11','BD12','MS1.0','MS2.0','RS2.0']
 };
+
+// A physical chassis has its own stable ID independent of the brand/model.
+// This list belongs to the signed-in user and never enters public leaderboard documents.
+let myChassis=[];
+function chassisStoreKey(){return 'rc_v18_chassis_'+(currentUser?.uid||'guest')}
+function loadLocalChassis(){try{const a=JSON.parse(localStorage.getItem(chassisStoreKey())||'[]');return Array.isArray(a)?a:[]}catch(_){return []}}
+function saveLocalChassis(){try{localStorage.setItem(chassisStoreKey(),JSON.stringify(myChassis))}catch(err){console.warn(err)}}
+async function loadMyChassis(){
+  myChassis=loadLocalChassis();renderMyChassis();
+  if(!currentUser)return;
+  try{
+    const snap=await db.collection('users').doc(currentUser.uid).collection('preferences').doc('myChassis').get();
+    if(snap.exists&&Array.isArray(snap.data().cars)){myChassis=snap.data().cars;saveLocalChassis();renderMyChassis();}
+  }catch(err){console.warn('車架清單暫時使用本機備份',err)}
+}
+async function persistMyChassis(){
+  saveLocalChassis();renderMyChassis();
+  if(!currentUser)return;
+  try{await db.collection('users').doc(currentUser.uid).collection('preferences').doc('myChassis').set({cars:myChassis,updatedAt:new Date().toISOString()});}
+  catch(err){console.warn(err);alert('車架已存在本機，但雲端儲存失敗；請確認網路並重新儲存車架。')}
+}
+function clearSelectedChassis(){
+  const i=document.getElementById('vehicleId'),n=document.getElementById('vehicleName');
+  if(i)i.value='';if(n)n.value='';
+  const sel=document.getElementById('myChassisSelect');if(sel)sel.value='';
+}
+function chassisName(ch){return (ch.name||ch.model||'我的車架').trim()}
+function renderMyChassis(){
+  const sel=document.getElementById('myChassisSelect');
+  if(sel){
+    const keep=document.getElementById('vehicleId')?.value||'';
+    sel.innerHTML='<option value="">不指定實體車架（依車型）</option>'+myChassis.map(ch=>`<option value="${escHtml(ch.id)}">${escHtml(chassisName(ch))} · ${escHtml(ch.brand)} ${escHtml(ch.model)}</option>`).join('');
+    sel.value=myChassis.some(x=>x.id===keep)?keep:'';
+  }
+  const list=document.getElementById('myChassisList');if(!list)return;
+  list.innerHTML=myChassis.length?myChassis.map(ch=>`<div class="my-chassis-item">
+    <div><b>${escHtml(chassisName(ch))}</b><small>${escHtml(ch.brand)} · ${escHtml(ch.model)}</small></div>
+    <div class="row-actions"><button type="button" data-action="use" data-id="${escHtml(ch.id)}">記錄圈速</button><button type="button" data-action="rename" data-id="${escHtml(ch.id)}">改名</button><button type="button" class="danger" data-action="delete" data-id="${escHtml(ch.id)}">移除</button></div>
+  </div>`).join(''):'<p class="muted">尚未建立車架。新增第一台後，之後新增圈速就可以直接點選。</p>';
+  list.onclick=e=>{
+    const b=e.target.closest('button[data-action]');if(!b)return;
+    const id=b.dataset.id;
+    if(b.dataset.action==='use'){newSession();selectMyChassis(id);}
+    if(b.dataset.action==='rename')renameMyChassis(id);
+    if(b.dataset.action==='delete')removeMyChassis(id);
+  };
+}
+function startRegisterMyChassis(){
+  if(!currentUser){alert('請先登入 Google 後再建立「我的車架」。');return;}
+  openCarPicker('register');
+}
+function registerMyChassisFromEditor(){
+  if(!currentUser){alert('請先登入 Google。');return;}
+  const current=currentCarIdentity();
+  if(current.brand&&current.model){registerMyChassis(current.brand,current.model);}
+  else openCarPicker('register');
+}
+async function registerMyChassis(brand,model){
+  if(!currentUser)return;
+  const n=myChassis.filter(x=>x.brand===brand&&x.model===model).length;
+  const suggested=n?`${model} #${n+1}`:model;
+  const name=prompt('這台實體車架叫什麼？同型號的不同車可用不同名稱區分。',suggested);
+  if(name===null)return;
+  if(!name.trim()){alert('請輸入車架名稱。');return;}
+  const ch={id:uid(),brand,model,name:name.trim().slice(0,50),createdAt:new Date().toISOString()};
+  myChassis.push(ch);await persistMyChassis();
+  if(!document.getElementById('editor')?.classList.contains('hidden'))selectMyChassis(ch.id);
+}
+function selectMyChassis(id){
+  const ch=myChassis.find(x=>x.id===id);
+  if(!ch){clearSelectedChassis();refreshPersonalSuggestions();return;}
+  document.getElementById('vehicleId').value=ch.id;
+  document.getElementById('vehicleName').value=chassisName(ch);
+  // Preserve the physical identity when applying the matching model.
+  applyTouringIdentity(ch.brand,ch.model,false);
+  renderMyChassis();
+  onCarModelChange();
+}
+async function renameMyChassis(id){
+  const ch=myChassis.find(x=>x.id===id);if(!ch)return;
+  const name=prompt('修改車架名稱（不會更改歷史 Session 的車架 ID）',chassisName(ch));
+  if(name===null||!name.trim())return;
+  ch.name=name.trim().slice(0,50);
+  if(vehicleId.value===id)vehicleName.value=ch.name;
+  await persistMyChassis();
+}
+async function removeMyChassis(id){
+  const ch=myChassis.find(x=>x.id===id);if(!ch)return;
+  if(!confirm(`從「我的車架」移除「${chassisName(ch)}」？歷史圈速與 Session 都會保留。`))return;
+  myChassis=myChassis.filter(x=>x.id!==id);
+  if(vehicleId.value===id)clearSelectedChassis();
+  await persistMyChassis();
+}
+function showMyChassis(){showView('manage');document.getElementById('myChassisManager')?.scrollIntoView({behavior:'smooth',block:'start'});}
+function toggleSetupDisclosure(force){
+  const collapsed=force===undefined?!document.body.classList.contains('setup-compact'):!!force;
+  document.body.classList.toggle('setup-compact',collapsed);
+  const btn=document.getElementById('setupDisclosureBtn');if(btn)btn.textContent=collapsed?'展開車輛設定與 Setup　⌄':'收合車輛設定與 Setup　⌃';
+}
+
 const TOURING_BRAND_ORDER=Object.keys(TOURING_CAR_CATALOG);
 const TOURING_BRAND_ALIASES={'Mugen Seiki':['mugen','mugenseiki'],'Team Associated':['teamassociated','associated','rc10'],'RC Maker':['rcmaker'],'XRAY':['xray'],'Xpress':['xpress']};
-let carPickerLayer='brands',carPickerSelectedBrand='',carPickerCustomMode='';
+let carPickerLayer='brands',carPickerSelectedBrand='',carPickerCustomMode='',carPickerPurpose='editor';
 
 function carKey(v){return String(v||'').toLowerCase().replace(/[^a-z0-9]/g,'')}
 function modelKeys(model){const out=new Set([carKey(model),carKey(String(model||'').replace(/^(Execute|Arrow)\s+/i,''))]);if(model==='TC8')out.add('rc10tc8');if(model==='TT-02')out.add('tt02');return [...out].filter(Boolean)}
@@ -1509,7 +1858,13 @@ function inferCarIdentity(source){
 }
 function sessionCarIdentity(s){return typeOf(s)==='touring'?inferCarIdentity(s):{brand:'',model:String(s?.car||''),listed:false}}
 function currentCarIdentity(){if(currentType()==='nitro8')return {brand:'',model:(car?.value||'').trim(),listed:false};const b=(carBrand?.value||'').trim(),m=(carModel?.value||'').trim();return {brand:b,model:m,listed:isCatalogModel(b,m)}}
-function sessionMatchesCurrentCar(s){if(typeOf(s)!==currentType())return false;if(currentType()==='nitro8'){const m=(car?.value||'').trim();return !m||!s.car||String(s.car).trim()===m}const c=currentCarIdentity(),x=sessionCarIdentity(s);return !!c.brand&&!!c.model&&x.brand===c.brand&&x.model===c.model}
+function sessionMatchesCurrentCar(s){
+  if(typeOf(s)!=='touring')return false;
+  const c=currentCarIdentity(),x=sessionCarIdentity(s);
+  if(!c.brand||!c.model||x.brand!==c.brand||x.model!==c.model)return false;
+  const selected=document.getElementById('vehicleId')?.value||'';
+  return selected ? s.vehicleId===selected : !s.vehicleId;
+}
 function applyTouringIdentity(b,m,notify=true){b=String(b||'').trim();m=String(m||'').trim();carBrand.value=b;carModel.value=m;car.value=formatCarName(b,m);syncCarPickerDisplay();if(b&&m)rememberRecentTouringCar(b,m);if(notify)onCarModelChange()}
 function hydrateTouringIdentity(source,notify=false){const id=inferCarIdentity(source);if(id.brand&&id.model){applyTouringIdentity(id.brand,id.model,notify);return true}carBrand.value='';carModel.value='';if(source?.car!==undefined)car.value=source.car||'';syncCarPickerDisplay();return false}
 function syncCarPickerDisplay(){const b=(carBrand?.value||'').trim(),m=(carModel?.value||'').trim(),raw=(car?.value||'').trim();if(!carPickerBrand||!carPickerModel)return;if(b&&m){carPickerBrand.textContent=b;carPickerModel.textContent=m}else if(raw){carPickerBrand.textContent='未分類車型';carPickerModel.textContent=raw}else{carPickerBrand.textContent='選擇品牌';carPickerModel.textContent='選擇車型'}}
@@ -1523,7 +1878,8 @@ function recentTouringCars(){
 function rememberRecentTouringCar(b,m){if(!b||!m)return;const arr=recentTouringCars().filter(x=>!(x.brand===b&&x.model===m));arr.unshift({brand:b,model:m});try{localStorage.setItem('rc_recent_touring_cars_v15',JSON.stringify(arr.slice(0,5)))}catch(_){}}
 function pickerEl(id){return document.getElementById(id)}
 
-function openCarPicker(){
+function openCarPicker(purpose='editor'){
+  carPickerPurpose=purpose;
   if(currentType()!=='touring')return;
   carPickerLayer='brands';
   carPickerSelectedBrand='';
@@ -1575,13 +1931,13 @@ function openCustomCar(b=''){
 }
 
 function chooseCatalogCar(b,m){
-  applyTouringIdentity(b,m,true);
-  closeCarPicker();
+  if(carPickerPurpose==='register'){closeCarPicker();registerMyChassis(b,m);return;}
+  clearSelectedChassis();applyTouringIdentity(b,m,true);closeCarPicker();
 }
 
 function chooseRecentCar(b,m){
-  applyTouringIdentity(b,m,true);
-  closeCarPicker();
+  if(carPickerPurpose==='register'){closeCarPicker();registerMyChassis(b,m);return;}
+  clearSelectedChassis();applyTouringIdentity(b,m,true);closeCarPicker();
 }
 
 function saveCustomCar(){
@@ -1595,8 +1951,8 @@ function saveCustomCar(){
     alert('請輸入品牌與車型。');
     return;
   }
-  applyTouringIdentity(b,m,true);
-  closeCarPicker();
+  if(carPickerPurpose==='register'){closeCarPicker();registerMyChassis(b,m);return;}
+  clearSelectedChassis();applyTouringIdentity(b,m,true);closeCarPicker();
 }
 
 function bindCarPickerBody(){
@@ -1774,13 +2130,24 @@ function renderCarPicker(){
 
 const touringFields=['motor','esc','pinion','spur','internalRatio','fdr','tires','additive','warmerTemp','warmerMin','rideF','rideR','downF','downR','toeF','toeR','camberF','camberR','shockF','shockR','diffOil','arb'];
 const nitroFieldsList=['nEngine','nPipe','nManifold','nGlowPlug','nFuel','nNitroPct','nCarbDia','nHeadClearance','nAirTemp','nTrackTemp','nTraction','nLayout','nTrackCondition','nResult','nTransmitter','nReceiver','nSteeringServo','nSteeringExpo','nSteeringSpeed','nThrottleServo','nThrottleExpo','nThrottleSpeed','nClutchType','nClutchShoe','nClutchSpring','nClutchPreload','nClutchGap','nClutchEndplay','nBrakeDisc','nBrakePad','nGear1Pinion','nGear1Spur','nGear2Pinion','nGear2Spur','nShift','nTireBrandF','nTireBrandR','nShoreF','nShoreR','nTireDiaFStart','nTireDiaRStart','nTireDiaFEnd','nTireDiaREnd','nAdditiveF','nAdditiveR','nRideF','nRideR','nDownF','nDownR','nToeF','nToeR','nCamberF','nCamberR','nArbF','nArbR','nSpringF','nSpringR','nShockOilF','nShockOilR','nPistonF','nPistonR','nReboundF','nReboundR','nShockPosF','nShockPosR','nCaster','nWidthF','nWidthR','nWheelbase','nAckermann','nBumpSteer','nUpperArmF','nUpperArmR','nRollCenterF','nRollCenterR','nUprightF','nUprightR','nFrontAxle','nFlex','nBody','nBodyPos','nBumperDist','nWingPos','nWingHeight','nWeight'];
-const fields=['date','track','carType','car','carBrand','carModel','className',...touringFields,...nitroFieldsList,'changeNote','notes'];
+const fields=['date','track','carType','car','carBrand','carModel','vehicleId','vehicleName','className',...touringFields,...nitroFieldsList,'changeNote','notes'];
 const nitroCarryFields=nitroFieldsList.filter(f=>!['nAirTemp','nTrackTemp','nTraction','nLayout','nTrackCondition','nResult','nTireDiaFEnd','nTireDiaREnd'].includes(f));
-const carryFields=['track','carType','car','carBrand','carModel','className',...touringFields,...nitroCarryFields];
-let siteMode=null;
-function openModeGate(){ document.getElementById('modeGate')?.classList.remove('hidden'); }
+const carryFields=['track','carType','car','carBrand','carModel','vehicleId','vehicleName','className',...touringFields,...nitroCarryFields];
+let siteMode='touring';
+function openModeGate(){
+  document.getElementById('modeGate')?.classList.remove('hidden');
+  document.body.classList.remove('quick-collapsed');
+}
+function enterLapSite(target='tracks'){
+  chooseSiteMode('touring');
+  if(target==='new')newSession();
+  else if(target==='cars')showMyChassis();
+  else showView(target);
+  if(window.lapA2HSPending && target!=='new'){window.lapA2HSPending=false;setTimeout(()=>{if(document.getElementById('editor')?.classList.contains('hidden'))openA2HSGuide(false);},6000);}
+}
+
 function chooseSiteMode(type){
-  if(!['touring','nitro8'].includes(type))return;
+  if(type!=='touring')return;
   siteMode=type;
   const ct=document.getElementById('carType'); if(ct)ct.value=type;
   const ml=document.getElementById('modeLabel'); if(ml)ml.textContent=typeLabel(type);
@@ -1789,7 +2156,7 @@ function chooseSiteMode(type){
   toggleTypeUI(); refreshPersonalSuggestions(); renderDashboard(); renderManage();
   if(!document.getElementById('editor')?.classList.contains('hidden')) newSession();
 }
-function filteredActiveSessions(){ return activeSessions().filter(s=>!siteMode || typeOf(s)===siteMode); }
+function filteredActiveSessions(){ return activeSessions().filter(s=>typeOf(s)==='touring'); }
 function typeOf(s){return s?.carType||'touring'}
 function typeLabel(t){return t==='nitro8'?'1/8 油平跑':'1/10 電房'}
 function currentType(){return document.getElementById('carType')?.value||'touring'}
@@ -1843,7 +2210,7 @@ function copySetupFromSession(s){
   const ct=document.getElementById('carType');if(ct)ct.value=type;
   toggleTypeUI();
   carryFields.forEach(f=>{const el=document.getElementById(f);if(el&&s[f]!==undefined)el.value=s[f]??''});
-  if(type==='touring')hydrateTouringIdentity(s,false);
+  if(type==='touring'){hydrateTouringIdentity(s,false);renderMyChassis();}
   if(type==='nitro8')setNitroDefaults(false);
   updateNitroTireWear();refreshPersonalSuggestions();
 }
@@ -1871,6 +2238,7 @@ function updateNitroTireWear(){
   out.textContent=`前 ${wear('nTireDiaFStart','nTireDiaFEnd')} / 後 ${wear('nTireDiaRStart','nTireDiaREnd')}`;
 }
 function showView(name){
+  if(name==='editor')toggleSetupDisclosure(true);
   if(name!=='editor' && !document.getElementById('editor').classList.contains('hidden') && typeof saveEditorDraft==='function')saveEditorDraft();
   ['dashboard','editor','detail','compare','trends','tracks','manage'].forEach(id=>document.getElementById(id).classList.toggle('hidden',id!==name));
   if(name==='dashboard') renderDashboard();
@@ -2125,7 +2493,7 @@ function prepareLapsForSave(){
   }
   return [...currentLaps];
 }
-const DRAFT_PREFIX='rc_v17_draft_';
+const DRAFT_PREFIX='rc_v18_draft_';
 let draftPause=false,draftTimer=null;
 function draftKey(){return DRAFT_PREFIX+(currentUser?.uid||'anonymous')+'_'+(currentGarageId||'local')+'_'+(siteMode||'touring');}
 function draftRead(){try{return JSON.parse(localStorage.getItem(draftKey())||'null')}catch(_){return null}}
@@ -2156,7 +2524,7 @@ function restoreEditorDraft(){
  try{
    currentId=d.sessionId||null;
    for(const [k,v] of Object.entries(d.fields)){const el=document.getElementById(k);if(el)el.value=v;}
-   if(currentType()==='touring')hydrateTouringIdentity(d.fields,false);
+   if(currentType()==='touring'){hydrateTouringIdentity(d.fields,false);renderMyChassis();}
    toggleTypeUI();
    publishPublic.checked=!!d.pub;shareSetupPublic.checked=!!d.share;
    publicDriverAlias.value=d.alias||safePublicDriverName();
@@ -2178,13 +2546,15 @@ function restoreEditorDraft(){
 function newSession(){
   document.body.classList.remove('quick-collapsed');
   currentId=null; currentLaps=[];
-  editorTitle.textContent='新增練車紀錄';
+  editorTitle.textContent='新增圈速';
   const pub=document.getElementById('publishPublic'), share=document.getElementById('shareSetupPublic');
   if(pub)pub.checked=false;if(share){share.checked=false;share.disabled=true;}
-  publicDriverAlias.value=safePublicDriverName(localStorage.getItem('rc_v17_public_alias')||'');
+  publicDriverAlias.value=safePublicDriverName(localStorage.getItem('rc_v18_public_alias')||'');
   fields.forEach(f=>{const el=document.getElementById(f);if(el)el.value='';});
-  const type=siteMode||'touring';
+  const type='touring';
   carType.value=type;car.value='';carBrand.value='';carModel.value='';
+  className.value='13.5 Open';
+  clearSelectedChassis();
   if(type==='touring')applyTouringIdentity('Xpress','Execute XQ3S',false);
   internalRatio.value='1.90';
   date.value=localToday();
@@ -2194,14 +2564,16 @@ function newSession(){
   if(document.getElementById('timerImportText'))timerImportText.value='';
   if(document.getElementById('timerSource'))timerSource.value='Auto';
   lapTimerSource='manual';
-  setLapInputMode('full',true);
+  setLapInputMode('best',true);
   updateLapStats(); refreshPersonalSuggestions();
+  renderMyChassis();
   const latest=personalSetups.find(s=>!s.deletedAt && typeOf(s)===type && sessionMatchesCurrentCar(s));
   if(latest) copySetupFromSession(latest);
   else { carType.value=type; toggleTypeUI(); if(type==='nitro8')setNitroDefaults(true); }
   document.getElementById('setupSource').value=latest?'latest':'blank';
   syncPublicOptionsUI();
   showView('editor');
+  toggleSetupDisclosure(true);
   quickInfo.classList.add('hidden');
   checkEditorDraft();
 }
@@ -2223,9 +2595,10 @@ function quickNewSession(sourceId=''){
   changeNote.value=''; notes.value='';
   quickInfo.classList.remove('hidden');
   document.body.classList.add('quick-collapsed');
+  toggleSetupDisclosure(true);
   document.getElementById('quickAdvancedToggle').textContent='展開車輛設定';
   lapTimerSource='manual';
-  setLapInputMode('full',true);
+  setLapInputMode('best',true);
   // The newly created Session is private unless the user explicitly publishes it.
   publishPublic.checked=false;shareSetupPublic.checked=false;syncPublicOptionsUI();
 }
@@ -2271,7 +2644,7 @@ async function saveSession(){
     lapTimerSource:lapInputMode==='timer'?lapTimerSource:'manual'
   };
   fields.forEach(f=>{const el=document.getElementById(f);obj[f]=el?el.value:'';});
-  obj.carType=siteMode||obj.carType||'touring';
+  obj.carType='touring';
   if(obj.carType==='touring'){
     obj.carBrand=String(obj.carBrand||'').trim();obj.carModel=String(obj.carModel||'').trim();
     if(!obj.carBrand||!obj.carModel){alert('請先選擇 1/10 電房的品牌與車型。');return;}
@@ -2281,7 +2654,7 @@ async function saveSession(){
   if(obj.carType==='nitro8'){ obj.className=''; touringFields.forEach(f=>obj[f]=''); }
   else nitroFieldsList.forEach(f=>obj[f]='');
 
-  try{localStorage.setItem('rc_v17_public_alias',obj.publicDriverName)}catch(_){}
+  try{localStorage.setItem('rc_v18_public_alias',obj.publicDriverName)}catch(_){}
   try{enqueueSessionSync(obj);}catch(err){alert(err.message||'本機暫存失敗，請勿關閉頁面。');return;}
   const idx=sessions.findIndex(x=>String(x.id)===String(obj.id));
   if(idx>=0) sessions[idx]=obj; else sessions.push(obj);
@@ -2322,7 +2695,7 @@ function renderDashboard(){
       <td>${escHtml(s.date||'—')}${pending[String(s.id)]?'<div class="warn" style="font-size:11px;margin-top:4px">待同步</div>':''}</td>
       <td class="creator">${escHtml(s.ownerName||'舊資料')}</td>
       <td>${escHtml(s.track||'—')}</td>
-      <td>${carCellHtml(s)}</td>
+      <td>${carCellHtml(s)}${s.vehicleName?`<div class="muted" style="font-size:11px">${escHtml(s.vehicleName)}</div>`:''}</td>
       <td>${powerSummary(s)}</td>
       <td>${tireSummary(s)}</td>
       <td class="good">${fmt(st.best)}</td>
@@ -2339,7 +2712,7 @@ function nitroWearValue(s,axis){
 function openDetail(id){
   const s=sessions.find(x=>String(x.id)===String(id) && !x.deletedAt); if(!s){showView('dashboard');return;}
   currentId=id; const st=stats(s.laps||[]);
-  detailTitle.textContent=`${s.date||''} ${s.track||''} — ${s.car||''}`;
+  detailTitle.textContent=`${s.date||''} ${s.track||''} — ${s.car||''}${s.vehicleName?' · '+s.vehicleName:''}`;
   const own=s.ownerUid===currentUser?.uid;
   const detailButtons=document.querySelector('#detail .row-actions');
   if(detailButtons) detailButtons.innerHTML=`<button onclick="duplicateSession('${s.id}')">複製成我的新紀錄</button>${own?`<button onclick="quickNewSession('${s.id}')">⚡ 下一條電池</button><button onclick="editCurrent()">編輯</button><button class="danger" onclick="deleteCurrent()">刪除</button>`:''}<button onclick="showView(\'dashboard\')">返回</button>`;
@@ -2390,9 +2763,10 @@ function editSession(id){
   currentId=id;
   editorTitle.textContent='編輯練車紀錄';
   fields.forEach(f=>{const el=document.getElementById(f);if(el)el.value=s[f]??'';});
-  carType.value=typeOf(s);if(typeOf(s)==='touring')hydrateTouringIdentity(s,false);toggleTypeUI();refreshPersonalSuggestions();updateNitroTireWear();
+  if(typeOf(s)!=='touring'){alert('1/8 油平跑資料已保留，但 V18 不提供編輯。');return;}
+  carType.value='touring';hydrateTouringIdentity(s,false);toggleTypeUI();renderMyChassis();refreshPersonalSuggestions();updateNitroTireWear();
   const pub=document.getElementById('publishPublic'),share=document.getElementById('shareSetupPublic');
-  publicDriverAlias.value=safePublicDriverName(s.publicDriverName||localStorage.getItem('rc_v17_public_alias')||'');
+  publicDriverAlias.value=safePublicDriverName(s.publicDriverName||localStorage.getItem('rc_v18_public_alias')||'');
   if(pub)pub.checked=s.publishPublic===true;
   if(share){share.checked=s.publishPublic===true && s.shareSetupPublic===true;share.disabled=!pub?.checked;}
   syncPublicOptionsUI();
@@ -2452,7 +2826,7 @@ function duplicateSession(id){
   fields.forEach(f=>{const el=document.getElementById(f);if(el)el.value='';});
   const pub=document.getElementById('publishPublic'),share=document.getElementById('shareSetupPublic');
   if(pub)pub.checked=false;if(share){share.checked=false;share.disabled=true;}
-  publicDriverAlias.value=safePublicDriverName(localStorage.getItem('rc_v17_public_alias')||'');
+  publicDriverAlias.value=safePublicDriverName(localStorage.getItem('rc_v18_public_alias')||'');
   copySetupFromSession(src);
   date.value=localToday();
   if(typeOf(src)==='nitro8'){nTireDiaFEnd.value='';nTireDiaREnd.value='';nAirTemp.value='';nTrackTemp.value='';nTraction.value='';nLayout.value='';nTrackCondition.value='';nResult.value='';updateNitroTireWear();}
@@ -2481,7 +2855,7 @@ const nitroSetupCompareFields=[
 function previousOwnSession(s){
   if(!s?.ownerUid)return null;
   const t=typeOf(s);
-  const mine=activeSessions().filter(x=>x.ownerUid===s.ownerUid && String(x.id)!==String(s.id) && typeOf(x)===t && (!s.car || x.car===s.car) && x.track===s.track && (t==='nitro8'||normalizedPublicClass(x)===normalizedPublicClass(s)));
+  const mine=activeSessions().filter(x=>x.ownerUid===s.ownerUid && String(x.id)!==String(s.id) && typeOf(x)===t && (!s.car || x.car===s.car) && x.track===s.track && (x.vehicleId||'')===(s.vehicleId||'') && (t==='nitro8'||normalizedPublicClass(x)===normalizedPublicClass(s)));
   const curKey=(s.date||'')+'|'+(s.createdAt||'');
   return mine.filter(x=>((x.date||'')+'|'+(x.createdAt||''))<curKey).sort((a,b)=>(((b.date||'')+'|'+(b.createdAt||'')).localeCompare((a.date||'')+'|'+(a.createdAt||''))))[0]||null;
 }
@@ -2558,7 +2932,7 @@ function renderManage(){
   escManageList.innerHTML=(escs.map(v=>`<div class="manage-item"><div class="meta"><b>${escHtml(v)}</b></div>${hiddenEscHistory.includes(v)?`<button onclick='unhideHistory("esc",${JSON.stringify(v)})'>恢復建議</button>`:`<button class="danger" onclick='hideHistory("esc",${JSON.stringify(v)})'>從建議移除</button>`}</div>`).join('')||'<span class="muted">尚無 ESC 歷史。</span>');
 }
 
-// ---------------- V17 Track Hub / Public Timing Board ----------------
+// ---------------- V18 Track Hub / Public Timing Board ----------------
 const TRACK_CATALOG=[
   {
     id:'ganyuan',
@@ -2744,7 +3118,7 @@ function renderTrackCatalog(){
   const box=document.getElementById('trackCards'); if(!box)return;
   box.innerHTML=TRACK_CATALOG.map(t=>`
     <div class="track-card ${t.id===currentTrackId?'active':''} ${t.enabled?'':'track-unsupported'}">
-      <button onclick="${t.enabled?`selectTrack('${t.id}')`:`alert('這個場地先收錄資訊；目前 Garage V17 的公開圈速榜先支援 On-road Session。')`}">
+      <button onclick="${t.enabled?`selectTrack('${t.id}')`:`alert('這個場地先收錄資訊；目前 Garage V19 的公開圈速榜先支援 On-road Session。')`}">
         <b>${escHtml(t.name)}</b>
         <small>${escHtml(t.region)}｜${escHtml(t.surface)}</small>
         <div class="track-meta">
@@ -2793,14 +3167,14 @@ function selectTrack(id){
       renderTrackBoard();
     },err=>{
       console.error('track board load',err);
-      document.getElementById('trackLoadStatus').textContent='排行榜讀取失敗。若這是第一次使用 V17，請先更新 Firestore Rules。';
+      document.getElementById('trackLoadStatus').textContent='排行榜讀取失敗。若這是第一次使用 V18，請先更新 Firestore Rules。';
       trackEntries=[];
       renderTrackBoard();
     });
 }
 
 function rebuildTrackClassFilter(){
-  // V17 組別固定為 PUBLIC_CLASSES；不再依已上傳資料動態增加其他組別。
+  // V18 組別固定為 PUBLIC_CLASSES；不再依已上傳資料動態增加其他組別。
 }
 
 function publicCarIdentity(e){return e?.carType==='nitro8'?{brand:'',model:String(e?.car||''),listed:false}:inferCarIdentity(e)}
@@ -2820,6 +3194,7 @@ function onTrackClassFilterChange(){const nitro=trackClassFilter?.value==='1/8 �
 function filteredTrackEntries(){
   const f=trackClassFilter?.value||'',bf=trackBrandFilter?.value||'',mf=trackModelFilter?.value||'',shared=!!trackSharedSetupOnly?.checked;
   return trackEntries.filter(e=>{
+    if(e.carType==='nitro8'||e.className==='1/8 油平跑')return false;
     if(!PUBLIC_CLASSES.includes(e.className)||f&&e.className!==f||shared&&e.shareSetup!==true)return false;
     if((bf||mf)&&e.carType==='nitro8')return false;
     if(bf||mf){const id=publicCarIdentity(e),known=isCatalogBrand(id.brand);if(bf==='__other__'){if(known)return false}else if(bf&&id.brand!==bf)return false;if(mf){if(mf==='__other__'){if(id.brand&&isCatalogModel(id.brand,id.model))return false}else if(id.model!==mf)return false}}
@@ -2951,7 +3326,7 @@ function trendGroups(){
  for(const s of mySessions()){
    if(typeOf(s)!==(siteMode||'touring')||!s.car)continue;
    const id=sessionCarIdentity(s);
-   const carId=typeOf(s)==='nitro8'?String(s.car):(id.brand&&id.model?formatCarName(id.brand,id.model):String(s.car));
+   const carId=s.vehicleId?('chassis:'+s.vehicleId):(id.brand&&id.model?formatCarName(id.brand,id.model)+' · 未指定車架':String(s.car));
    const key=JSON.stringify([typeOf(s),s.track||'未選場地',carId,typeOf(s)==='nitro8'?'1/8 油平跑':normalizedPublicClass(s)]);
    if(!groups.has(key))groups.set(key,[]);
    groups.get(key).push(s);
@@ -2995,7 +3370,10 @@ function renderTrends(){
  if(!select)return;
  const groups=trendGroups(),keep=select.value;
  select.innerHTML=[...groups.entries()].map(([k,v])=>{
-   const [type,track,car,cls]=JSON.parse(k);return `<option value="${escHtml(k)}">${escHtml(track+'｜'+car+'｜'+cls)}（${v.length} 場）</option>`;
+   const [type,track,car,cls]=JSON.parse(k);
+   const own=myChassis.find(x=>car==='chassis:'+x.id);
+   const label=own?formatCarName(own.brand,own.model)+' · '+chassisName(own):(car.startsWith('chassis:') ? (v[0]?.car||'車型')+' · '+(v[0]?.vehicleName||'原車架') : car);
+   return `<option value="${escHtml(k)}">${escHtml(track+'｜'+label+'｜'+cls)}（${v.length} 場）</option>`;
  }).join('');
  if([...select.options].some(o=>o.value===keep))select.value=keep;
  const all=groups.get(select.value)||[];
@@ -3120,7 +3498,7 @@ renderDashboard();
 </script>
 <script>
 
-// ---------------- V17 Add to Home Screen ----------------
+// ---------------- V18 Add to Home Screen ----------------
 let deferredInstallPrompt=null;
 
 function isStandaloneMode(){
@@ -3245,17 +3623,14 @@ window.addEventListener('appinstalled',()=>{
     closeA2HSGuide('done');
   });
 
-  if(!done && Date.now()>=laterUntil){
-    // Delay a little so the first paint remains clean.
-    setTimeout(()=>openA2HSGuide(false),650);
-  }
+  window.lapA2HSPending = !done && Date.now()>=laterUntil;
 })();
 
 // Register a very small service worker for Chromium installability.
 // It deliberately does not cache app HTML, so version testing will not be trapped on an old copy.
 if('serviceWorker' in navigator){
   window.addEventListener('load',()=>{
-    navigator.serviceWorker.register('./sw_v17.js').catch(err=>console.warn('SW register failed',err));
+    navigator.serviceWorker.register('./sw_v18.js').catch(err=>console.warn('SW register failed',err));
   });
 }
 
