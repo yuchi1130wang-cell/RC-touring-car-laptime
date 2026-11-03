@@ -1,0 +1,12 @@
+# 1/10 RC Lap Time — V24 PWA 安裝包
+
+1. 把 ZIP 裡所有檔案上傳到 GitHub 儲存庫 `RC-touring-car-laptime` 的根目錄（不要放入資料夾）。
+2. `Garage_V24.html`：保留 V24 歷史版本，供測試。
+3. `index.html`：取代正式首頁，與 Garage_V24.html 內容完全相同。
+4. 其餘檔案：`manifest.webmanifest`、`sw.js`、`offline.html`、四張 `rc-lap-*.png` 圖示；PWA 缺少它們會不完整。
+5. 先用瀏覽器打開正式網址，確認網站可以登入、記錄、查看公開榜；再加入主畫面測試。
+6. iPhone：在瀏覽器使用「分享」→「加入主畫面」，若有「以網頁 App 開啟」請開啟。Android Chrome：可使用網站「加入主畫面」→瀏覽器安裝提示。
+
+重要：GitHub Pages 的 PWA 需以正式根網址 `https://yuchi1130wang-cell.github.io/RC-touring-car-laptime/` 安裝。manifest 的 start_url 指向正式版 `./`，因此在 Garage_V24.html 測試安裝後，仍會啟動根目錄的 index.html。
+
+這次沒有改 Firebase 資料格式和 Firestore Rules。離線時顯示友善說明；登入、雲端同步與正式儲存仍需要網路。網站不會快取私人雲端紀錄或舊版 HTML。

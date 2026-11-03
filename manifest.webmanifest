@@ -1,0 +1,37 @@
+{
+  "id": "./",
+  "name": "1/10 RC Lap Time — 電房圈速紀錄",
+  "short_name": "RC Lap Time",
+  "description": "免費記錄 1/10 電房最快圈、分享賽道圈速、追蹤練車進步。登入後同步你的車架與紀錄。",
+  "lang": "zh-Hant",
+  "dir": "ltr",
+  "start_url": "./?source=pwa",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#101612",
+  "theme_color": "#101912",
+  "categories": [
+    "sports",
+    "utilities"
+  ],
+  "icons": [
+    {
+      "src": "rc-lap-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "rc-lap-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "rc-lap-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
