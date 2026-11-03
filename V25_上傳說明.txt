@@ -1,0 +1,15 @@
+1/10 RC Lap Time V25 — 封面車圖完整置中修正
+
+這次只調整首頁封面車圖呈現方式：
+- 移除舊 SVG 840:350 比例強制套用到 PNG 的限制
+- 圖片依原圖 1298×678 的比例縮放
+- 手機版將車圖放在獨立置中區域，保持四輪、車頭、尾翼完整
+- 移除圖片 drop-shadow 濾鏡，以降低 iOS Safari 繪圖異常風險
+- 其餘圈速、Garage、Firebase、刪除功能、PWA 引導與設定欄位皆保留 V24 邏輯
+
+GitHub 上傳：
+1. Garage_V25.html：新版本存檔
+2. index.html：覆蓋正式版
+3. PWA 沿用 V24 已上傳的 manifest.webmanifest、sw.js、offline.html 和 rc-lap 圖示，無需重傳；若從未上傳過那些資源，請先補上。
+
+註：網站須實際在 iPhone Safari 與加入主畫面模式下複測。
